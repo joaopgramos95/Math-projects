@@ -1,0 +1,369 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\title{Rigidity of simply connected free-boundary domains\\
+       for radially symmetric Schr\"{o}dinger potentials}
+\author{}
+\date{}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\1}{\mathbf{1}}
+\renewcommand{\Im}{\operatorname{Im}}
+\renewcommand{\Re}{\operatorname{Re}}
+
+\begin{document}
+
+\maketitle
+
+\section{Setup and statement}
+
+Let $\rho\colon[0,\infty)\to[0,\infty)$ be a continuous function such that
+\[
+  \rho(r)>0\qquad (r>0).
+\]
+Define
+\begin{equation}\label{eq:Phi}
+  \Phi(t) \;:=\; \int_0^t \rho\!\left(\sqrt{s}\,\right) ds, \qquad t\ge 0.
+\end{equation}
+Since $\rho(\sqrt{s})>0$ for every $s>0$, the function $\Phi$ is strictly increasing with
+$\Phi(0)=0$.
+
+We consider the following free-boundary problem.  Let $U\subset\C$ be a bounded open set with
+$C^{1,1}$ boundary, and let $c>0$ be a constant satisfying $c < \pi \Phi(\infty)$.  We say
+that a function $u\in W^{1,2}_0(U)$ is a \emph{compactly supported solution} for $(U,\rho,c)$
+if
+\begin{enumerate}[label=\textnormal{(\roman*)}]
+  \item $u \equiv 0$ on $\C\setminus\overline{U}$ and $u \in C^0(\overline{U}\setminus\{0\})$;
+  \item the distributional identity
+    \begin{equation}\label{eq:PDE}
+      \Delta u \;=\; \rho(|\cdot|)\,\1_U - c\,\delta_0
+    \end{equation}
+    holds on $\C$.
+\end{enumerate}
+
+\begin{theorem}[Disk rigidity]\label{thm:disk}
+  Let $U$, $c$, $\rho$, and $u$ be as above.  If $U$ is simply connected, then $0\in U$ and
+  there exists $R>0$ such that
+  \[
+    U \;=\; \{z\in\C : |z| < R\}.
+  \]
+  Moreover, $R$ is the unique solution to $\Phi(R^2)=c/\pi$.
+\end{theorem}
+
+We stress that no a priori symmetry is imposed on $U$.  The conclusion follows entirely from the
+PDE structure, the zero Dirichlet--Neumann data on the free boundary, and the radial symmetry
+of $\rho$.
+
+\begin{remark}
+  The Gaussian case $\rho(r)=e^{-\pi r^2}$ is the one arising from the $h_0$-eigenfunction
+  problem for Gaussian time--frequency localization operators.  In this case,
+  $\Phi(t)=(1-e^{-\pi t})/\pi$, and the conclusion strengthens the Garofalo--Segala hypothesis
+  from a continuation condition to the direct identification $U=D(0,R)$.
+\end{remark}
+
+\begin{remark}\label{rem:h0hk-weight}
+  The proof below does not use positivity of $\rho$ at the origin; it only uses positivity away
+  from the origin together with radiality.  Therefore it applies in particular to the weights
+  \[
+    \rho_k(r):=r^{2k}e^{-\pi r^2},
+    \qquad k\in\mathbb N_0,
+  \]
+  which vanish at $r=0$ for $k\ge 1$.
+\end{remark}
+
+\section{Proof of Theorem~\ref{thm:disk}}
+
+The proof proceeds in five steps.
+
+\subsection*{Step 1: Location of the singularity and boundary gradient condition}
+
+We first show $0\in U$.  Since $c>0$, the distribution $\Delta u$ has a non-trivial singular
+part $-c\,\delta_0$.  By condition~(i), $u\equiv 0$ outside $\overline U$, so $\Delta u=0$
+there in the distributional sense.  Hence the support of $-c\,\delta_0$ must lie in
+$\overline{U}$, i.e.\ $0\in\overline{U}$.  We now rule out $0\in\partial U$.
+
+Assume for contradiction that $0\in\partial U$.  Choose $r>0$ so small that $B_r:=\{|z|<r\}$
+meets $\partial U$ only along the local $C^1$ arc through $0$.  Since $\rho$ is continuous, the
+function $f(z):=\rho(|z|)\1_U(z)$ belongs to $L^\infty(B_r)$.  Setting
+\[
+  E(z):=-\frac{1}{2\pi}\log|z|, \qquad v(z):=u(z)-cE(z),
+\]
+the distributional equation in $B_r$ becomes $\Delta v=f\in L^\infty(B_r)$.  By the interior
+$W^{2,p}$ estimate \cite[Theorem~9.11]{GilbargTrudinger} and Sobolev embedding in two
+dimensions,
+\[
+  v\in C^{1,\alpha}_{\mathrm{loc}}(B_r) \qquad\text{for every }\alpha\in(0,1),
+\]
+so $\nabla v$ is bounded near $0$.  Therefore, writing $z=(x,y)$,
+\begin{equation}\label{eq:singular-expansion}
+  \nabla u(z) = -\frac{c}{2\pi}\frac{(x,y)}{|z|^2} + \nabla v(z),
+\end{equation}
+where $|\nabla v(z)|\le C$ for some constant $C$ and all $z\in B_{r_0}$.  Since
+$c/(2\pi|z|)\to\infty$, for $|z|\le r_1:=c/(8\pi C)$ we get
+\begin{equation}\label{eq:grad-bound}
+  |\nabla u(z)| \;\ge\; \frac{c}{2\pi|z|} - C \;\ge\; \frac{c}{4\pi|z|}.
+\end{equation}
+Because $\partial U$ is $C^1$ at $0$, the set $U\cap B_{r_1}$ contains an angular sector of
+positive opening angle $\theta_0>0$ with vertex at $0$.  Integrating \eqref{eq:grad-bound}:
+\[
+  \int_{U\cap B_{r_1}} |\nabla u|^2\,dA
+  \;\ge\;
+  \frac{c^2}{16\pi^2}\int_0^{r_1}\!\int_0^{\theta_0}
+  \frac{1}{\varrho^2}\,\varrho\,d\theta\,d\varrho
+  \;=\;
+  \frac{c^2\theta_0}{16\pi^2}\int_0^{r_1}\frac{d\varrho}{\varrho}
+  \;=\;\infty,
+\]
+contradicting $u\in W^{1,2}_0(U)$.  Therefore $0\notin\partial U$, hence $0\in U$.
+
+\begin{lemma}\label{lem:boundary-regularity}
+  There exists an open neighborhood $V$ of $\partial U$ such that $0\notin \overline V$ and
+  \[
+    u\in C^{1,\alpha}(\overline V\cap \overline U)\quad\text{for every }\alpha\in(0,1).
+  \]
+  In particular, $\partial_\nu u$ is classically defined on $\partial U$ and Green's identity
+  may be applied on $U$ against test functions supported away from $0$.
+\end{lemma}
+
+\begin{proof}
+  Since $0\in U$ and $U$ is open, set $d:=\operatorname{dist}(0,\partial U)>0$ and
+  $V:=\{z:\operatorname{dist}(z,\partial U)<d/2\}$, so $\overline V\cap\{0\}=\varnothing$.
+
+  \emph{Interior regularity.}  On $V\cap U$ the equation~\eqref{eq:PDE} reduces to
+  $\Delta u=\rho(|z|)$, since $\delta_0$ is supported away from $V$.  Because
+  $\rho(|z|)\in L^\infty(V)$, the interior $W^{2,p}$ estimate
+  \cite[Theorem~9.11]{GilbargTrudinger} gives $u\in W^{2,p}_{\mathrm{loc}}(V\cap U)$ for
+  every $p<\infty$.
+
+  \emph{Boundary regularity.}  The trace of $u\in W^{1,2}_0(U)$ on $\partial U$ vanishes in
+  the $L^2$-Sobolev sense.  Since $\partial U$ is $C^{1,1}$ and $\rho(|z|)\in L^\infty(V)$,
+  the $W^{2,p}$ boundary estimate \cite[Theorem~9.13]{GilbargTrudinger} gives
+  $u\in W^{2,p}(V\cap U)$ for every $p\in(1,\infty)$.  The Sobolev embedding
+  $W^{2,p}\hookrightarrow C^{1,1-2/p}$ for $p>2$ in dimension two
+  \cite[Theorem~7.26]{GilbargTrudinger} then gives $u\in C^{1,\alpha}(\overline V\cap\overline U)$
+  for every $\alpha\in(0,1)$.
+\end{proof}
+
+Next we establish the free-boundary gradient condition.  Fix $\phi\in C_c^\infty(\C\setminus\{0\})$.
+Integrating by parts and using $u=0$ outside $\overline U$:
+\[
+  \int_\C u\,\Delta\phi\,dA
+  \;=\;
+  \int_U u\,\Delta\phi\,dA
+  \;=\;
+  \int_U \Delta u\cdot\phi\,dA
+  \;+\;
+  \int_{\partial U}\!\left(u\,\partial_\nu\phi - \partial_\nu u\cdot\phi\right)d\sigma.
+\]
+By~\eqref{eq:PDE} the left-hand side equals $\int_U\rho(|z|)\,\phi\,dA$ (the $\delta_0$ term
+vanishes since $\phi(0)=0$).  Using $u|_{\partial U}=0$ (from condition~(i) and
+$u\in C^0(\overline U\setminus\{0\})$), the boundary terms give
+\[
+  -\int_{\partial U}\partial_\nu u\cdot\phi\,d\sigma \;=\; 0
+  \qquad \forall\,\phi\in C_c^\infty(\C\setminus\{0\}).
+\]
+Since $0\notin\partial U$, the test functions $\phi$ are unrestricted on $\partial U$, so
+\begin{equation}\label{eq:Neumann}
+  \partial_\nu u \;=\; 0 \quad\text{on }\partial U.
+\end{equation}
+Combined with $u=0$ on $\partial U$, we have $\nabla u=0$ there.  The tangential component
+$\partial_\tau u=0$ because the trace of $u$ is identically zero on $\partial U$ and, by
+Lemma~\ref{lem:boundary-regularity}, $u\in C^{1,\alpha}(\overline V\cap\overline U)$.  In
+complex notation:
+\begin{equation}\label{eq:dz-zero}
+  \partial_z u \;=\; 0 \quad\text{on }\partial U.
+\end{equation}
+
+\subsection*{Step 2: A holomorphic auxiliary function}
+
+Recall the Wirtinger operators $\partial_z = \tfrac12(\partial_x - i\partial_y)$,
+$\partial_{\bar z} = \tfrac12(\partial_x + i\partial_y)$, so that $\Delta = 4\partial_z\partial_{\bar z}$.
+
+Define
+\begin{equation}\label{eq:Psi}
+  \Psi(z) \;:=\; \frac{\Phi(|z|^2)}{z}, \qquad z\neq 0.
+\end{equation}
+A direct calculation using $\partial_{\bar z}|z|^2=z$ and $\Phi'(t)=\rho(\sqrt{t})$ gives,
+for $z\neq 0$,
+\[
+  \partial_{\bar z}\Psi(z)
+  \;=\;
+  \frac{\Phi'(|z|^2)\cdot z}{z}
+  \;=\;
+  \Phi'(|z|^2)
+  \;=\;
+  \rho(|z|).
+\]
+(The distributional Leibniz correction $\pi\Phi(0)\delta_0=0$ since $\Phi(0)=0$.)
+
+Now define
+\begin{equation}\label{eq:F}
+  F(z) \;:=\; 4\partial_z u(z) - \Psi(z) + \frac{c}{\pi z}, \qquad z\in U\setminus\{0\}.
+\end{equation}
+
+\begin{lemma}\label{lem:holo}
+  $F$ extends to a holomorphic function on all of $U$.
+\end{lemma}
+
+\begin{proof}
+  Using $\partial_{\bar z}(1/z)=\pi\delta_0$ and $\Delta=4\partial_z\partial_{\bar z}$, the
+  distributional $\bar z$-derivative of $F$ in $\mathcal D'(U)$ is
+  \[
+    \partial_{\bar z} F
+    = \partial_{\bar z}(4\partial_z u) - \partial_{\bar z}\Psi
+      + \frac{c}{\pi}\partial_{\bar z}(1/z)
+    = \Delta u - \rho(|z|) + c\delta_0.
+  \]
+  Substituting~\eqref{eq:PDE} (noting $\1_U\equiv 1$ on $U$):
+  \[
+    \partial_{\bar z} F
+    = \bigl(\rho(|z|) - c\delta_0\bigr) - \rho(|z|) + c\delta_0
+    = 0
+    \quad \text{in }\mathcal D'(U).
+  \]
+  By Weyl's Lemma, $F$ is holomorphic on $U$.
+\end{proof}
+
+\begin{remark}[Reduction to the real-valued case]\label{rem:real}
+  The real-valuedness of $u$ is automatic.  Indeed, by Step~1 we already know that $0\in U$, so
+  there is no singular point on $\partial U$.  If $u$ were complex-valued, then its imaginary
+  part $v:=\Im u$ would satisfy
+  \[
+    \Delta v=0 \qquad\text{in }U,
+  \]
+  because the right-hand side of \eqref{eq:PDE} is real.  By condition~(i), \(u=0\) on
+  \(\C\setminus\overline U\), so the trace of \(v\) vanishes on \(\partial U\); and by
+  Lemma~\ref{lem:boundary-regularity}, \(v\in C^{1,\alpha}(\overline V\cap\overline U)\) near
+  \(\partial U\).  Since \(v\) is harmonic in all of \(U\) and continuous up to the boundary,
+  the maximum principle yields \(v\equiv 0\).  Thus \(u\) is real-valued.
+\end{remark}
+
+\subsection*{Step 3: Real boundary values of a holomorphic function}
+
+Define
+\begin{equation}\label{eq:W}
+  W(z) \;:=\; \pi z \cdot F(z), \qquad z\in U.
+\end{equation}
+Since $F$ is holomorphic on $U$ and $z\mapsto\pi z$ is entire, $W$ is holomorphic on $U$ with
+$W(0)=0$.  By Lemma~\ref{lem:boundary-regularity}, $\partial_z u\in C^{0,\alpha}(\overline V
+\cap\overline U)$; since $\Psi$ and $c/(\pi z)$ are smooth away from $0\in U$, both $F$ and
+$W$ extend continuously to $\partial U$.
+
+On $\partial U$, using~\eqref{eq:dz-zero}:
+\begin{align}
+  W\big|_{\partial U}
+  &\;=\;
+  \pi z\!\left(4\partial_z u - \frac{\Phi(|z|^2)}{z}+\frac{c}{\pi z}\right)\bigg|_{\partial U}
+  \notag\\
+  &\;=\;
+  \pi z\cdot 0 - \pi\Phi(|z|^2) + c
+  \;=\;
+  c - \pi\Phi(|z|^2).
+  \label{eq:W-boundary}
+\end{align}
+Since $c$, $\pi$, and $\Phi(|z|^2)$ are all real, $W\big|_{\partial U}\in\R$.
+
+\subsection*{Step 4: $W$ is constant}
+
+The function $\Im W$ is harmonic in $U$, continuous up to $\partial U$ (as $0\in U$, not on
+$\partial U$), and $\Im W=0$ on $\partial U$ by~\eqref{eq:W-boundary}.  The maximum principle
+gives $\Im W\equiv 0$ in $U$.  A holomorphic function with zero imaginary part satisfies
+$\partial_x\Re W=0$ and $\partial_y\Re W=0$ by Cauchy--Riemann, so $\Re W$ is constant.
+Therefore
+\begin{equation}\label{eq:W-constant}
+  W(z) \;\equiv\; \kappa \quad\text{in }U, \qquad \kappa\in\R.
+\end{equation}
+
+\subsection*{Step 5: Identifying $U$ as a disk}
+
+Restricting~\eqref{eq:W-constant} to $\partial U$ via~\eqref{eq:W-boundary}:
+\[
+  c - \pi\Phi(|z|^2) \;=\; \kappa \qquad \text{for all }z\in\partial U.
+\]
+Hence $\Phi(|z|^2)=(c-\kappa)/\pi$ is constant on $\partial U$.  Since $\Phi$ is strictly
+increasing, $|z|$ is constant on $\partial U$, say $|z|=R$ with $\Phi(R^2)=(c-\kappa)/\pi$.
+Thus $\partial U\subseteq\{|z|=R\}$.  Since $U$ is simply connected with $C^{1,1}$ boundary,
+$\partial U$ is a single connected closed $C^{1,1}$ curve; being contained in the circle
+$\{|z|=R\}$, it must equal it.  Therefore $U=\{z\in\C:|z|<R\}$.
+
+Finally, $W(0)=0$ and $W\equiv\kappa$ give $\kappa=0$, so $\Phi(R^2)=c/\pi$, uniquely
+determining $R$.\qed
+
+\section{Consequences and remarks}
+
+\begin{corollary}[\((h_0,h_k)\) case]\label{cor:h0hk}
+  Fix $k\in\mathbb N_0$ and define $\rho_k(r):=r^{2k}e^{-\pi r^2}$,
+  $\Phi_k(t):=\int_0^t s^ke^{-\pi s}\,ds$.  Let $U\subset\C$ be bounded, simply connected,
+  with $C^{1,1}$ boundary, and let $c\in(0,\pi\Phi_k(\infty))$.  If $u\in W^{1,2}_0(U)$
+  satisfies conditions~(i)--(ii) with $\rho=\rho_k$, then $U=D(0,R)$ for the unique
+  $R>0$ with $\Phi_k(R^2)=c/\pi$.
+\end{corollary}
+
+\begin{proof}
+  Apply Theorem~\ref{thm:disk} with $\rho=\rho_k$; Remark~\ref{rem:h0hk-weight} confirms the
+  hypotheses, and $\rho_k(\sqrt{s})=s^ke^{-\pi s}$ gives $\Phi=\Phi_k$.
+\end{proof}
+
+\begin{remark}[Localization interpretation]\label{rem:localization-h0hk}
+  Corollary~\ref{cor:h0hk} covers the Gaussian localization problem with window $h_0$ and
+  eigenfunction $h_k$: the Bargmann reduction, after differentiating the eigenvalue identity
+  $k$ times, yields a bulk term $|z|^{2k}e^{-\pi|z|^2}\1_U$, and the
+  Paley--Wiener / Ehrenpreis--Malgrange step produces a compactly supported $u$ satisfying
+  \eqref{eq:PDE} with $\rho=\rho_k$.
+\end{remark}
+
+\begin{corollary}[Gaussian weight]\label{cor:gaussian}
+  Let $\rho(r)=e^{-\pi r^2}$, so $\Phi(t)=(1-e^{-\pi t})/\pi$.  Then $U=D(0,R)$ where
+  $e^{-\pi R^2}=1-c$, and $c\in(0,1)$ is necessary.
+\end{corollary}
+
+\begin{proof}
+  $\Phi(R^2)=c/\pi$ gives $e^{-\pi R^2}=1-c$; for $R>0$ one needs $c\in(0,1)$.
+\end{proof}
+
+\begin{remark}[Connection to the Schwarz function]
+  Once $\partial U=\{|z|=R\}$ is established, the Schwarz function of $\partial U$ is
+  $S(z)=R^2/z$, which extends meromorphically into all of $U$ with a single simple pole at $0$.
+  This is strictly stronger than the Garofalo--Segala hypothesis (which asks only for
+  one-sided meromorphic continuation into a neighborhood of $\partial U$): here it is derived
+  as a consequence, not assumed.
+\end{remark}
+
+\begin{remark}[Comparison with the first-order approach]
+  The companion note \texttt{h\_0-loc.tex} derives disk rigidity via the first-order equation
+  $\partial_w u=-e^{-\pi|w|^2}$ in $U$ and the compatibility condition $w\cdot\tau=0$ on
+  $\partial U$.  The present approach works at the level of $\Delta u$, avoids the first-order
+  structure, and applies to any radial weight $\rho$ that is continuous on $[0,\infty)$ and
+  positive for $r>0$.
+\end{remark}
+
+\begin{remark}[On the regularity assumptions]
+  Any weakening of the present hypotheses requires a separate justification of the boundary
+  trace identities used in Steps~1 and~3.  A plausible route --- stated as a program rather
+  than a proved result --- is to invoke the one-phase free-boundary regularity theory of
+  Alt--Caffarelli / Kinderlehrer--Nirenberg to deduce analyticity of $\partial U$ away from $0$
+  from a purely distributional starting point, and then apply the argument above.
+\end{remark}
+
+\begin{thebibliography}{9}
+
+\bibitem{GilbargTrudinger}
+D.~Gilbarg and N.~S.~Trudinger,
+\emph{Elliptic Partial Differential Equations of Second Order},
+2nd~ed., Grundlehren der Mathematischen Wissenschaften \textbf{224},
+Springer-Verlag, Berlin, 1983.
+
+\end{thebibliography}
+
+\end{document}

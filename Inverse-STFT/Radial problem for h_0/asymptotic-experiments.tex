@@ -1,0 +1,1376 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.7cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathbb C}
+\newcommand{\D}{\mathbb D}
+\newcommand{\R}{\mathbb R}
+\newcommand{\dd}{\,d}
+\newcommand{\pbar}{\partial_{\bar z}}
+\newcommand{\p}{\partial}
+\newcommand{\1}{\mathbf 1}
+\newcommand{\Log}{\operatorname{Log}}
+
+\title{Asymptotic experiments for the analytic two-boundary inverse problem}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Purpose}
+
+These notes record what one can rigorously extract from the boundary moment identities in
+the inverse Gaussian localization problem, under the following regularity assumption:
+\[
+  \partial U=\Gamma_{\mathrm{out}}\cup \Gamma_{\mathrm{in}}
+\]
+has exactly two connected components, and both are real-analytic Jordan curves. No
+stronger global regularity or algebraicity of the boundary is assumed.
+
+The goal is not to give a finished rigidity proof. The point is to isolate the correct
+asymptotic mechanism. A real-analytic boundary gives a complex collar. It does not, by
+itself, give a global meromorphic Schwarz function or a finite singularity structure.
+Consequently the correct asymptotics are Darboux/steepest-descent asymptotics controlled
+by the first complex obstruction to continuing or deforming the boundary integrals, not by
+the largest Euclidean radius attained on the real boundary.
+
+\section{Moment and boundary identities}
+
+For the Gaussian window and the Hermite eigenfunction \(h_k\), the Bargmann-side
+eigenfunction identity gives
+\begin{equation}\label{eq:bulk-moments}
+  \int_U z^n |z|^{2k}e^{-\pi |z|^2}\dd A(z)=0,
+  \qquad n\ge 1.
+\end{equation}
+Define
+\begin{equation}\label{eq:Hk-def}
+  H_k(s):=s^{-(k+1)}\int_0^s t^k e^{-\pi t}\dd t .
+\end{equation}
+The singularity at \(s=0\) is removable, and \(H_k\) is entire, since
+\[
+  H_k(s)=\sum_{m=0}^\infty
+  \frac{(-\pi)^m}{m!(m+k+1)}s^m .
+\]
+Moreover,
+\[
+  \pbar\!\left(z^{n+k}\bar z^{\,k+1}H_k(|z|^2)\right)
+  =
+  z^n |z|^{2k}e^{-\pi |z|^2}.
+\]
+Therefore Cauchy--Green gives, for every \(n\ge 1\),
+\begin{equation}\label{eq:boundary-moments}
+  \int_{\partial U} z^{n+k}\bar z^{\,k+1}H_k(|z|^2)\dd z=0.
+\end{equation}
+Writing the two boundary components with the orientation induced by \(U\),
+\begin{equation}\label{eq:two-component-split}
+  I_n^{\mathrm{out}}+I_n^{\mathrm{in}}=0,
+\end{equation}
+where
+\begin{equation}\label{eq:component-integral}
+  I_n^\Gamma
+  :=
+  \int_\Gamma z^{n+k}\bar z^{\,k+1}H_k(|z|^2)\dd z .
+\end{equation}
+
+\section{Why the naive real Laplace asymptotic is false}
+
+Let a component be parametrized by a real-analytic immersion
+\[
+  \gamma:\R/2\pi\mathbb Z\to \C\setminus\{0\}.
+\]
+Then
+\begin{equation}\label{eq:param-integral}
+  I_n^\Gamma=\int_0^{2\pi}\gamma(t)^n A(t)\dd t,
+\end{equation}
+where
+\[
+  A(t)=\gamma(t)^k\overline{\gamma(t)}^{\,k+1}
+       H_k(|\gamma(t)|^2)\gamma'(t).
+\]
+It is tempting to set \(R(t)=|\gamma(t)|\) and claim that a nonconstant maximum
+\(R(t_0)=R_*\) contributes
+\[
+  R_*^n n^{-1/(2m)}e^{in\arg\gamma(t_0)}
+\]
+up to a nonzero constant. This is not correct in general.
+
+Indeed, near \(t_0\) write
+\[
+  \gamma(t)=R(t)e^{i\varphi(t)} .
+\]
+If \(R'(t_0)=0\), then regularity of the curve gives
+\[
+  \gamma'(t_0)=e^{i\varphi(t_0)}R_*\,i\varphi'(t_0).
+\]
+Since \(\gamma'(t_0)\ne0\), necessarily
+\[
+  \varphi'(t_0)\ne0.
+\]
+Thus the local model contains a large linear oscillation:
+\[
+  \gamma(t)^n
+  =
+  R_*^n e^{in\varphi(t_0)}
+  \exp\{-na(t-t_0)^{2m}+inb(t-t_0)+\cdots\},
+  \qquad b\ne0.
+\]
+Already for \(m=1\),
+\[
+  \int_{\R}e^{-na t^2+inbt}\dd t
+  =
+  \sqrt{\frac{\pi}{na}}\,
+  e^{-b^2n/(4a)}.
+\]
+Hence the real maximum can be exponentially smaller than \(R_*^n n^{-1/2}\). The
+dominant contribution has moved to a complex saddle. The correct asymptotics must be
+complex.
+
+\section{The correct local analytic setup}
+
+Because \(\gamma\) is real analytic, there is a strip
+\[
+  \mathcal S_\epsilon:=\{t\in\C/2\pi\mathbb Z:|\Im t|<\epsilon\}
+\]
+to which \(\gamma\) extends holomorphically. The conjugate boundary value is continued by
+the reflected analytic function
+\[
+  \gamma^*(t):=\overline{\gamma(\bar t)} ,
+\]
+which satisfies \(\gamma^*(t)=\overline{\gamma(t)}\) for real \(t\). Thus the amplitude is
+continued as
+\[
+  A(t):=\gamma(t)^k\gamma^*(t)^{k+1}
+       H_k(\gamma(t)\gamma^*(t))\gamma'(t).
+\]
+Shrinking \(\epsilon\), we may assume \(\gamma(t)\ne0\) and \(A(t)\) is holomorphic in the
+strip. Choose a branch of \(\Psi=\Log\gamma\) on the universal cover of this strip. Then
+\[
+  I_n^\Gamma=\int_{\R/2\pi\mathbb Z} e^{n\Psi(t)}A(t)\dd t .
+\]
+The possible leading contributions are:
+\begin{enumerate}[label=(\roman*)]
+\item complex critical points satisfying
+\[
+  \Psi'(\tau)=0
+  \quad\Longleftrightarrow\quad
+  \gamma'(\tau)=0;
+\]
+\item singularities of the analytic continuation of \(\gamma\), \(A\), or the chosen
+branch of \(\Psi\);
+\item boundary points of the maximal continuation domain, if no explicit singularity
+description is available.
+\end{enumerate}
+Thus real analyticity alone gives a method, but not a numerical list of dominant
+contributions. To get a closed formula one must know, or prove, which critical points or
+singularities are first encountered by an admissible contour deformation.
+
+\begin{definition}[Admissible deformation and exponential scale]
+Fix a holomorphic continuation domain \(X\) for \(\gamma\) and \(A\), containing the real
+cycle \(C_0=\R/2\pi\mathbb Z\), and assume \(\gamma\ne0\) on \(X\). An admissible cycle is a
+cycle \(C\subset X\), homologous to \(C_0\) in \(X\). Define
+\[
+  M(C):=\sup_{t\in C}|\gamma(t)|,
+  \qquad
+  \rho_X(\Gamma):=\inf_{C\sim C_0}M(C).
+\]
+\end{definition}
+
+If the infimum is achieved on a smooth contour away from singularities and away from
+critical points of \(\Log\gamma\), then the contour can be pushed a little farther and the
+infimum was not sharp. Therefore a sharp contour is obstructed by a saddle
+\(\gamma'(\tau)=0\) or by the boundary of the continuation domain. In this sense the
+geometric exponential scale is
+\[
+  \rho_X(\Gamma)
+  =
+  \max |\gamma(\tau)|
+\]
+over the dominant obstruction points \(\tau\) on the optimal deformation. This is the
+right replacement for the incorrect quantity \(\max_{\Gamma}|z|\).
+
+\section{Saddle asymptotics}
+
+Here is the precise local statement used once the dominant obstruction is a saddle.
+
+\begin{proposition}[Nondegenerate saddle contribution]\label{prop:saddle}
+Let \(X\) be a continuation domain for \(\Psi=\Log\gamma\) and \(A\). Suppose an
+admissible deformation of the real cycle can be made into a steepest-descent contour
+through finitely many points \(\tau_1,\dots,\tau_N\), and that:
+\begin{enumerate}[label=(\roman*)]
+\item \(\Psi'(\tau_j)=0\);
+\item \(\Psi''(\tau_j)\ne0\);
+\item the values \(\Re\Psi(\tau_j)\) are equal and dominate all other portions of the
+deformed contour;
+\item \(A(\tau_j)\ne0\).
+\end{enumerate}
+Then
+\begin{equation}\label{eq:saddle-asymptotic}
+  I_n^\Gamma
+  \sim
+  \sum_{j=1}^N
+  \varepsilon_j
+  A(\tau_j)e^{n\Psi(\tau_j)}
+  \left(\frac{2\pi}{-n\Psi''(\tau_j)}\right)^{1/2}
+  \left(1+\frac{c_{j,1}}{n}+\frac{c_{j,2}}{n^2}+\cdots\right),
+\end{equation}
+where the signs/phases \(\varepsilon_j\) and square-root branches are determined by the
+orientation of the steepest-descent contour.
+\end{proposition}
+
+\begin{remark}
+In geometric terms, the exponential scale in \eqref{eq:saddle-asymptotic} is
+\[
+  \rho_\Gamma=\max_j |\gamma(\tau_j)|.
+\]
+If several saddles have the same modulus, the leading term is a finite exponential sum
+\[
+  \rho_\Gamma^n n^{-1/2}
+  \sum_j c_j e^{in\arg \gamma(\tau_j)} .
+\]
+Degenerate saddles give the same structure with \(n^{-1/2}\) replaced by a fractional
+power \(n^{-1/p}\), where \(p\) is the first nonzero order of \(\Psi-\Psi(\tau_j)\).
+\end{remark}
+
+\section{Schwarz-function/Darboux formulation}
+
+There is an equivalent formulation directly in the \(z\)-plane. Since \(\Gamma\) is
+real analytic, it has a Schwarz function \(S_\Gamma\) in a collar:
+\[
+  S_\Gamma(z)=\bar z,\qquad z\in\Gamma.
+\]
+In that collar,
+\begin{equation}\label{eq:B-schwarz}
+  I_n^\Gamma=\int_\Gamma z^n B_\Gamma(z)\dd z,
+  \qquad
+  B_\Gamma(z):=z^k S_\Gamma(z)^{k+1}H_k(zS_\Gamma(z)).
+\end{equation}
+
+Assume \(B_\Gamma\) can be analytically continued to the region swept when \(\Gamma\) is
+deformed to another curve \(\Gamma'\), except for isolated singularities
+\(\alpha_1,\dots,\alpha_N\). Then Cauchy's theorem gives the exact identity
+\begin{equation}\label{eq:darboux-exact}
+  I_n^\Gamma
+  =
+  2\pi i\sum_{j=1}^N \operatorname{Res}_{z=\alpha_j}
+  \left(z^nB_\Gamma(z)\right)
+  +
+  \int_{\Gamma'}z^nB_\Gamma(z)\dd z .
+\end{equation}
+If \(\sup_{\Gamma'}|z|<\rho\), where
+\[
+  \rho:=\max_j|\alpha_j|,
+\]
+then the last term is \(O((\rho-\eta)^n)\) for some \(\eta>0\), and the asymptotics are
+given by the local singular expansions of \(B_\Gamma\) at the singularities with
+\(|\alpha_j|=\rho\).
+
+\begin{proposition}[Darboux forms]\label{prop:darboux-forms}
+Suppose \(\alpha\ne0\) is a dominant singularity of \(B_\Gamma\).
+\begin{enumerate}[label=(\roman*)]
+\item If \(B_\Gamma\) has a pole of order \(q\) at \(\alpha\), then its contribution has
+the form
+\[
+  \alpha^n P_\alpha(n),
+\]
+where \(P_\alpha\) is a polynomial of degree at most \(q-1\).
+\item If
+\[
+  B_\Gamma(z)
+  =
+  C_\alpha (1-z/\alpha)^\beta
+  +\text{less singular terms},
+  \qquad \beta\notin\mathbb Z_{\ge0},
+\]
+then its contribution is
+\[
+  C_\alpha'
+  \alpha^n n^{-\beta-1}
+  \left(1+O(n^{-1})\right),
+\]
+with the constant determined by the local branch.
+\item If the singularity is essential, the local saddle problem near \(\alpha\) must be
+solved. A standard normal form is
+\[
+  B_\Gamma(z)\approx C(z-\alpha)^{-q}
+  \exp\!\left(\frac{\beta}{z-\alpha}\right),
+\]
+which leads to saddles satisfying
+\[
+  \frac{n}{\alpha}+O(n(z-\alpha))-\frac{\beta}{(z-\alpha)^2}=0
+\]
+and therefore to contributions of the type
+\[
+  \alpha^n
+  \exp\!\left(\pm 2\sqrt{\frac{\beta n}{\alpha}}\right)
+  n^{q/2-3/4}
+  \times(\text{explicit phase and constant}),
+\]
+provided the relevant steepest paths are accessible. The exact sign and branch are part of
+the local steepest-descent computation.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}
+The essential case is not artificial here. Even if \(S_\Gamma\) has only a pole, the
+factor \(H_k(zS_\Gamma(z))\) is entire but not polynomial, so composing it with a pole of
+\(S_\Gamma\) can create an essential singularity. In favorable sectors one may replace
+\(H_k(s)\) by its large-\(s\) asymptotic, but this is a sectorial statement and must be
+checked against the contour geometry.
+\end{remark}
+
+\section{What step 5 should actually prove}
+
+For two components, the boundary identity is
+\[
+  I_n^{\mathrm{out}}+I_n^{\mathrm{in}}=0.
+\]
+The asymptotic strategy can prove that the outer boundary is a centered circle if it
+establishes the following structure.
+
+\begin{theorem}[Conditional separation criterion]\label{thm:conditional-separation}
+Assume both boundary components are real analytic. Suppose that, for each component, one
+has chosen a continuation/deformation domain giving true asymptotics
+\begin{align}
+  I_n^{\mathrm{out}}
+  &=
+  \rho_{\mathrm{out}}^n n^{a_{\mathrm{out}}}
+  \left(\sum_{\ell=1}^{L}c_\ell e^{in\theta_\ell}+o(1)\right),
+  \label{eq:out-asymp}\\
+  I_n^{\mathrm{in}}
+  &=
+  O\!\left(\rho_{\mathrm{in}}^n n^{a_{\mathrm{in}}}\right),
+  \label{eq:in-asymp}
+\end{align}
+with \(c_\ell\ne0\) and distinct \(e^{i\theta_\ell}\). If
+\[
+  \rho_{\mathrm{in}}<\rho_{\mathrm{out}},
+\]
+then \eqref{eq:two-component-split} is impossible. Hence the hypothesis that produced the
+nonzero outer asymptotic must fail.
+\end{theorem}
+
+\begin{proof}
+Divide \eqref{eq:two-component-split} by
+\(\rho_{\mathrm{out}}^n n^{a_{\mathrm{out}}}\). The inner contribution tends to \(0\).
+Thus
+\[
+  \sum_{\ell=1}^{L}c_\ell e^{in\theta_\ell}\to0.
+\]
+By Cesaro averaging after multiplication by \(e^{-in\theta_j}\), each coefficient
+\(c_j\) must vanish, a contradiction.
+\end{proof}
+
+The geometric content is therefore the strict separation
+\[
+  \rho_{\mathrm{in}}<\rho_{\mathrm{out}}.
+\]
+Here \(\rho_{\mathrm{out}}\) is not \(\max_{\Gamma_{\mathrm{out}}}|z|\). It is the modulus
+of the dominant obstruction for the analytic continuation of the outer component integral:
+either \(|\gamma_{\mathrm{out}}(\tau)|\) at a dominant complex saddle
+\(\gamma'_{\mathrm{out}}(\tau)=0\), or \(|\alpha|\) at a dominant Schwarz-function
+singularity \(z=\alpha\). The same definition applies to \(\rho_{\mathrm{in}}\).
+
+\section{What real analyticity alone gives, and what it does not give}
+
+Real analyticity gives:
+\begin{enumerate}[label=(\roman*)]
+\item a nontrivial complex collar for each boundary component;
+\item local Schwarz functions \(S_{\mathrm{out}}\) and \(S_{\mathrm{in}}\);
+\item a legitimate steepest-descent/Darboux problem for each component integral;
+\item true asymptotics once the relevant saddles or singularities in the chosen
+continuation domain are identified.
+\end{enumerate}
+
+Real analyticity alone does not give:
+\begin{enumerate}[label=(\roman*)]
+\item a global meromorphic Schwarz function;
+\item a finite list of singularities;
+\item equality between the asymptotic scale and the real boundary radius
+\(\max_\Gamma |z|\);
+\item the separation \(\rho_{\mathrm{in}}<\rho_{\mathrm{out}}\).
+\end{enumerate}
+
+Thus a rigorous proof should not state that the outer component has leading size
+\[
+  R_*^n n^{-1/(2m)}
+  \quad\text{with } R_*=\max_{\Gamma_{\mathrm{out}}}|z|.
+\]
+The right statement is conditional on the complexified geometry:
+\[
+  I_n^\Gamma
+  \text{ is controlled by dominant accessible complex saddles or singularities.}
+\]
+
+\section{Suggested proof program}
+
+The most plausible rigorous route is:
+\begin{enumerate}[label=\arabic*.]
+\item Derive \eqref{eq:boundary-moments} from the Hermite eigenfunction identity.
+\item For each analytic component, introduce its local Schwarz function and write
+\[
+  I_n^\Gamma=\int_\Gamma z^nB_\Gamma(z)\dd z.
+\]
+\item Determine a continuation/deformation domain on the side relevant to the annular
+region \(U\). This is an actual geometric input, not a formal consequence of real
+analyticity.
+\item Apply Darboux if the first obstructions are Schwarz singularities; apply complex
+steepest descent if the first obstructions are saddles of \(\Log\gamma\).
+\item Prove the strict separation
+\[
+  \rho_{\mathrm{in}}<\rho_{\mathrm{out}}.
+\]
+\item Use Theorem~\ref{thm:conditional-separation} to force the outer boundary not to have
+any nonradial dominant obstruction. If this can be made for every possible obstruction,
+the outer boundary must be a circle centered at the origin.
+\item Once the outer boundary is a centered circle, the angular-derivative propagation
+argument becomes robust: in a circular collar, \(w=\partial_\theta u\) is harmonic and has
+both \(w=0\) and \(\partial_r w=0\) on the outer circle, hence \(w\equiv0\) in the collar
+and then in the connected domain by unique continuation. This yields radiality.
+\end{enumerate}
+
+\section{Bottom line}
+
+The correct asymptotics are available under real-analytic boundary regularity, but their
+exponential scales are complex-geometric:
+\[
+  \rho_\Gamma
+  =
+  \text{modulus of the dominant accessible saddle/singularity of the component integral}.
+\]
+They are not determined by \(\max_\Gamma |z|\). A complete proof of radiality by this
+method therefore needs a new geometric theorem comparing the dominant complex
+obstructions of the outer and inner analytic boundary components.
+
+\section{Why weighted quadrature does not automatically give a meromorphic Schwarz function}
+
+One might hope to strengthen the previous program as follows. Compact support gives a
+weighted quadrature identity; perhaps this forces the ordinary Schwarz function to extend
+meromorphically, after which the asymptotics reduce to residues. This is too optimistic in
+general.
+
+Suppose
+\[
+  \Delta u=f\,\1_U-c\delta_0
+\]
+has a compactly supported solution, with \(f\) real analytic near \(\partial U\). Testing
+against holomorphic polynomials gives
+\begin{equation}\label{eq:weighted-quadrature}
+  \int_U p(z)f(z,\bar z)\dd A(z)=c\,p(0).
+\end{equation}
+Equivalently, for \(\zeta\) outside \(U\),
+\begin{equation}\label{eq:weighted-cauchy}
+  C_{f,U}(\zeta):=\int_U\frac{f(z,\bar z)}{\zeta-z}\dd A(z)
+  =
+  \frac{c}{\zeta}.
+\end{equation}
+Thus the data control the weighted Cauchy transform \(C_{f,U}\), not the ordinary Cauchy
+transform
+\[
+  C_U(\zeta):=\int_U\frac{\dd A(z)}{\zeta-z}.
+\]
+Classical quadrature-domain theory gives meromorphic Schwarz functions from finite
+quadrature identities for \(dA\), or equivalently from rationality/finite-rank structure of
+\(C_U\). The identity \eqref{eq:weighted-cauchy} is a different statement.
+
+Let \(F(z,\bar z)\) be a local analytic \(\pbar\)-primitive of \(f\):
+\[
+  \pbar F(z,\bar z)=f(z,\bar z).
+\]
+On an analytic boundary component, write \(S(z)=\bar z\). Then Cauchy--Green gives
+\[
+  \int_U z^n f(z,\bar z)\dd A(z)
+  =
+  \frac{1}{2i}\int_{\partial U}z^nF(z,\bar z)\dd z
+  =
+  \frac{1}{2i}\int_{\partial U}z^nF(z,S(z))\dd z.
+\]
+The boundary object controlled by the weighted moment identities is therefore
+\begin{equation}\label{eq:G-weighted-schwarz}
+  G(z):=F(z,S(z)),
+\end{equation}
+not \(S(z)\) itself.
+
+The missing implication would be
+\begin{equation}\label{eq:bad-step2}
+  G(z)=F(z,S(z))\ \text{meromorphic}
+  \quad\Longrightarrow\quad
+  S(z)\ \text{meromorphic}.
+\end{equation}
+This implication is not formal. Its truth depends on the dependence of \(F\) on the second
+variable.
+
+\begin{enumerate}[label=(\roman*)]
+\item If \(f=1\), we may take \(F(z,\eta)=\eta\). Then \(G=S\), and the weighted identity is
+the usual quadrature identity. This is the classical case in which meromorphic
+continuation of the Schwarz function is natural.
+
+\item More generally, if
+\[
+  F(z,\eta)=a(z)\eta+b(z),
+\]
+with \(a\) holomorphic and nonvanishing in the continuation region, then
+\[
+  S(z)=\frac{G(z)-b(z)}{a(z)}.
+\]
+In this affine case, meromorphicity of \(G\) implies meromorphicity of \(S\).
+
+\item If \(F\) is polynomial in \(\eta\) of degree \(d>1\), then \(G=F(z,S)\) gives an
+algebraic equation for \(S\), not a meromorphic representation. One may at best expect
+\(S\) to be algebraic over the meromorphic field generated by \(G\), and branching can
+appear.
+
+\item If \(F\) is non-polynomial analytic in \(\eta\), then \eqref{eq:bad-step2} is
+generally the wrong target. Inverting \(F(z,\cdot)\) can produce multivalued branches and
+essential complications even when \(G\) is meromorphic.
+\end{enumerate}
+
+For the Hermite/Gaussian boundary identity, the natural object is not \(S\) but
+\begin{equation}\label{eq:weighted-hermite-object}
+  B(z)=z^kS(z)^{k+1}H_k(zS(z)).
+\end{equation}
+The function \(H_k\) is entire and non-polynomial. Hence even if \(S\) had only a pole,
+the composition \(H_k(zS(z))\) could produce an essential singularity. Conversely, knowing
+that \(B\) has controlled continuation does not by itself make \(S\) meromorphic.
+
+Thus the realistic replacement for the failed Step 2 is:
+\[
+  \text{prove controlled continuation/asymptotics for }F(z,S(z))
+  \text{ or }B(z),
+\]
+rather than trying to prove meromorphic continuation of the ordinary Schwarz function.
+Meromorphic \(S\) is plausible only under additional finite-quadrature structure, such as
+constant density or affine dependence of a \(\pbar\)-primitive on \(\bar z\).
+
+\section{The pure Gaussian weight}
+
+Now specialize to
+\[
+  f(z,\bar z)=e^{-\pi |z|^2}=e^{-\pi z\bar z}.
+\]
+Treating \(z\) and \(\eta=\bar z\) as independent complex variables, a removable
+\(\pbar\)-primitive is
+\begin{equation}\label{eq:gaussian-primitive}
+  F(z,\eta):=
+  \begin{cases}
+  \displaystyle \frac{1-e^{-\pi z\eta}}{\pi z}, & z\ne0,\\[1.1em]
+  \eta, & z=0.
+  \end{cases}
+\end{equation}
+Indeed, the power-series expansion
+\[
+  \frac{1-e^{-\pi z\eta}}{\pi z}
+  =
+  \sum_{m=1}^\infty \frac{(-1)^{m+1}\pi^{m-1}}{m!}z^{m-1}\eta^m
+\]
+shows removability at \(z=0\), and direct differentiation gives
+\[
+  \partial_\eta F(z,\eta)=e^{-\pi z\eta}.
+\]
+
+On an analytic boundary component with Schwarz function \(S\), the controlled boundary
+object is therefore
+\begin{equation}\label{eq:gaussian-G}
+  G(z):=F(z,S(z))
+  =
+  \frac{1-e^{-\pi zS(z)}}{\pi z},
+\end{equation}
+again with the removable interpretation at \(z=0\). The moment identity becomes
+\begin{equation}\label{eq:gaussian-boundary-moment}
+  \int_{\partial U} z^n G(z)\dd z=0,\qquad n\ge1.
+\end{equation}
+Equivalently, since \(\int_{\partial U}z^{n-1}\dd z=0\) for \(n\ge1\),
+\begin{equation}\label{eq:gaussian-exp-boundary}
+  \int_{\partial U}z^{n-1}e^{-\pi zS(z)}\dd z=0,\qquad n\ge1.
+\end{equation}
+This is exactly the \(k=0\) instance of the Hermite boundary identity, because
+\[
+  H_0(s)=\frac{1-e^{-\pi s}}{\pi s}
+  \quad\text{and}\quad
+  S(z)H_0(zS(z))
+  =
+  \frac{1-e^{-\pi zS(z)}}{\pi z}.
+\]
+
+This specialization makes the failed meromorphic-Schwarz step especially transparent.
+Suppose, optimistically, that the moment identity allowed one to continue \(G\)
+meromorphically. Then
+\begin{equation}\label{eq:gaussian-M}
+  M(z):=e^{-\pi zS(z)}=1-\pi zG(z)
+\end{equation}
+would be meromorphic. But recovering \(S\) requires taking a logarithm:
+\begin{equation}\label{eq:S-from-M}
+  S(z)=-\frac{1}{\pi z}\Log M(z).
+\end{equation}
+This is not a meromorphic operation. Zeros and poles of \(M\) create logarithmic
+singularities of \(S\), and nontrivial monodromy may appear. Thus meromorphicity of the
+Gaussian weighted object \(G\), or of \(M\), does not imply meromorphicity of the ordinary
+Schwarz function.
+
+Conversely, meromorphicity of \(S\) is not naturally compatible with the Gaussian object.
+If \(S\) has a pole at \(\alpha\ne0\), then \(zS(z)\) has a pole at \(\alpha\), and
+\[
+  e^{-\pi zS(z)}
+\]
+has an essential singularity at \(\alpha\). Hence \(G\) has an essential singularity there,
+not a pole. Therefore, for the Gaussian weight, ordinary meromorphic Schwarz continuation
+is not the right expected finite-complexity statement. The correct object for asymptotics
+is the exponential weighted Schwarz object \(M=e^{-\pi zS}\), or equivalently
+\(G=(1-M)/(\pi z)\).
+
+If a continuation of \(S\) has a pole of order \(q\) at a nonzero point \(\alpha\),
+\[
+  S(z)=a_{-q}(z-\alpha)^{-q}+a_{-q+1}(z-\alpha)^{-q+1}+\cdots,
+  \qquad a_{-q}\ne0,
+\]
+then the Gaussian boundary integrand has local exponential type
+\[
+  z^nG(z)\dd z
+  \sim
+  -\frac{z^{n-1}}{\pi}
+  \exp\!\left(
+    -\pi\alpha a_{-q}(z-\alpha)^{-q}
+  \right)\dd z
+\]
+up to lower singular orders in the exponential. The local saddle equation has leading
+form
+\begin{equation}\label{eq:gaussian-pole-saddles}
+  \frac{n}{\alpha}
+  +
+  \pi q\alpha a_{-q}(z-\alpha)^{-q-1}
+  \approx0,
+\end{equation}
+so the relevant saddles lie at distance
+\begin{equation}\label{eq:gaussian-pole-scale}
+  z-\alpha
+  \asymp
+  n^{-1/(q+1)}.
+\end{equation}
+Substitution gives contributions of the qualitative form
+\begin{equation}\label{eq:gaussian-pole-asymp}
+  \alpha^n
+  \exp\!\left(C\,n^{q/(q+1)}\right)
+  n^\beta
+  \left(c_0+c_1 n^{-1/(q+1)}+\cdots\right),
+\end{equation}
+where \(C,\beta,c_0,\dots\) depend on the chosen saddle, branch, and steepest path. This
+is not a residue asymptotic. It is an essential-singularity saddle asymptotic.
+
+\begin{remark}[Two checks]
+First, \eqref{eq:gaussian-primitive} is the correct primitive: differentiating the
+removable power series in \(\eta\) recovers \(e^{-\pi z\eta}\), and therefore
+Cauchy--Green gives \eqref{eq:gaussian-boundary-moment}. Second, the inversion obstruction
+is structural: from \(M=e^{-\pi zS}\) one obtains \(S=-(\pi z)^{-1}\Log M\), and logarithms
+of meromorphic functions are not meromorphic except in special single-valued nonvanishing
+cases. Thus the Gaussian weight does not repair Step 2; it confirms that the asymptotic
+object should be weighted/exponential rather than the ordinary Schwarz function.
+\end{remark}
+
+\section{Topology: what is independent of simple connectivity}
+
+The continuation of the Gaussian weighted object is local and does not require simple
+connectivity. Let
+\[
+  A(z):=4\partial_z u(z)-F(z,\bar z),
+  \qquad
+  F(z,\eta)=\frac{1-e^{-\pi z\eta}}{\pi z},
+\]
+with the removable value \(F(0,\eta)=\eta\). In \(U\setminus\{0\}\),
+\[
+  \pbar A=4\partial_z\pbar u-\pbar F
+  =
+  \Delta u-e^{-\pi z\bar z}
+  =
+  0.
+\]
+Thus \(A\) is holomorphic on every connected component of \(U\setminus\{0\}\). Now fix an
+analytic boundary component \(\Gamma\). The boundary identity below requires one extra
+componentwise hypothesis: the complementary component adjacent to \(\Gamma\) must be a
+zero region for \(u\). Under this hypothesis, \(C^1\) regularity across \(\Gamma\) gives
+\[
+  \partial_z u=0\qquad\text{on }\Gamma.
+\]
+Consequently,
+\[
+  A(z)=-F(z,S(z))
+  =
+  \frac{e^{-\pi zS(z)}-1}{\pi z}
+  \qquad (z\in\Gamma),
+\]
+and hence
+\begin{equation}\label{eq:M-pde-continuation}
+  M(z):=e^{-\pi zS(z)}=1+\pi zA(z)
+  \qquad (z\in\Gamma).
+\end{equation}
+The right-hand side gives a holomorphic continuation of the \(M\)-branch attached to
+\(\Gamma\) to the \(U\)-side of that boundary component. This construction uses only the
+local PDE, the local analytic Schwarz function near the boundary, and the zero-side
+condition for \(u\); it does not use simple connectivity.
+
+This point is important in a multiply connected domain. Compact support forces \(u\equiv0\)
+in the unbounded complementary component, by harmonic unique continuation from the open
+set where the compactly supported function vanishes. Hence the argument applies to the
+outer boundary component. It does not automatically apply to an inner boundary component:
+in a bounded hole, \(u\) is harmonic, but it need not vanish identically. On such a
+component one only has the identity
+\[
+  M(z)=1+\pi zA(z)-4\pi z\,\partial_z u(z)
+  \qquad (z\in\Gamma),
+\]
+and the last term is not determined by real analyticity of \(\Gamma\). Thus the
+\(M\)-branch continued from the outer boundary need not agree with the local
+Schwarz-defined \(M\)-branch on an inner boundary unless an additional zero-side, or
+equivalent boundary, condition is proved there.
+
+If a connected component of \(U\) contains the origin, then the distributional statement on
+the whole component has to include the point mass. In that case
+\[
+  \pbar A=-c\delta_0,
+\]
+and the corrected holomorphic field is
+\[
+  A_c(z):=A(z)+\frac{c}{\pi z}.
+\]
+Equivalently,
+\[
+  A_c=4\partial_z u-F(z,\bar z)+\frac{c}{\pi z}
+\]
+is holomorphic across \(0\) when the logarithmic singular part has the prescribed strength.
+For boundary components away from \(0\), this changes the boundary formula to
+\begin{equation}\label{eq:M-pde-continuation-puncture}
+  M(z)=1+\pi zA_c(z)-c.
+\end{equation}
+In an annular component not containing \(0\), no correction is present and
+\eqref{eq:M-pde-continuation} is the relevant formula.
+
+What does depend on topology is the attempt to recover the ordinary Schwarz function from
+\(M\). Formally,
+\[
+  S(z)=-\frac{1}{\pi z}\Log M(z).
+\]
+For this to define a single-valued continuation of \(S\), one needs a single-valued branch
+of \(\Log M\). On a multiply connected region this requires not only that \(M\) be
+nonzero, but also vanishing of the logarithmic periods:
+\begin{equation}\label{eq:log-period-condition}
+  \frac{1}{2\pi i}\int_\gamma \frac{M'(z)}{M(z)}\dd z=0
+  \qquad
+  \text{for every closed cycle }\gamma .
+\end{equation}
+If these periods do not vanish, \(M\) may be a perfectly good holomorphic continuation of
+the weighted object while \(S\) is only a multivalued logarithmic lift.
+
+Topology also enters the contour deformation problem. The asymptotic integrals are
+\[
+  J_n^\Gamma=\int_\Gamma z^{n-1}M(z)\dd z.
+\]
+If \(M\) is holomorphic in an annular component of \(U\) between two analytic boundary
+curves, then \(z^{n-1}M(z)\dd z\) is a holomorphic one-form there, away from the possible
+puncture \(0\). The outer and inner boundary cycles are homologous with opposite
+orientations, so
+\[
+  J_n^{\mathrm{out}}+J_n^{\mathrm{in}}=0
+\]
+is simply Cauchy's theorem in that annulus. In a multiply connected region one may deform a
+contour only within its homology class, not necessarily collapse it to nothing.
+
+If \(0\) lies in the component under consideration, then the point mass contributes the
+logarithmic singular part of \(u\), and \(A\) may have a pole at \(0\). This is a puncture
+issue, not a simple-connectivity issue. The singular part must be computed before applying
+Cauchy's theorem to \(z^{n-1}M(z)\dd z\).
+
+Thus the useful summary is:
+\begin{itemize}
+\item holomorphic continuation of the \(M\)-branch from a boundary component is local and
+topology-free once the adjacent zero-side condition \(u\equiv0\) is available;
+\item compact support gives this condition on the unbounded exterior boundary, but not on
+inner boundaries surrounding holes;
+\item single-valued recovery of \(S\) requires monodromy control, and global contour
+deformation requires homology control.
+\end{itemize}
+
+\section{Parametrized component asymptotics}
+
+This section refines the older real-maximum argument in the sibling drafts. Those drafts
+compare the outer contribution to inner contributions using \(\max_\Gamma |z|\). The
+preceding sections show why that comparison is not reliable: the weighted object \(M\)
+continues through the annular region, and any asymptotic formula must be tied to genuine
+obstructions on the analytic continuation surface, not merely to a chosen real
+parametrization.
+
+Let the two analytic boundary components be parametrized by real-analytic immersions
+\[
+  \gamma_{\mathrm{out}},\gamma_{\mathrm{in}}:\R/2\pi\mathbb Z\to\C\setminus\{0\},
+\]
+with the orientations induced by \(U\). For each component define the reflected analytic
+continuation
+\[
+  \gamma_j^*(t):=\overline{\gamma_j(\bar t)} ,
+  \qquad j\in\{\mathrm{out},\mathrm{in}\}.
+\]
+On the real axis, \(\gamma_j^*(t)=\overline{\gamma_j(t)}\), and therefore the Gaussian
+boundary identity can be written componentwise as
+\begin{equation}\label{eq:param-J}
+  J_n^{(j)}
+  :=
+  \int_0^{2\pi}
+  \gamma_j(t)^{\,n-1}
+  e^{-\pi\gamma_j(t)\gamma_j^*(t)}
+  \gamma_j'(t)\dd t,
+  \qquad
+  J_n^{\mathrm{out}}+J_n^{\mathrm{in}}=0.
+\end{equation}
+Equivalently, after choosing a branch of
+\[
+  \Phi_j(t):=\Log\gamma_j(t)
+\]
+on the relevant continuation strip,
+\[
+  J_n^{(j)}
+  =
+  \int e^{n\Phi_j(t)}a_j(t)\dd t,
+  \qquad
+  a_j(t):=
+  e^{-\pi\gamma_j(t)\gamma_j^*(t)}
+  \frac{\gamma_j'(t)}{\gamma_j(t)}.
+\]
+This is the exact parametrized oscillatory integral. Its true asymptotics are obtained by
+deforming the \(t\)-contour in the complexified parameter cylinder. The dominant points
+are not real maxima of \(|\gamma_j|\). They are accessible singularities of the analytic
+data \((\gamma_j,\gamma_j^*)\), or accessible complex saddles of \(\Phi_j\), i.e.
+\[
+  \Phi_j'(\tau)=0
+  \quad\Longleftrightarrow\quad
+  \gamma_j'(\tau)=0.
+\]
+However, such a critical point is useful only if it is a genuine obstruction for the chosen
+homology class of contour deformation. If the same contour can be pushed farther in the
+\(z\)-plane because \(M\) is holomorphic there, the parametric saddle is a coordinate
+artifact and cannot be used as an intrinsic leading term.
+
+
+There is a useful normalization at such saddles. Let
+\[
+  E_j(t):=e^{-\pi\gamma_j(t)\gamma_j^*(t)}.
+\]
+Since
+\[
+  \gamma_j(t)^{\,n-1}\gamma_j'(t)\dd t
+  =
+  \frac1n\dd\left(\gamma_j(t)^n\right),
+\]
+periodicity gives
+\begin{equation}\label{eq:param-integration-by-parts}
+  J_n^{(j)}
+  =
+  -\frac1n\int e^{n\Phi_j(t)}E_j'(t)\dd t.
+\end{equation}
+This identity is important: the naive saddle contribution of \(a_j=E_j\Phi_j'\) cancels at
+leading order. Formula \eqref{eq:param-integration-by-parts} is the safer starting point
+for saddle asymptotics.
+
+\begin{proposition}[Parametric saddle contribution]\label{prop:param-saddle}
+Assume a contour for \(J_n^{(j)}\) can be deformed to a steepest-descent contour through
+finitely many dominant saddle points \(\tau_\ell\). Suppose that, at such a point,
+\[
+  \Phi_j(t)=\Phi_j(\tau_\ell)
+  +\lambda_\ell (t-\tau_\ell)^m+O((t-\tau_\ell)^{m+1}),
+  \qquad
+  m\ge2,\quad \lambda_\ell\ne0,
+\]
+and that \(E_j'(\tau_\ell)\ne0\). Then the contribution of \(\tau_\ell\) has the form
+\begin{equation}\label{eq:param-saddle-form}
+  J_{n,\tau_\ell}^{(j)}
+  \sim
+  e^{n\Phi_j(\tau_\ell)}
+  n^{-1-1/m}
+  \left(
+    C_{\ell,0}
+    +C_{\ell,1}n^{-1/m}
+    +C_{\ell,2}n^{-2/m}
+    +\cdots
+  \right).
+\end{equation}
+The leading constant is the usual one-dimensional steepest-descent constant for the local
+normal form
+\[
+  -\frac1n\int e^{n\lambda_\ell (t-\tau_\ell)^m}E_j'(\tau_\ell)\dd t;
+\]
+explicitly, it is a nonzero multiple of
+\[
+  -E_j'(\tau_\ell)\,\Gamma(1/m)\,\lambda_\ell^{-1/m},
+\]
+with the root and phase determined by the two steepest rays used by the deformed contour.
+If \(E_j'\) vanishes to order \(r\) at \(\tau_\ell\), the power \(n^{-1-1/m}\) is replaced
+by \(n^{-1-(r+1)/m}\).
+\end{proposition}
+
+Thus a finite set of dominant saddles with equal modulus gives
+\begin{equation}\label{eq:param-saddle-sum}
+  J_n^{(j)}
+  \sim
+  \rho_j^n n^{-1-1/m_j}
+  \sum_{\ell:\,|\gamma_j(\tau_\ell)|=\rho_j}
+  C_{\ell,0}e^{in\arg\gamma_j(\tau_\ell)}
+\end{equation}
+in the nondegenerate equal-type case, with the evident modifications for different saddle
+orders or vanishing orders of \(E_j'\). Here
+\[
+  \rho_j=|\gamma_j(\tau_\ell)|
+\]
+on the dominant saddle set. This is the precise replacement for the incorrect real
+quantity \(\max_{t\in\R}|\gamma_j(t)|\).
+
+If the first obstruction is not a saddle but a singularity of the continued weighted
+object, the \(z\)-plane version is cleaner. Let
+\[
+  M_j(z)=e^{-\pi zS_j(z)}.
+\]
+If deforming the \(j\)-th contour crosses finitely many pole singularities \(\alpha\) of
+\(M_j\), and near such a point
+\[
+  M_j(z)=\sum_{\ell=1}^{q_\alpha}
+  b_{\alpha,-\ell}(z-\alpha)^{-\ell}+O(1),
+\]
+then the crossed contribution is exactly
+\begin{equation}\label{eq:pole-exact}
+  2\pi i
+  \sum_{\ell=1}^{q_\alpha}
+  b_{\alpha,-\ell}
+  \binom{n-1}{\ell-1}
+  \alpha^{\,n-\ell}.
+\end{equation}
+Dominant poles are those maximizing \(|\alpha|\) among the crossed singularities.
+
+For algebraic branch singularities,
+\[
+  M_j(z)\sim b_\alpha(1-z/\alpha)^\beta,
+  \qquad \beta\notin\mathbb Z_{\ge0},
+\]
+the standard Darboux transfer gives contributions of the form
+\begin{equation}\label{eq:branch-form}
+  C_\alpha\,\alpha^n n^{-\beta-1}
+  \left(1+c_1n^{-1}+c_2n^{-2}+\cdots\right),
+\end{equation}
+with the constant determined by the jump of the chosen branch across the local cut.
+
+For the Gaussian weight, an important singularity model is a pole of the Schwarz function.
+If
+\[
+  S_j(z)=a_{-q}(z-\alpha)^{-q}+\cdots,
+  \qquad a_{-q}\ne0,
+\]
+then \(M_j=e^{-\pi zS_j}\) has an essential singularity at \(\alpha\). The local saddle
+calculation can be made more explicit in the model retaining only the leading singular
+term. Put \(s=z-\alpha\). The phase is
+\[
+  \Theta_n(s):=(n-1)\Log(\alpha+s)-\pi(\alpha+s)S_j(\alpha+s).
+\]
+To leading order,
+\[
+  \Theta_n'(s)
+  =
+  \frac{n}{\alpha}
+  +
+  \pi q\alpha a_{-q}s^{-q-1}
+  +\text{lower order terms}.
+\]
+Thus the \(q+1\) leading saddle locations satisfy
+\begin{equation}\label{eq:essential-saddle-locations}
+  s_\kappa
+  =
+  \omega_\kappa
+  \left(-\frac{\pi q\alpha^2a_{-q}}{n}\right)^{1/(q+1)}
+  \left(1+o(1)\right),
+  \qquad \omega_\kappa^{q+1}=1,
+\end{equation}
+subject to the usual accessibility condition for the deformed contour. In particular the
+local saddle scale is
+\[
+  z-\alpha\asymp n^{-1/(q+1)},
+\]
+and, for each accessible saddle, the exponent has the refined leading form
+\begin{equation}\label{eq:essential-exponent}
+  \Theta_n(s_\kappa)
+  =
+  n\Log\alpha
+  +
+  C_\kappa n^{q/(q+1)}
+  +O(n^{(q-1)/(q+1)}),
+\end{equation}
+where
+\[
+  C_\kappa
+  =
+  \frac{q+1}{q\alpha}\,
+  \omega_\kappa
+  \left(-\pi q\alpha^2a_{-q}\right)^{1/(q+1)}.
+\]
+The second derivative at the saddle is of size
+\[
+  \Theta_n''(s_\kappa)\asymp n^{(q+2)/(q+1)}.
+\]
+Therefore the corresponding contribution has the form
+\begin{equation}\label{eq:essential-form-param}
+  \alpha^n
+  \exp\!\left(C_\kappa n^{q/(q+1)}\right)
+  n^{-\frac{q+2}{2(q+1)}}
+  \left(c_0+c_1n^{-1/(q+1)}+c_2n^{-2/(q+1)}+\cdots\right),
+\end{equation}
+provided the saddle is nondegenerate and no other local terms change the leading order.
+The constants \(c_0,c_1,\dots\) and the chosen branch of \(C_\kappa\) are determined by the
+accessible steepest path. For \(q=1\), the power is \(n^{-3/4}\), matching the standard
+simple-pole/essential-singularity model.
+
+Consequently, the two-component comparison has the following rigorous shape. Once the
+dominant accessible saddle/singularity set has been identified for each parametrization,
+\[
+  J_n^{(j)}
+  \sim
+  \rho_j^n
+  \exp\!\left(C_j n^{\alpha_j}\right)
+  n^{\beta_j}
+  \sum_\ell c_{j,\ell}e^{in\theta_{j,\ell}}
+\]
+with \(\alpha_j=0\) in the purely algebraic Darboux/saddle cases and
+\(0<\alpha_j<1\) in essential Gaussian cases. The moment identity can force a
+contradiction only after one proves a strict dominance statement for this full scale,
+lexicographically:
+\[
+  (\rho_{\mathrm{out}},\Re C_{\mathrm{out}},\beta_{\mathrm{out}})
+  >
+  (\rho_{\mathrm{in}},\Re C_{\mathrm{in}},\beta_{\mathrm{in}}),
+\]
+unless the outer component is already a centered circle. This dominance statement is the
+geometric input not supplied by real analyticity alone.
+
+\begin{remark}[Scope warning from the sibling files]
+The file \texttt{h\_0-loc.tex} records a different, first-order reduction for the
+\((h_0,h_0,U)\) localization problem. If that boundary-value interpretation is the one
+being used, the geometry can close directly from the tangential condition
+\(z\cdot\tau=0\) on each boundary component, without any asymptotics. The present
+asymptotic analysis applies to the Gaussian weighted moment/Laplacian formulation
+developed above; it should not be used to replace a stronger first-order boundary
+condition when that condition is available.
+\end{remark}
+
+
+
+\section{Finite Weighted Quadrature}
+
+This section gives the precise implication that is actually available. It is a statement
+about the weighted Schwarz primitive
+\[
+  G(z):=F(z,S(z))=\frac{1-e^{-\pi zS(z)}}{\pi z},
+\]
+not about the ordinary Schwarz function \(S\). For the Gaussian asymptotic problem the
+target object is
+\[
+  M(z):=e^{-\pi zS(z)}.
+\]
+The use of \(G\) is only a primitive normalization: \(M=1-\pi zG\), so meromorphic
+continuation of \(G\) and meromorphic continuation of \(M\) are equivalent away from the
+removable point \(z=0\). Meromorphic continuation of \(S\) is neither needed for these
+asymptotics nor implied by meromorphicity of \(M\), because recovering \(S\) requires a
+single-valued logarithm of \(M\).
+
+We use the following convention for the weighted Cauchy transform:
+\begin{equation}\label{eq:weighted-cauchy-K}
+  K_f(\zeta):=\int_U \frac{f(z,\bar z)}{\zeta-z}\dd A(z),
+  \qquad f(z,\bar z)=e^{-\pi z\bar z}.
+\end{equation}
+Let \(F(z,\eta)=(1-e^{-\pi z\eta})/(\pi z)\), with removable value \(F(0,\eta)=\eta\), so
+that \(\partial_\eta F=e^{-\pi z\eta}\). If \(S\) is the Schwarz function of an analytic
+boundary component, then \(G=F(z,S(z))\) on that component.
+
+\begin{proposition}[Cauchy jump for the weighted primitive]\label{prop:cauchy-jump-G}
+Let \(\Gamma\) be a real-analytic boundary component and suppose \(G\) is defined in a
+collar of \(\Gamma\). Define
+\[
+  \mathcal C_G(\zeta):=\frac{1}{2i}\int_{\partial U}\frac{G(z)}{\zeta-z}\dd z,
+\]
+with \(\partial U\) oriented as the boundary of \(U\). Then, for \(\zeta\notin\partial U\),
+\begin{equation}\label{eq:C-G-out-in}
+  \mathcal C_G(\zeta)=
+  \begin{cases}
+  K_f(\zeta), & \zeta\in \C\setminus\overline U,\\[0.4em]
+  K_f(\zeta)-\pi F(\zeta,\bar\zeta), & \zeta\in U.
+  \end{cases}
+\end{equation}
+Moreover the non-tangential boundary values satisfy
+\begin{equation}\label{eq:C-G-jump}
+  \mathcal C_G^{\mathrm{out}}-\mathcal C_G^{\mathrm{in}}=\pi G
+  \qquad\text{on }\partial U.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+For \(\zeta\notin\overline U\), Cauchy--Green applied to
+\(F(z,\bar z)/(\zeta-z)\) gives
+\[
+  \int_U \frac{f(z,\bar z)}{\zeta-z}\dd A(z)
+  =
+  \frac{1}{2i}\int_{\partial U}\frac{F(z,\bar z)}{\zeta-z}\dd z
+  =
+  \mathcal C_G(\zeta).
+\]
+For \(\zeta\in U\), use
+\(\partial_{\bar z}(1/(\zeta-z))=-\pi\delta_\zeta\). Then
+\[
+  \frac{1}{2i}\int_{\partial U}\frac{G(z)}{\zeta-z}\dd z
+  =
+  \int_U \partial_{\bar z}\left(\frac{F(z,\bar z)}{\zeta-z}\right)\dd A(z)
+  =
+  K_f(\zeta)-\pi F(\zeta,\bar\zeta).
+\]
+The jump formula follows from the standard Plemelj jump relation with the present
+normalization. Equivalently, for \(G\equiv1\) and a positively oriented circle, the inside
+value of \(\mathcal C_G\) is \(-\pi\) and the outside value is \(0\), so the jump is
+\(\pi G\); the general case follows locally by flattening the analytic arc.
+\end{proof}
+
+\begin{theorem}[Finite weighted quadrature]\label{thm:finite-weighted-G}
+Assume \(U\) has real-analytic boundary. Suppose the Gaussian weighted area measure has a
+finite quadrature identity: there exist points \(a_j\in U\), integers \(m_j\ge0\), and
+constants \(c_{j,\ell}\) such that
+\begin{equation}\label{eq:finite-weighted-quadrature}
+  \int_U h(z)e^{-\pi|z|^2}\dd A(z)
+  =
+  \sum_{j=1}^N\sum_{\ell=0}^{m_j}c_{j,\ell}h^{(\ell)}(a_j)
+\end{equation}
+for every holomorphic \(h\) in a neighborhood of \(\overline U\). Then the exterior
+weighted Cauchy transform \(K_f\) is rational:
+\begin{equation}\label{eq:K-rational}
+  K_f(\zeta)
+  =
+  \sum_{j=1}^N\sum_{\ell=0}^{m_j}
+  c_{j,\ell}\,\partial_z^\ell\left(\frac{1}{\zeta-z}\right)\bigg|_{z=a_j},
+  \qquad \zeta\in\C\setminus\overline U.
+\end{equation}
+Consequently, for each boundary component, the weighted Schwarz primitive
+\[
+  G(z)=\frac{1-e^{-\pi zS(z)}}{\pi z}
+\]
+extends meromorphically to the \(U\)-side. More precisely, if \(R(\zeta)\) denotes the
+rational function on the right-hand side of \eqref{eq:K-rational}, and
+\[
+  H(\zeta):=K_f(\zeta)-\pi F(\zeta,\bar\zeta)
+  \qquad (\zeta\in U)
+\]
+is the holomorphic interior branch from \eqref{eq:C-G-out-in}, then
+\begin{equation}\label{eq:G-meromorphic-formula}
+  G_{\mathrm{ext}}(\zeta)=\frac{R(\zeta)-H(\zeta)}{\pi}
+\end{equation}
+is a meromorphic continuation of \(G\) to the \(U\)-side. Its poles can occur only at the
+quadrature nodes \(a_j\), with order controlled by the corresponding \(m_j\).
+\end{theorem}
+
+\begin{proof}
+Apply \eqref{eq:finite-weighted-quadrature} with
+\(h(z)=(\zeta-z)^{-1}\), which is holomorphic near \(\overline U\) for
+\(\zeta\in\C\setminus\overline U\). This gives \eqref{eq:K-rational}.
+
+By Proposition~\ref{prop:cauchy-jump-G}, the outside branch of \(\mathcal C_G\) is
+\(K_f\), hence agrees with the rational function \(R\). The inside branch is the holomorphic
+function \(H=K_f-\pi F\). The jump relation \eqref{eq:C-G-jump} gives, on the boundary,
+\[
+  R-H=\pi G.
+\]
+Therefore \((R-H)/\pi\) is a meromorphic function on the \(U\)-side whose boundary values
+agree with \(G\). By uniqueness of analytic continuation from the boundary collar, it is
+the desired meromorphic continuation. Since \(H\) is holomorphic, the only possible poles
+come from \(R\), i.e. from the quadrature nodes and their derivative orders.
+\end{proof}
+
+\begin{remark}
+This theorem explains exactly what kind of quadrature assumption implies meromorphicity of
+\(G\): a finite weighted quadrature identity, equivalently rationality of the Gaussian
+weighted Cauchy transform. It still does not imply that \(S\) is meromorphic, because
+\[
+  e^{-\pi zS(z)}=1-\pi zG(z),
+  \qquad
+  S(z)=-\frac{1}{\pi z}\Log(1-\pi zG(z)).
+\]
+Thus meromorphic \(G\) gives a logarithmic, potentially multivalued description of \(S\),
+not a meromorphic one unless additional zero/monodromy conditions hold.
+\end{remark}
+
+\section{Exact consequences of real analyticity and of a centered annulus}
+
+This section states only what follows from real-analyticity, plus the extra information that
+one has a centered annulus inside the continuation region. We use the pure Gaussian object
+\[
+  J_n^\Gamma=\int_\Gamma z^{n-1}M(z)\dd z,
+  \qquad M(z)=e^{-\pi zS(z)}.
+\]
+All statements below are contour statements for this one-form. They do not assert a true
+asymptotic expansion unless a singularity model is explicitly assumed.
+
+\begin{proposition}[Real analyticity alone]\label{prop:real-analytic-alone}
+Let \(\Gamma\) be a real-analytic boundary component. Then its Schwarz function \(S\) is
+holomorphic in some collar \(N\) of \(\Gamma\), and therefore
+\[
+  M(z)=e^{-\pi zS(z)}
+\]
+is holomorphic in that collar. Consequently, for every closed curve \(C\subset N\)
+homologous to \(\Gamma\) in \(N\),
+\[
+  J_n^\Gamma=\int_\Gamma z^{n-1}M(z)\dd z
+  =\int_C z^{n-1}M(z)\dd z,
+\]
+and hence
+\[
+  |J_n^\Gamma|\le \operatorname{length}(C)\sup_C|M|\,\bigl(\sup_C|z|\bigr)^{n-1}.
+\]
+Thus real analyticity alone gives exact local deformation identities and exponential
+limsup bounds obtained by choosing admissible contours in the analytic collar. It does not
+identify a finite set of contributing points and does not give an asymptotic equivalent.
+A true Darboux or steepest-descent expansion requires additional information about the
+first obstruction to continuing \(M\) beyond the chosen collar.
+\end{proposition}
+
+\begin{proposition}[Exact deformation identity]\label{prop:exact-deformation}
+Let \(D\subset\C\) be a domain in which \(M\) is holomorphic, and let \(\Gamma\) and
+\(C\) be two closed, piecewise \(C^1\) curves in \(D\) that are homologous in \(D\). Then,
+for every \(n\ge1\),
+\begin{equation}\label{eq:exact-holomorphic-deformation}
+  \int_\Gamma z^{n-1}M(z)\dd z
+  =
+  \int_C z^{n-1}M(z)\dd z.
+\end{equation}
+Consequently,
+\begin{equation}\label{eq:contour-upper-bound}
+  \left|\int_\Gamma z^{n-1}M(z)\dd z\right|
+  \le
+  \operatorname{length}(C)\,\sup_C|M|\,\bigl(\sup_C|z|\bigr)^{n-1}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The one-form \(z^{n-1}M(z)\dd z\) is holomorphic in \(D\). The equality
+\eqref{eq:exact-holomorphic-deformation} is Cauchy's theorem for homologous cycles. The
+bound \eqref{eq:contour-upper-bound} is the immediate absolute-value estimate on the
+right-hand side.
+\end{proof}
+
+\begin{corollary}[What a centered annulus gives]\label{cor:centered-annulus-bound}
+Assume \(M\) is holomorphic in a region containing a centered annulus
+\[
+  A_{r_-,r_+}:=\{r_-<|z|<r_+\},
+\]
+and assume \(\Gamma\) is homologous in that region to every circle
+\[
+  C_r:=\{|z|=r\},\qquad r_-<r<r_+.
+\]
+Then, for every fixed \(r\in(r_-,r_+)\),
+\begin{equation}\label{eq:annulus-bound-fixed-r}
+  J_n^\Gamma
+  =
+  \int_{C_r} z^{n-1}M(z)\dd z,
+  \qquad
+  |J_n^\Gamma|
+  \le
+  2\pi r^n\sup_{|z|=r}|M(z)|.
+\end{equation}
+In particular,
+\begin{equation}\label{eq:annulus-limsup}
+  \limsup_{n\to\infty}|J_n^\Gamma|^{1/n}\le r_-.
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Apply Proposition~\ref{prop:exact-deformation} with \(C=C_r\). The bound follows because
+\(\operatorname{length}(C_r)=2\pi r\) and \(|z|^{n-1}=r^{n-1}\) on \(C_r\). Since the
+bound holds for each fixed \(r>r_-\), taking \(n\)-th roots and then letting
+\(r\downarrow r_-\) gives \eqref{eq:annulus-limsup}.
+\end{proof}
+
+\begin{remark}
+This is an effective estimate, but it is not a true asymptotic formula. The centered annulus
+provides radial comparison contours. It does not identify the first singularities of \(M\),
+and therefore it does not determine the leading coefficient or even guarantee a nonzero
+leading term.
+\end{remark}
+
+\begin{proposition}[Laurent coefficients]\label{prop:laurent-annulus}
+Under the hypotheses of Corollary~\ref{cor:centered-annulus-bound}, write the Laurent
+expansion of \(M\) in the centered annulus as
+\[
+  M(z)=\sum_{m\in\mathbb Z} a_m z^m,
+  \qquad r_-<|z|<r_+.
+\]
+Then
+\begin{equation}\label{eq:J-laurent-coeff}
+  J_n^\Gamma=2\pi i\,a_{-n}.
+\end{equation}
+Thus the question of asymptotics is exactly the question of asymptotics of the negative
+Laurent coefficients of \(M\) in that annulus.
+\end{proposition}
+
+\begin{proof}
+By Corollary~\ref{cor:centered-annulus-bound}, for any \(r\in(r_-,r_+)\),
+\[
+  J_n^\Gamma=\int_{|z|=r}z^{n-1}M(z)\dd z.
+\]
+Substituting the Laurent expansion and integrating term by term gives
+\[
+  \int_{|z|=r}\sum_{m\in\mathbb Z}a_m z^{m+n-1}\dd z=2\pi i\,a_{-n}.
+\]
+\end{proof}
+
+\begin{theorem}[When a true Darboux asymptotic follows]\label{thm:exact-darboux-annulus}
+Assume the hypotheses of Corollary~\ref{cor:centered-annulus-bound}. Assume further that
+\(M\) continues holomorphically through \(|z|=r_-\) except at finitely many points
+\(\alpha_1,\dots,\alpha_N\) on \(|z|=r_-\), and that near each \(\alpha_j\)
+\begin{equation}\label{eq:finite-singularity-model}
+  M(z)=\sum_{\ell=1}^{q_j}b_{j,-\ell}(z-\alpha_j)^{-\ell}+H_j(z),
+\end{equation}
+where \(H_j\) is holomorphic near \(\alpha_j\). Suppose also that after crossing small
+circles around the \(\alpha_j\), the remaining contour can be placed in \(|z|<r_- -\eta\)
+for some \(\eta>0\). Then
+\begin{equation}\label{eq:exact-pole-asymptotic-annulus}
+  J_n^\Gamma
+  =
+  2\pi i\sum_{j=1}^N\sum_{\ell=1}^{q_j}
+  b_{j,-\ell}\binom{n-1}{\ell-1}\alpha_j^{\,n-\ell}
+  +O((r_- -\eta)^n).
+\end{equation}
+In particular, the points contributing to the leading asymptotics are exactly those
+singularities among \(\alpha_1,\dots,\alpha_N\) with largest pole order; all lie on the
+inner boundary circle \(|z|=r_-\) of the annulus.
+\end{theorem}
+
+\begin{proof}
+Deform the circle \(C_r\), \(r_-<r<r_+\), inward across the finitely many singularities
+\(\alpha_j\), leaving small positively oriented residue circles around them and a remaining
+contour in \(|z|<r_- -\eta\). Cauchy's residue theorem gives the sum of residues of
+\(z^{n-1}M(z)\dd z\) at the \(\alpha_j\), plus the integral over the remaining contour. The
+remaining contour is \(O((r_- -\eta)^n)\) by \eqref{eq:contour-upper-bound}. For a pole term
+\(b_{j,-\ell}(z-\alpha_j)^{-\ell}\),
+\[
+  \operatorname{Res}_{z=\alpha_j}\left(z^{n-1}b_{j,-\ell}(z-\alpha_j)^{-\ell}\dd z\right)
+  =b_{j,-\ell}\binom{n-1}{\ell-1}\alpha_j^{n-\ell}.
+\]
+This proves \eqref{eq:exact-pole-asymptotic-annulus}.
+\end{proof}
+
+\begin{remark}[What mere real analyticity does not give]
+Real analyticity of the two boundary components gives local collars and therefore bounds of
+the form \eqref{eq:contour-upper-bound}. If a centered annulus is contained in the
+continuation region, it gives the sharper coefficient statement
+\eqref{eq:J-laurent-coeff} and the limsup bound \eqref{eq:annulus-limsup}. It does not give
+the finite singularity hypothesis in Theorem~\ref{thm:exact-darboux-annulus}. Without such
+additional continuation information, the set of boundary points \(|z|=r_-\) obstructing
+continuation of \(M\) can be non-discrete, and no finite Darboux sum is forced.
+\end{remark}
+
+\end{document}

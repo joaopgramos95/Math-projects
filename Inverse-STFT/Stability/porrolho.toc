@@ -1,0 +1,14 @@
+\contentsline {section}{\tocsection {}{1}{The boundary identity and the Laplace claim}}{1}{section.1}%
+\contentsline {section}{\tocsection {}{2}{The error in the Laplace step}}{2}{section.2}%
+\contentsline {section}{\tocsection {}{3}{The Schwarz function reformulation}}{3}{section.3}%
+\contentsline {section}{\tocsection {}{4}{Exact evaluation for the disk; the disk is a quadrature domain}}{4}{section.4}%
+\contentsline {section}{\tocsection {}{5}{Near-disk perturbation: Schwarz function expansion}}{5}{section.5}%
+\contentsline {section}{\tocsection {}{6}{Constraints on $U$ from $F\approx e_k$}}{6}{section.6}%
+\contentsline {section}{\tocsection {}{7}{Relation between Schwarz coefficients and the Fourier boundary}}{7}{section.7}%
+\contentsline {section}{\tocsection {}{8}{The global stability statement}}{8}{section.8}%
+\contentsline {section}{\tocsection {}{9}{Assessment of the overall global program}}{8}{section.9}%
+\contentsline {subsection}{\tocsubsection {}{9.1}{What the Laplace approach got right}}{8}{subsection.9.1}%
+\contentsline {subsection}{\tocsubsection {}{9.2}{What was wrong}}{8}{subsection.9.2}%
+\contentsline {subsection}{\tocsubsection {}{9.3}{The correct approach}}{9}{subsection.9.3}%
+\contentsline {subsection}{\tocsubsection {}{9.4}{What remains for the fully global convex result}}{9}{subsection.9.4}%
+\contentsline {subsection}{\tocsubsection {}{9.5}{Concrete open problem}}{9}{subsection.9.5}%

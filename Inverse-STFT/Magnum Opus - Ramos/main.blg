@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: amsplain.bst
+Database file #1: biblio.bib
+Warning--missing pages in Gustafsson
+Warning--missing pages in Nicola-Tilli-2
+Warning--missing pages in Ramos-time-frequency
+Warning--missing pages in Ramos-Tilli
+You've used 41 entries,
+            2213 wiz_defined-function locations,
+            794 strings with 10395 characters,
+and the built_in function-call counts, 11681 in all, are:
+= -- 1048
+> -- 448
+< -- 3
++ -- 188
+- -- 140
+* -- 1028
+:= -- 1888
+add.period$ -- 41
+call.type$ -- 41
+change.case$ -- 198
+chr.to.int$ -- 0
+cite$ -- 45
+duplicate$ -- 477
+empty$ -- 1064
+format.name$ -- 140
+if$ -- 2406
+int.to.chr$ -- 0
+int.to.str$ -- 41
+missing$ -- 87
+newline$ -- 133
+num.names$ -- 78
+pop$ -- 235
+preamble$ -- 1
+purify$ -- 156
+quote$ -- 0
+skip$ -- 250
+stack$ -- 0
+substring$ -- 787
+swap$ -- 61
+text.length$ -- 3
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 152
+warning$ -- 4
+while$ -- 127
+width$ -- 43
+write$ -- 368
+(There were 4 warnings)

@@ -1,0 +1,196 @@
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
+\begin{thebibliography}{10}
+
+\bibitem{Abreu-Doerfler}
+Lu{\'\i}s~Daniel Abreu and Monika D{\"o}rfler, \emph{An inverse problem for
+  localization operators}, Inverse Problems \textbf{28} (2012), no.~11, 115001.
+
+\bibitem{abreu2021donoho}
+Lu{\'\i}s~Daniel Abreu and Michael Speckbacher, \emph{Donoho-logan large sieve
+  principles for modulation and polyanalytic fock spaces}, Bulletin des
+  Sciences Math{\'e}matiques \textbf{171} (2021), 103032.
+
+\bibitem{Aharonov-Schiffer-Zalcman}
+Dov Aharonov, MM~Schiffer, and Lawrence Zalcman, \emph{Potato kugel}, Israel
+  Journal of Mathematics \textbf{40} (1981), no.~3, 331--339.
+
+\bibitem{Bargmann}
+V.~Bargmann, \emph{On a hilbert space of analytic functions and an associated
+  integral transform. part {I}}, Comm. Pure Appl. Math. \textbf{14} (1961),
+  no.~3, 187--214.
+
+\bibitem{Bastianoni-Cordero-Nicola}
+Federico Bastianoni, Elena Cordero, and Fabio Nicola, \emph{Decay and
+  smoothness for eigenfunctions of localization operators}, J. Math. Anal.
+  Appl. \textbf{492} (2020), no.~2, 124480.
+
+\bibitem{Bastianoni-Teofanov}
+Federico Bastianoni and Nenad Teofanov, \emph{Subexponential decay and
+  regularity estimates for eigenfunctions of localization operators}, J.
+  Pseudo-Differ. Oper. Appl. \textbf{12} (2021), 19.
+
+\bibitem{Bayer-Grochenig}
+Dominik Bayer and Karlheinz Gr{\"o}chenig, \emph{Time-frequency localization
+  operators and a berezin transform}, Integral Equations Operator Theory
+  \textbf{82} (2015), no.~1, 95--117.
+
+\bibitem{Berezin}
+F.~A. Berezin, \emph{Wick and anti-wick operator symbols}, Math. USSR-Sb.
+  \textbf{15} (1971), no.~4, 577--606.
+
+\bibitem{Berger-Coburn-Symbol}
+C.~A. Berger and L.~A. Coburn, \emph{A symbol calculus for toeplitz operators},
+  Proc. Natl. Acad. Sci. USA \textbf{83} (1986), no.~10, 3072--3073.
+
+\bibitem{Berger-Coburn}
+\bysame, \emph{Toeplitz operators on the segal--bargmann space}, Trans. Amer.
+  Math. Soc. \textbf{301} (1987), no.~2, 813--829.
+
+\bibitem{Berger-Coburn-Heat}
+\bysame, \emph{Heat flow and berezin--toeplitz estimates}, Amer. J. Math.
+  \textbf{116} (1994), no.~3, 563--590.
+
+\bibitem{Boggiatto-Cordero-Grochenig}
+Paolo Boggiatto, Elena Cordero, and Karlheinz Gr{\"o}chenig, \emph{Generalized
+  anti-{Wick} operators with symbols in distributional sobolev spaces},
+  Integral Equations Operator Theory \textbf{48} (2004), no.~4, 427--442.
+
+\bibitem{Cherednichenko}
+VG~Cherednichenko, \emph{Inverse logarithmic potential problem}, Inverse
+  Logarithmic Potential Problem, De Gruyter, 2014.
+
+\bibitem{Cordero-Grochenig}
+Elena Cordero and Karlheinz Gr{\"o}chenig, \emph{Time-frequency analysis of
+  localization operators}, J. Funct. Anal. \textbf{205} (2003), no.~1,
+  107--131.
+
+\bibitem{Daubechies}
+Ingrid Daubechies, \emph{Time-frequency localization operators: a geometric
+  phase space approach}, IEEE Transactions on Information Theory \textbf{34}
+  (1988), no.~4, 605--612.
+
+\bibitem{Daubechies-Paul}
+Ingrid Daubechies and Thierry Paul, \emph{Time-frequency localisation
+  operators-a geometric phase space approach: Ii. the use of dilations},
+  Inverse problems \textbf{4} (1988), no.~3, 661.
+
+\bibitem{Folland}
+Gerald~B. Folland, \emph{Harmonic analysis in phase space}, Princeton
+  University Press, Princeton, NJ, 1989.
+
+\bibitem{Fulsche-Hagger}
+Robert Fulsche and Raffael Hagger, \emph{Quantum harmonic analysis for
+  polyanalytic fock spaces}, J. Fourier Anal. Appl. \textbf{30} (2024), 63.
+
+\bibitem{Gomez-Guerra-Ramos-Tilli}
+Jaime G\'{o}mez, Andr\'{e} Guerra, Jo\~{a}o P.~G. Ramos, and Paolo Tilli,
+  \emph{Stability of the {F}aber-{K}rahn inequality for the short-time
+  {F}ourier transform}, Invent. Math. \textbf{236} (2024), no.~2, 779--836.
+  \MR{4728242}
+
+\bibitem{Goncalves-Oliveira-Steinerberger}
+Felipe Goncalves, Diogo Oliveira~e Silva, and Stefan Steinerberger,
+  \emph{Hermite polynomials, linear flows on the torus, and an uncertainty
+  principle for roots}, J. Math. Anal. Appl. \textbf{451} (2017), no.~2,
+  678--711. \MR{3624763}
+
+\bibitem{Grochenig}
+Karlheinz Gr{\"o}chenig, \emph{Foundations of time-frequency analysis},
+  Springer Science \& Business Media, 2001.
+
+\bibitem{Gustafsson}
+Bj{\"o}rn Gustafsson, \emph{On quadrature domains and an inverse problem in
+  potential theory}, Journal d'Analyse Math{\'e}matique \textbf{55} (1990).
+
+\bibitem{Isakov}
+Victor Isakov, \emph{Inverse source problems}, no.~34, American Mathematical
+  Soc., 1990.
+
+\bibitem{Karp}
+LAVI Karp, \emph{Generalized newton potential and its applications}, Journal of
+  mathematical analysis and applications \textbf{174} (1993), no.~2, 480--497.
+
+\bibitem{Kisil-CrossToeplitz}
+Vladimir~V. Kisil, \emph{Cross-{Toeplitz} operators on the
+  {Fock--Segal--Bargmann} spaces and two-sided convolutions on the {Heisenberg}
+  group}, Ann. Funct. Anal. \textbf{14} (2023), 38.
+
+\bibitem{Kulikov-Oliveira-Ramos}
+Aleksei Kulikov, Lucas Oliveira, and João P.~G. Ramos, \emph{On gaussian decay
+  rates of harmonic oscillators and equivalences of related fourier uncertainty
+  principles}, 2022.
+
+\bibitem{Lieb}
+Elliott~H Lieb, \emph{Integral bounds for radar ambiguity functions and wigner
+  distributions}, Inequalities, Springer, 2002, pp.~625--630.
+
+\bibitem{Mallat}
+St{\'e}phane Mallat, \emph{A wavelet tour of signal processing}, 3 ed.,
+  Academic Press, Burlington, MA, 2008.
+
+\bibitem{Marceca-Romero-Speckbacher}
+Felipe Marceca, Jos{\'e}~Luis Romero, and Michael Speckbacher, \emph{Eigenvalue
+  estimates for fourier concentration operators on two domains}, Arch. Ration.
+  Mech. Anal. \textbf{248} (2024), no.~3, 35.
+
+\bibitem{Nicola-Romero-Trapasso}
+Fabio Nicola, Jos{\'e}~Luis Romero, and S.~Ivan Trapasso, \emph{On the
+  existence of optimizers for time--frequency concentration problems}, Calc.
+  Var. Partial Differential Equations \textbf{62} (2023), no.~1, 21.
+
+\bibitem{Nicola-Tilli}
+Fabio Nicola and Paolo Tilli, \emph{The faber--krahn inequality for the
+  short-time fourier transform}, Inventiones mathematicae (2022), 1--30.
+
+\bibitem{Nicola-Tilli-2}
+\bysame, \emph{The norm of time-frequency localization operators}, arXiv
+  preprint arXiv:2207.08624 (2022).
+
+\bibitem{Ramanathan-Topiwala-Weyl}
+J.~Ramanathan and P.~Topiwala, \emph{Time-frequency localization via the weyl
+  correspondence}, SIAM J. Math. Anal. \textbf{24} (1993), no.~5, 1378--1393.
+
+\bibitem{Ramanathan-Topiwala-Spectrogram}
+\bysame, \emph{Time-frequency localization and the spectrogram}, Appl. Comput.
+  Harmon. Anal. \textbf{1} (1994), no.~2, 209--215.
+
+\bibitem{Ramos-time-frequency}
+Jo{\~a}o P.~G. Ramos, \emph{Time-frequency localisation operators, their
+  eigenvectors and weighted quadrature formulas}, In preparation (2022).
+
+\bibitem{Ramos-Tilli}
+Jo{\~a}o~PG Ramos and Paolo Tilli, \emph{A faber-krahn inequality for wavelet
+  transforms}, arXiv preprint arXiv:2205.07998 (2022).
+
+\bibitem{Samuelsen}
+Helge~J. Samuelsen, \emph{Compactness of fourier concentration operators}, J.
+  Fourier Anal. Appl. \textbf{31} (2025), 64.
+
+\bibitem{Shahgholian}
+Henrik Shahgholian, \emph{On quadrature domains and the schwarz potential},
+  Journal of mathematical analysis and applications \textbf{171} (1992), no.~1,
+  61--78.
+
+\bibitem{Gustafsson-Shahgholian}
+Henrik Shahgholian and Bj{\"o}rn Gustafsson, \emph{Existence and geometric
+  properties of solutions of a free boundary problem in potential theory.},
+  Journal f{\"u}r die reine und angewandte Mathematik (Crelles Journal)
+  \textbf{1996} (1996), no.~473, 137--180.
+
+\bibitem{Thangavelu}
+Sundaram Thangavelu, \emph{An introduction to the uncertainty principle},
+  Progress in Mathematics, vol. 217, Birkh\"{a}user Boston, Inc., Boston, MA,
+  2004, Hardy's theorem on Lie groups, With a foreword by Gerald B. Folland.
+  \MR{2008480}
+
+\bibitem{Zhu}
+Kehe Zhu, \emph{Analysis on fock spaces}, Graduate Texts in Mathematics, vol.
+  263, Springer, New York, 2012.
+
+\end{thebibliography}

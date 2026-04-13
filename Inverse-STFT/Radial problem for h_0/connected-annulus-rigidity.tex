@@ -1,0 +1,251 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\title{Connected Radial Rigidity: What Survives from the Section 4 Strategy}
+\author{}
+\date{}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\1}{\mathbf 1}
+\newcommand{\pb}{\partial_{\bar z}}
+
+\begin{document}
+
+\maketitle
+
+\section{Purpose}
+
+The simply connected argument in Section~4 of \texttt{main.tex} uses the holomorphic
+auxiliary function
+\[
+W(z)=\pi z\left(4\partial_z u(z)-\frac{\Phi(|z|^2)}{z}+\frac{c}{\pi z}\right),
+\]
+whose boundary values are real on all of $\partial U$. In the connected but not simply
+connected case, that argument no longer closes: reality on the \emph{outer} boundary does not
+control the values of $\Im W$ on the inner boundary components.
+
+What \emph{does} survive is the following scheme:
+\begin{enumerate}[label=\textnormal{(\arabic*)}]
+\item prove separately that the outer boundary component is a circle centered at the origin;
+\item use the resulting collar to show that the angular derivative of the potential vanishes in
+all of $U\setminus\{0\}$;
+\item conclude that $U$ is rotationally invariant, hence a disk or an annulus.
+\end{enumerate}
+
+The first step is the genuinely hard one. The second and third steps are rigorous under mild
+regularity assumptions and do not use simple connectivity.
+
+\section{Outer Circle Implies Disk or Annulus}
+
+Let $U\subset \C$ be bounded and connected. Denote by $\Gamma_{\mathrm{out}}$ its outer
+boundary component, and by $E_\infty$ the unbounded connected component of
+$\C\setminus \overline U$.
+
+\begin{theorem}\label{thm:outer-circle-implies-annulus}
+Assume $U\subset \C$ is bounded, connected, and has $C^1$ boundary. Let
+$u\in C^1(\C\setminus\{0\})$ be compactly supported and satisfy
+\begin{equation}\label{eq:pde}
+\Delta u=\rho(|z|)\1_U-c\,\delta_0
+\qquad\text{in }\mathcal D'(\C),
+\end{equation}
+where $\rho:[0,\infty)\to \R$ is continuous and
+\[
+\rho(r)>0 \qquad (r>0).
+\]
+Assume moreover that
+\[
+u\equiv 0 \qquad\text{in }E_\infty.
+\]
+If the outer boundary component is a circle centered at the origin,
+\[
+\Gamma_{\mathrm{out}}=\{|z|=R\},
+\]
+then $U$ is either a disk or an annulus centered at the origin.
+\end{theorem}
+
+\begin{proof}
+Since the inner boundary components are compact and disjoint from $\Gamma_{\mathrm{out}}$, there
+exists $\varepsilon>0$ such that the collar
+\[
+\mathcal A:=\{R-\varepsilon<|z|<R\}
+\]
+is contained in $U$.
+
+Define the angular derivative
+\[
+L:=x\partial_y-y\partial_x=\partial_\theta
+\]
+and set
+\[
+w:=Lu.
+\]
+Because $L$ commutes with $\Delta$ and annihilates every radial function and the point mass
+$\delta_0$, the equation \eqref{eq:pde} gives
+\[
+\Delta w=0
+\qquad\text{in }U\setminus\{0\}.
+\]
+Thus $w$ is harmonic in $U\setminus\{0\}$.
+
+On the outer boundary, the exterior side is identically zero and $u\in C^1(\C\setminus\{0\})$,
+so
+\[
+u=0,\qquad \nabla u=0
+\qquad\text{on }\Gamma_{\mathrm{out}}.
+\]
+Hence
+\[
+w=\partial_\theta u=0
+\qquad\text{on }|z|=R,
+\]
+and also
+\[
+\partial_r w=\partial_r\partial_\theta u=\partial_\theta\partial_r u=0
+\qquad\text{on }|z|=R.
+\]
+
+Since $w$ is harmonic in the annulus $\mathcal A$, it has the Fourier expansion
+\[
+w(r,\theta)=a_0+b_0\log r+\sum_{n\ge 1}(a_n r^n+b_n r^{-n})\cos(n\theta)
++\sum_{n\ge 1}(c_n r^n+d_n r^{-n})\sin(n\theta).
+\]
+The conditions
+\[
+w(R,\theta)=0,\qquad \partial_r w(R,\theta)=0
+\]
+force all coefficients to vanish, so
+\[
+w\equiv 0
+\qquad\text{in }\mathcal A.
+\]
+
+Now $U\setminus\{0\}$ is connected: if $0\notin U$ there is nothing to prove, and if $0\in U$
+then removing a single point from a planar domain leaves it connected. By unique continuation for
+harmonic functions,
+\[
+w\equiv 0
+\qquad\text{in }U\setminus\{0\}.
+\]
+Therefore
+\[
+\partial_\theta u=0
+\qquad\text{in }U\setminus\{0\},
+\]
+so $u$ is radial there.
+
+Applying $\Delta$ to a radial function gives a radial distribution. Since $\delta_0$ is radial,
+\eqref{eq:pde} shows that
+\[
+\rho(|z|)\1_U
+\]
+is radial as a distribution. Because $\rho(r)>0$ for every $r>0$, the characteristic function
+$\1_U$ must be radial on each circle $\{|z|=r\}$, hence $U$ is rotationally invariant about the
+origin.
+
+A bounded connected rotationally invariant planar domain is either a disk or an annulus centered
+at the origin.
+\end{proof}
+
+\begin{remark}
+This is the part of the connected-case strategy that is genuinely robust. No simple connectivity
+is used anywhere in the proof.
+\end{remark}
+
+\section{A Conditional Hermite-Type Extension}
+
+For the Hermite weights
+\[
+\rho_k(r):=r^{2k}e^{-\pi r^2},
+\]
+the Bargmann reduction gives the moment identity
+\begin{equation}\label{eq:exp-identity}
+\int_U e^{\pi zw}|z|^{2k}e^{-\pi |z|^2}\,dA(z)=c_k
+\qquad (w\in \C).
+\end{equation}
+Expanding in powers of $w$ yields
+\[
+\int_U z^n |z|^{2k}e^{-\pi |z|^2}\,dA(z)=0
+\qquad (n\ge 1).
+\]
+
+Define
+\[
+H_k(s):=s^{-(k+1)}\int_0^s t^k e^{-\pi t}\,dt.
+\]
+Then
+\[
+\pb\!\left(z^{n+k}\bar z^{\,k+1}H_k(|z|^2)\right)=z^n|z|^{2k}e^{-\pi|z|^2},
+\]
+so Cauchy--Green gives the boundary identity
+\begin{equation}\label{eq:boundary-identity}
+\int_{\partial U} z^{n+k}\bar z^{\,k+1}H_k(|z|^2)\,dz=0
+\qquad (n\ge 1).
+\end{equation}
+
+\begin{theorem}\label{thm:conditional}
+Assume the hypotheses of Theorem~\ref{thm:outer-circle-implies-annulus} with
+\[
+\rho(r)=r^{2k}e^{-\pi r^2},
+\]
+and assume in addition:
+\begin{enumerate}[label=\textnormal{(\roman*)}]
+\item the Bargmann moment identity \eqref{eq:exp-identity} holds;
+\item the outer boundary component $\Gamma_{\mathrm{out}}$ is a real-analytic Jordan curve.
+\end{enumerate}
+Then $U$ is a disk or an annulus centered at the origin.
+\end{theorem}
+
+\begin{proof}
+Under the analyticity assumption, the steepest-descent argument from the outer-boundary part of
+\texttt{newnew.tex} becomes valid for $\Gamma_{\mathrm{out}}$: the contribution of the outer
+boundary to \eqref{eq:boundary-identity} has asymptotic size
+\[
+R_*^n n^{-1/(2m_*)}
+\left(\sum_{\ell=1}^L c_\ell e^{in\theta_\ell}\right)
+\]
+if $|\gamma(t)|$ is nonconstant on the outer boundary, whereas each inner boundary contribution is
+only $O((R_j^*)^n)$ with $R_j^*<R_*$. Since a nontrivial finite exponential sum cannot tend to
+zero, \eqref{eq:boundary-identity} forces $|\gamma(t)|$ to be constant on
+$\Gamma_{\mathrm{out}}$. Hence $\Gamma_{\mathrm{out}}$ is a circle centered at the origin.
+
+The conclusion now follows from Theorem~\ref{thm:outer-circle-implies-annulus}.
+\end{proof}
+
+\begin{remark}
+This theorem is intentionally conditional. The draft \texttt{newnew.tex} tries to obtain the
+analyticity of the outer boundary directly from a one-phase free-boundary argument, but that step
+is not justified from its stated hypotheses. The valid takeaway is:
+\begin{enumerate}[label=\textnormal{(\roman*)}]
+\item if one can justify analyticity of the outer boundary by some separate argument, then the
+boundary-moment asymptotics do force the outer boundary to be a circle;
+\item once that outer circle is known, the rest of the connected-case conclusion is rigorous.
+\end{enumerate}
+\end{remark}
+
+\section{Why the Simply Connected Proof Does Not Transfer Directly}
+
+\begin{remark}
+In Section~4 of \texttt{main.tex}, the simply connected proof defines a holomorphic function
+\[
+W(z)=\pi z\left(4\partial_z u(z)-\frac{\Phi(|z|^2)}{z}+\frac{c}{\pi z}\right)
+\]
+and uses that $W|_{\partial U}$ is real-valued. For simply connected $U$, this implies
+$\Im W\equiv 0$ in $U$ by the maximum principle.
+
+For connected multiply connected $U$, this implication is false if one only knows reality on the
+outer boundary. The inner boundary components contribute additional boundary data for the harmonic
+function $\Im W$, and there is no reason for those traces to vanish. This is the precise place
+where one must not implicitly reuse the simply connected argument.
+\end{remark}
+
+\end{document}
