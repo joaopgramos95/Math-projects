@@ -11,6 +11,7 @@
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{assumption}[theorem]{Assumption}
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
 \theoremstyle{remark}
@@ -31,7 +32,7 @@
 \newcommand{\ip}[2]{\langle #1,#2\rangle}
 \newcommand{\distpm}[2]{d_{\pm}(#1,#2)}
 
-\title{A VC Draft for the Probabilistic Modulus Gap}
+\title{A Check of the VC Draft for the Probabilistic Modulus Gap}
 \author{}
 
 \begin{document}
@@ -39,11 +40,12 @@
 
 \section{Setup}
 
-This note records the replacement for the Paley--Zygmund step in the proof of
-Theorem~0.4 from the phase retrieval notes.  We use the notation of
-\texttt{RealSPR.tex}.  Thus \(\eta,\xi_2,\xi_3,\dots\) are independent
-real-valued random variables, \(\E\eta=0\), \(\norm{\eta}_{L^2}=1\), and for a
-fixed \(\delta>0\),
+Let \(\eta,\xi_2,\xi_3,\dots\) be independent real-valued random variables.
+The exceptional variable \(\eta\) is centered and \(L^2\)-normalized:
+\[
+        \E\eta=0,\qquad \norm{\eta}_{L^2}=1.
+\]
+For a fixed \(\delta>0\), the good coordinates are assumed to satisfy
 \[
         \E\xi_i=0,\qquad \norm{\xi_i}_{L^2}=1,\qquad
         \delta\le \norm{\xi_i}_{L^1}\le 1-\delta
@@ -54,7 +56,7 @@ For coefficient vectors \(a,b\in\ell^2(\N)\), write
 X_a=a_1\eta+\sum_{i\ge2}a_i\xi_i,\qquad
 X_b=b_1\eta+\sum_{i\ge2}b_i\xi_i.
 \]
-For finite-dimensional statements we use the analogous notation
+In finite dimension we write
 \[
 Z=(\eta,\xi_2,\ldots,\xi_n)\in\R^n,\qquad
 \langle Z,a\rangle=a_1\eta+\sum_{i=2}^n a_i\xi_i .
@@ -64,11 +66,19 @@ Finally,
         \distpm{u}{v}:=\min\{\norm{u-v}_2,\norm{u+v}_2\}.
 \]
 
+The question checked in this note is whether the one-exception hypotheses
+above imply a uniform fixed-probability lower bound of the form
+\[
+\Prob\left(\bigl||X_a|-|X_b|\bigr|\ge\theta_0\right)\ge p_0
+\]
+for all orthogonal unit coefficient vectors \(a,b\).  Such a bound would be
+exactly the small-ball input needed for the standard VC discretization
+argument.
+
 \section{VC Background}
 
-The following material is the only VC-dimension input needed below.  It is the
-same package used in Section 2.2 of the declipping manuscript
-\texttt{declipping.pdf}.
+The following standard VC facts are the only empirical-process input used in
+the conditional argument below.
 
 \begin{definition}[Shattering and VC dimension]
 Let \(\mathcal F\) be a class of Boolean functions on \(\R^n\).  A finite set
@@ -79,8 +89,8 @@ shattered by \(\mathcal F\).
 \end{definition}
 
 \begin{proposition}[VC law of large numbers]\label{prop:vc-lln}
-Let \(\mathcal F\) be a class of Boolean functions and let
-\(X_1,\ldots,X_m\) be i.i.d. copies of a random vector \(X\).  There is an
+Let \(\mathcal F\) be a class of Boolean functions with finite VC-dimension and
+let \(X_1,\ldots,X_m\) be i.i.d. copies of a random vector \(X\).  There is an
 absolute constant \(C>0\) such that
 \[
 \E\sup_{f\in\mathcal F}
@@ -106,13 +116,6 @@ of unions of one set from each \(\mathcal F_i\), then
 where \(C>0\) is absolute.
 \end{proposition}
 
-\begin{lemma}[Half-space classes]\label{lem:halfspaces}
-For each fixed \(k\), the class of indicators of intersections of at most
-\(k\) half-spaces in \(\R^n\) has VC-dimension \(O_k(n)\).  Consequently it
-satisfies the uniform law of large numbers in Proposition~\ref{prop:vc-lln}
-with error \(O_k(\sqrt{n/m})\).
-\end{lemma}
-
 \begin{lemma}[Polynomial threshold classes]\label{lem:poly-vc}
 Fix integers \(D,N_x,N_\theta\).  Let \(P(x,\theta)\) range through a family of
 real polynomials of degree at most \(D\) in the variables
@@ -121,189 +124,114 @@ real polynomials of degree at most \(D\) in the variables
 \[
         \bigl\{\mathbf 1_{\{x:P(x,\theta)\ge0\}}:\theta\in\R^{N_\theta}\bigr\}
 \]
-has VC-dimension \(O_{D}(N_x+N_\theta)\).
-In particular, if \(N_x=n\) and \(N_\theta=O(n)\), then the VC-dimension is
-\(O_D(n)\).  By Proposition~\ref{prop:vc-intersection}, the same remains true
-for intersections of a bounded number of such classes.
+has VC-dimension \(O_D(N_x+N_\theta)\).  By
+Proposition~\ref{prop:vc-intersection}, the same remains true for
+intersections of a bounded number of such classes.
 \end{lemma}
 
-\begin{remark}
-Lemma~\ref{lem:poly-vc} is the standard Warren-type VC bound used in the
-phase retrieval notes.  In the proof of Theorem~\ref{thm:finite-pr-vc} below,
-the relevant defining inequalities have bounded degree and depend on the
-parameters \(u,v\in\R^n\), hence the resulting class has VC-dimension \(O(n)\).
-\end{remark}
+\section{The Proposed Probabilistic Gap is False}
 
-\section{The New Compactness Input}
-
-The purpose of this section is to formulate the compactness replacement for
-the Paley--Zygmund lower bound.  In the original proof of Theorem~0.4, one
-uses an \(L_{2+\alpha}\)-hypothesis and Paley--Zygmund to prove
-\[
-\Prob\left(
- \bigl||\langle Z,u\rangle|-|\langle Z,v\rangle|\bigr|^2
-      \ge \theta\,\distpm{u}{v}^2
-\right)\ge p.
-\]
-Under the hypotheses of \texttt{RealSPR.tex}, this probability lower bound is
-instead obtained by compactness.
-
-\begin{proposition}[Orthogonal probabilistic modulus gap]\label{prop:orth-prob-gap}
-There exist constants \(\theta_0=\theta_0(\delta,\eta)>0\) and
+The attempted replacement for the Paley--Zygmund step was the following
+assertion: there should exist constants
+\(\theta_0=\theta_0(\delta,\eta)>0\) and
 \(p_0=p_0(\delta,\eta)>0\) such that, for every orthogonal pair
 \(a,b\in\ell^2(\N)\) with \(\norm{a}_2=\norm{b}_2=1\),
 \[
 \Prob\left(\bigl||X_a|-|X_b|\bigr|\ge\theta_0\right)\ge p_0 .
 \]
+This assertion does not follow from the hypotheses in Section~1.  In fact it
+is false, even for coordinate vectors.
+
+\begin{proposition}[Rare-spike obstruction]\label{prop:rare-spike}
+Fix \(0<\delta<1/2\).  For every \(\theta>0\) and every \(\rho>0\), there are
+independent centered real random variables \(\xi_2,\xi_3\) with
+\[
+\norm{\xi_2}_{L^2}=\norm{\xi_3}_{L^2}=1,\qquad
+\delta\le \norm{\xi_2}_{L^1},\norm{\xi_3}_{L^1}\le 1-\delta,
+\]
+such that, for the orthogonal unit vectors \(a=e_2\) and \(b=e_3\),
+\[
+\Prob\left(\bigl||X_a|-|X_b|\bigr|\ge\theta\right)<\rho .
+\]
 \end{proposition}
 
-\begin{proof}[Draft proof]
-Suppose this is false.  Then there are orthogonal unit vectors
-\(a^{(n)},b^{(n)}\in\ell^2(\N)\) such that, for
+\begin{proof}
+Set \(r=\delta\).  Choose \(M>r\), to be taken large, and define
 \[
-X_n=X_{a^{(n)}},\qquad Y_n=X_{b^{(n)}},
+        p_M:=\frac{1-r^2}{M^2-r^2}.
 \]
-one has
+Let \(\xi_M\) be symmetric and satisfy
 \[
-\Prob\left(\bigl||X_n|-|Y_n|\bigr|\ge \frac1n\right)\le\frac1n.
-\]
-Equivalently,
-\[
-        \bigl||X_n|-|Y_n|\bigr|\to0
-        \qquad\text{in probability.}
-\]
-
-Apply the reordered profile decomposition from \texttt{RealSPR.tex}.  After
-passing to a subsequence and permuting the good coordinates row by row, write
-\[
-a^{(n)}=a_{\rm head}^{(n)}+a_{\rm tail}^{(n)},\qquad
-b^{(n)}=b_{\rm head}^{(n)}+b_{\rm tail}^{(n)},
-\]
-where the heads converge strongly in \(\ell^2\) to some \(a,b\), while the
-tail coefficients are infinitesimal:
-\[
-\max_{i>m_n}\max\{|a_i^{(n)}|,|b_i^{(n)}|\}\to0 .
-\]
-The corresponding random vectors
-\[
-\bigl(X_n^{\rm head},Y_n^{\rm head},X_n^{\rm tail},Y_n^{\rm tail}\bigr)
-\]
-are tight.  Passing to a further subsequence, they converge in distribution to
-\[
-        (H_X,H_Y,R_X,R_Y).
-\]
-The head and tail limits are independent, because they are built from
-disjoint independent coordinate families.  The tail law is infinitely
-divisible, because it is a weak limit of infinitesimal triangular arrays of
-independent random variables.  The convergence in probability of the modulus
-gap passes to the limit and gives the exact identity
-\[
-        |H_X+R_X|=|H_Y+R_Y|\qquad\text{a.s.}
-\]
-
-The head-identification argument from \texttt{RealSPR.tex} is now applied at
-the limit level.  This is the point of the present replacement: we do not try
-to infer the bounded-probe identities directly from convergence in probability
-before taking the limit.  After conditioning on a tail value in the support of
-\((R_X,R_Y)\), the head law is supported on a translated phase-retrieval cone
-\[
-        |h_X+r_X|=|h_Y+r_Y|.
-\]
-Using the bounded linear probes \(S_i\), \(S_\eta\), and the quadratic probes
-for the good coordinates exactly as in the head-identification lemma of
-\texttt{RealSPR.tex} (equivalently, subtracting the deterministic translation
-terms before applying the quadratic probes), one obtains
-\[
-        a_i^2=b_i^2\quad(i\ge2),\qquad
-        a_i a_j=b_i b_j\quad(i\ne j,\ i,j\ge2),
-\]
-and
-\[
-        a_1a_j=b_1b_j\qquad(j\ge2).
-\]
-Therefore either \(a=\tau b\) for some \(\tau\in\{\pm1\}\), or else \(\eta\)
-is Rademacher and all good head coordinates vanish.  In the first case,
-\[
-\norm{a_{\rm head}^{(n)}-\tau b_{\rm head}^{(n)}}_2\to0 .
-\]
-In the Rademacher-only exceptional case the good head again vanishes, so the
-argument below applies with the head removed.
-
-The exact limiting identity forces the infinitely divisible tail law onto one
-of the phase-retrieval lines.  Indeed, if the head is nonzero, varying the head
-over two support points gives \(R_Y=\tau R_X\) for the same sign \(\tau\).  If
-the head is zero, then \(|R_X|=|R_Y|\) a.s.; since the tail law is infinitely
-divisible and supported on
-\[
-\Gamma=\{(s,t): |s|=|t|\}=L_+\cup L_-,
+\Prob\{\xi_M=r\}=\Prob\{\xi_M=-r\}=\frac{1-p_M}{2},
 \qquad
-L_\tau=\{(s,\tau s):s\in\R\},
+\Prob\{\xi_M=M\}=\Prob\{\xi_M=-M\}=\frac{p_M}{2}.
 \]
-the support theorem for infinitely divisible laws on \(L_+\cup L_-\) implies
-that \(R_Y=\tau R_X\) a.s. for some sign \(\tau\).
-
-Thus
+Then \(\E\xi_M=0\), and
 \[
-\sum_{i>m_n}(b_i^{(n)}-\tau a_i^{(n)})\xi_{n,i}
-\to0
-\qquad\text{in distribution.}
+\E\xi_M^2=(1-p_M)r^2+p_M M^2
+        =r^2+p_M(M^2-r^2)=1.
 \]
-The diffuse tail rigidity lemma from \texttt{RealSPR.tex} gives
+Moreover,
 \[
-\norm{b_{\rm tail}^{(n)}-\tau a_{\rm tail}^{(n)}}_2\to0.
+\E|\xi_M|
+=(1-p_M)r+p_M M
+=r+p_M(M-r)
+=r+\frac{1-r^2}{M+r}.
 \]
-Together with the head convergence this yields
+Since \(r=\delta<1/2\), for all sufficiently large \(M\),
 \[
-\norm{b^{(n)}-\tau a^{(n)}}_2\to0,
+        \delta\le \E|\xi_M|\le 1-\delta .
 \]
-contradicting orthogonality:
+Let \(\xi_2,\xi_3\) be independent copies of \(\xi_M\).  For \(a=e_2\) and
+\(b=e_3\), one has \(X_a=\xi_2\) and \(X_b=\xi_3\).  The absolute values of
+\(\xi_2\) and \(\xi_3\) take only the values \(r\) and \(M\).  If
+\(M-r>\theta\), then
 \[
-\norm{b^{(n)}-\tau a^{(n)}}_2^2
-=\norm{a^{(n)}}_2^2+\norm{b^{(n)}}_2^2
--2\tau\ip{a^{(n)}}{b^{(n)}}=2.
+\Prob\left(\bigl||\xi_2|-|\xi_3|\bigr|\ge\theta\right)
+=2p_M(1-p_M)\le 2p_M.
 \]
-This contradiction proves the proposition.
+As \(M\to\infty\), \(p_M\to0\).  Taking \(M\) large enough to ensure both
+\(M-r>\theta\) and \(2p_M<\rho\) proves the claim.
 \end{proof}
 
-\begin{remark}[Technical point in the draft]\label{rem:shifted-probes}
-The only point that should be checked carefully before inserting the argument
-into the paper is the parenthetical phrase ``subtracting the deterministic
-translation terms before applying the quadratic probes.''  The clean way to
-write it is to formulate a separate shifted head-identification lemma: if an
-independent head law satisfies
+\begin{remark}[Endpoint \(\delta=1/2\)]
+The endpoint is not materially different.  Take \(r<1/2\) and choose
 \[
-        |H_X+r_X|=|H_Y+r_Y|
+        M=\frac{1-r^2}{1/2-r}-r.
 \]
-for a tail value \(r\) in the relevant support set, then the same rank-one
-identities for the head coefficients follow.  The mixed identities are
-immediate from the centered linear probes; the diagonal identity is recovered
-by applying the quadratic probe to the centered quadratic observable after the
-linear terms in \(H_X,H_Y\) have been removed using the already established
-linear identities.
+Then the same construction gives \(\E|\xi_M|=1/2\), while \(M\to\infty\) as
+\(r\uparrow1/2\).  Hence the probability of a modulus discrepancy can again be
+made arbitrarily small.
 \end{remark}
 
-\section{A Version of Theorem 0.4}
-
-The next statement is the finite-dimensional VC conclusion corresponding to
-Theorem~0.4 in the notes, with the Paley--Zygmund step replaced by
-Proposition~\ref{prop:orth-prob-gap}.  It is stated in the one-exception
-notation of \texttt{RealSPR.tex}.
-
-\begin{theorem}[Finite-dimensional empirical phase retrieval]\label{thm:finite-pr-vc}
-Fix \(\delta>0\) and an exceptional variable \(\eta\) as above.  There exist
-constants \(C,c,\gamma>0\), depending only on \(\delta\) and on the law of
-\(\eta\), with the following property.  Let
+\begin{remark}[Where the compactness proof breaks]\label{rem:break}
+The obstruction is exactly the distinction between convergence in probability
+and the \(L^1\) convergence of the quadratic observable.  In the construction
+above, two independent copies satisfy
 \[
-        Z=(\eta,\xi_2,\ldots,\xi_n)\in\R^n,
+\bigl||\xi_2|-|\xi_3|\bigr|\longrightarrow0
+\qquad\text{in probability}
 \]
-where \(\eta,\xi_2,\ldots,\xi_n\) are independent, \(\E\eta=0\),
-\(\norm{\eta}_2=1\), and
+as \(M\to\infty\), because the mismatch event has probability
+\(2p_M(1-p_M)\to0\).  However,
 \[
-        \E\xi_i=0,\qquad \norm{\xi_i}_2=1,\qquad
-        \delta\le\norm{\xi_i}_1\le1-\delta\qquad(2\le i\le n).
+\E\bigl(|\,|\xi_2|^2-|\xi_3|^2\,|\bigr)
+=2p_M(1-p_M)(M^2-r^2)
+\longrightarrow 2(1-r^2).
 \]
-Let \(Z_1,\ldots,Z_m\) be i.i.d. copies of \(Z\).  If \(m\ge Cn\), then with
-probability at least \(1-e^{-cm}\),
+Thus the quadratic probes used in the stable \(L^2\) argument see the rare
+high-energy events, while weak convergence and convergence in probability do
+not.  A limit-level ``shifted head identification'' cannot recover these
+missing quadratic contributions without an additional uniform-integrability or
+small-ball hypothesis.
+\end{remark}
+
+\begin{corollary}[The finite empirical theorem is false as stated]
+\label{cor:finite-false}
+For \(0<\delta<1/2\), there are no constants \(C,c,\gamma>0\), depending only
+on \(\delta\) and on the law of \(\eta\), for which the following statement
+holds for every finite system satisfying the hypotheses in Section~1:
+if \(m\ge Cn\), then with probability at least \(1-e^{-cm}\),
 \[
 \frac1m\sum_{j=1}^m
 \left(
@@ -311,104 +239,221 @@ probability at least \(1-e^{-cm}\),
 \right)^2
 \ge
 \gamma\,\distpm{u}{v}^{\,2}
+\qquad(u,v\in\Sph^{n-1}).
 \]
-for every \(u,v\in\Sph^{n-1}\).
-\end{theorem}
+\end{corollary}
 
-\begin{proof}[Draft proof]
-By the orthogonal reduction from \texttt{RealSPR.tex}, it is enough to prove
-the lower bound after reducing the pair \(u,v\) to the orthogonal case.  Thus
-we first consider \(u,v\in\Sph^{n-1}\) with \(u\perp v\).  By
-Proposition~\ref{prop:orth-prob-gap}, there are constants
-\(\theta_0,p_0>0\), depending only on \(\delta\) and \(\eta\), such that
+\begin{proof}
+Suppose such constants existed.  Take \(n=3\) and let \(\xi_2,\xi_3\) be the
+rare-spike variables from Proposition~\ref{prop:rare-spike}, with \(M\) still
+free.  Put \(u=e_2\) and \(v=e_3\).  Then \(\distpm{u}{v}^2=2\).
+
+Let \(m=\lceil 3C\rceil\), and let
 \[
+q_M:=\Prob\{|\xi_2|\ne|\xi_3|\}=2p_M(1-p_M).
+\]
+On the event that no one of the \(m\) samples has
+\(|\xi_{2,j}|\ne|\xi_{3,j}|\), the empirical average is zero, hence the desired
+lower bound fails.  The probability of this event is
+\[
+        (1-q_M)^m.
+\]
+Since \(q_M\to0\), we may choose \(M\) so large that
+\[
+        (1-q_M)^m>e^{-cm}.
+\]
+Then the failure probability is larger than the allowed \(e^{-cm}\), a
+contradiction.
+\end{proof}
+
+\section{A Conditional VC Consequence}
+
+The VC part of the draft is correct once a genuine orthogonal small-ball input
+is assumed.  The finite-dimensional reduction should be written pointwise; no
+empirical covariance concentration is needed, and such concentration is not
+available from the hypotheses in Section~1 alone.
+
+\begin{assumption}[Orthogonal small-ball input]\label{ass:orth-small-ball}
+For a random vector \(Z\in\R^n\), assume that there are constants
+\(\theta_0,p_0>0\) such that
+\[
+\inf_{\substack{p,q\in\Sph^{n-1}\\ p\perp q}}
 \Prob\left(
-  \bigl||\langle Z,u\rangle|-|\langle Z,v\rangle|\bigr|\ge\theta_0
+  \bigl||\langle Z,p\rangle|-|\langle Z,q\rangle|\bigr|\ge\theta_0
 \right)\ge p_0 .
 \]
-Equivalently, if
+\end{assumption}
+
+\begin{lemma}[VC dimension of the orthogonal gap events]\label{lem:gap-vc}
+For fixed \(\theta_0>0\), define
 \[
-\mathcal E(u,v)
+\mathcal E(p,q)
 =
 \left\{
 x\in\R^n:
-\bigl||\langle x,u\rangle|-|\langle x,v\rangle|\bigr|^2
+\bigl||\langle x,p\rangle|-|\langle x,q\rangle|\bigr|^2
 \ge \theta_0^2
-\right\},
+\right\}.
 \]
-then \(\Prob(Z\in\mathcal E(u,v))\ge p_0\).
-
-The class of indicators \(\mathbf 1_{\mathcal E(u,v)}\), with
-\(u,v\in\Sph^{n-1}\), has VC-dimension \(O(n)\).  Indeed, as sets,
-\(\mathcal E(u,v)\) can be written as the intersection of two bounded-degree
-polynomial threshold conditions:
+The class
 \[
-\left(2|\langle x,u\rangle|\,|\langle x,v\rangle|\right)^2
-\le
-\left(|\langle x,u\rangle|^2+|\langle x,v\rangle|^2-\theta_0^2\right)^2
+        \{\mathbf 1_{\mathcal E(p,q)}:p,q\in\Sph^{n-1}\}
+\]
+has VC-dimension \(O(n)\).
+\end{lemma}
+
+\begin{proof}
+Write \(A=\langle x,p\rangle\) and \(B=\langle x,q\rangle\).  The condition
+\((|A|-|B|)^2\ge\theta_0^2\) is equivalent to the conjunction
+\[
+        A^2+B^2\ge\theta_0^2
 \]
 and
 \[
-|\langle x,u\rangle|^2+|\langle x,v\rangle|^2\ge \theta_0^2 .
+        (A^2+B^2-\theta_0^2)^2\ge 4A^2B^2.
 \]
-Lemma~\ref{lem:poly-vc} and Proposition~\ref{prop:vc-intersection} therefore
-give \(\vc=O(n)\).
+These are polynomial threshold conditions of degrees \(2\) and \(4\) in
+\((x,p,q)\in\R^n\times\R^n\times\R^n\).  Lemma~\ref{lem:poly-vc} and
+Proposition~\ref{prop:vc-intersection} give the claimed \(O(n)\) bound.
+\end{proof}
 
-By Proposition~\ref{prop:vc-lln}, with probability at least \(1-e^{-cm}\),
+\begin{lemma}[Pointwise reduction from arbitrary pairs to orthogonal pairs]
+\label{lem:pointwise-reduction}
+Let \(u,v\in\Sph^{n-1}\), and let \(d=\distpm{u}{v}\).  For every
+\(x\in\R^n\), there are orthogonal unit vectors \(p,q\in\Sph^{n-1}\), depending
+only on \(u,v\), such that
 \[
-\sup_{u\perp v,\ \norm{u}_2=\norm{v}_2=1}
-\left|
-\frac1m\sum_{j=1}^m\mathbf 1_{\mathcal E(u,v)}(Z_j)
--
-\Prob(Z\in\mathcal E(u,v))
-\right|
-\le \frac{p_0}{2},
+\left(
+  |\langle x,u\rangle|-|\langle x,v\rangle|
+\right)^2
+\ge
+\frac{\theta_0^2 d^2}{2}\,
+\mathbf 1_{\mathcal E(p,q)}(x).
 \]
-provided \(m\ge Cn\).  Hence, uniformly over orthogonal unit pairs,
+\end{lemma}
+
+\begin{proof}
+The assertion is trivial if \(d=0\).  Since replacing \(v\) by \(-v\) does not
+change either \(|\langle x,v\rangle|\) or \(\distpm{u}{v}\), we may assume
 \[
-\frac1m\sum_{j=1}^m\mathbf 1_{\mathcal E(u,v)}(Z_j)\ge \frac{p_0}{2}.
+        d=\norm{u-v}_2\le\norm{u+v}_2 .
 \]
-It follows that
+Set
+\[
+        h=\frac{u+v}{2},\qquad k=\frac{u-v}{2},
+\qquad
+        \alpha=\norm{h}_2,\qquad \beta=\norm{k}_2=\frac d2 .
+\]
+Then \(h\perp k\) and \(\alpha\ge\beta\).  If \(\beta=0\), again there is
+nothing to prove.  Let
+\[
+        e=\frac{h}{\alpha},\qquad f=\frac{k}{\beta},
+\qquad
+        p=\frac{e+f}{\sqrt2},\qquad q=\frac{e-f}{\sqrt2}.
+\]
+Then \(p,q\) are orthogonal unit vectors.  Put
+\[
+        A=\langle x,e\rangle,\qquad B=\langle x,f\rangle.
+\]
+For real numbers \(s,t\),
+\[
+        \bigl||s+t|-|s-t|\bigr|=2\min(|s|,|t|).
+\]
+Therefore
+\[
+\bigl||\langle x,p\rangle|-|\langle x,q\rangle|\bigr|
+=\sqrt2\min(|A|,|B|).
+\]
+On the event \(x\in\mathcal E(p,q)\), this gives
+\[
+        \min(|A|,|B|)\ge\frac{\theta_0}{\sqrt2}.
+\]
+Using \(u=h+k=\alpha e+\beta f\) and \(v=h-k=\alpha e-\beta f\), the same
+scalar identity yields
+\[
+\bigl||\langle x,u\rangle|-|\langle x,v\rangle|\bigr|
+=2\min(\alpha|A|,\beta|B|)
+\ge 2\beta\min(|A|,|B|)
+\ge \frac{\theta_0 d}{\sqrt2}.
+\]
+Squaring proves the lemma.
+\end{proof}
+
+\begin{theorem}[Conditional finite-dimensional empirical consequence]
+\label{thm:conditional-vc}
+Let \(Z\in\R^n\) satisfy Assumption~\ref{ass:orth-small-ball}, and let
+\(Z_1,\ldots,Z_m\) be i.i.d. copies of \(Z\).  There are constants
+\(C_1,c_1>0\), depending only on \(p_0\) and on the absolute constants in the
+VC estimates, such that if \(m\ge C_1n\), then with probability at least
+\(1-e^{-c_1m}\),
 \[
 \frac1m\sum_{j=1}^m
 \left(
   |\langle Z_j,u\rangle|-|\langle Z_j,v\rangle|
 \right)^2
 \ge
-\theta_0^2\cdot \frac{p_0}{2}
+\frac{\theta_0^2p_0}{4}\,\distpm{u}{v}^{\,2}
 \]
-for all orthogonal unit \(u,v\).
+for every \(u,v\in\Sph^{n-1}\).
+\end{theorem}
 
-Finally, applying the same orthogonal reduction used in \texttt{RealSPR.tex}
-to the empirical Hilbert space whose norm is
+\begin{proof}
+By Lemma~\ref{lem:gap-vc}, the class
 \[
-\norm{w}_{m}^{2}
-:=
-\frac1m\sum_{j=1}^m |\langle Z_j,w\rangle|^2,
+\mathcal F=\{\mathbf 1_{\mathcal E(p,q)}:p,q\in\Sph^{n-1}\}
 \]
-and intersecting with the standard empirical covariance event
+has VC-dimension at most \(K n\), where \(K\) is absolute.  Choose \(C_1\)
+large and \(c_1\) small enough that, whenever \(m\ge C_1n\),
 \[
-\frac12\norm{w}_2^2\le \norm{w}_m^2\le 2\norm{w}_2^2
-\qquad(w\in\R^n),
+C\sqrt{\frac{Kn}{m}}+\sqrt{\frac{c_1}{2}}\le \frac{p_0}{2},
 \]
-which holds with probability at least \(1-e^{-cm}\) for \(m\ge Cn\), gives the
-announced estimate for all \(u,v\in\Sph^{n-1}\), after changing constants.
+where \(C\) is the constant in Proposition~\ref{prop:vc-lln}.  Applying
+Proposition~\ref{prop:vc-lln} with \(t=c_1m\), we get, with probability at
+least \(1-e^{-c_1m}\),
+\[
+\sup_{p,q\in\Sph^{n-1}}
+\left|
+\frac1m\sum_{j=1}^m\mathbf 1_{\mathcal E(p,q)}(Z_j)
+-
+\Prob(Z\in\mathcal E(p,q))
+\right|
+\le \frac{p_0}{2}.
+\]
+On this event, Assumption~\ref{ass:orth-small-ball} implies that for every
+orthogonal unit pair \(p,q\),
+\[
+\frac1m\sum_{j=1}^m\mathbf 1_{\mathcal E(p,q)}(Z_j)\ge \frac{p_0}{2}.
+\]
+
+Now fix arbitrary \(u,v\in\Sph^{n-1}\).  Let \(p,q\) be the orthogonal unit
+pair supplied by Lemma~\ref{lem:pointwise-reduction}.  Summing the pointwise
+inequality from that lemma over the samples gives
+\[
+\frac1m\sum_{j=1}^m
+\left(
+  |\langle Z_j,u\rangle|-|\langle Z_j,v\rangle|
+\right)^2
+\ge
+\frac{\theta_0^2\distpm{u}{v}^{\,2}}{2}
+\cdot
+\frac1m\sum_{j=1}^m\mathbf 1_{\mathcal E(p,q)}(Z_j).
+\]
+The empirical proportion on the right is at least \(p_0/2\), so the desired
+bound follows.
 \end{proof}
 
-\begin{remark}[Relation with the original Theorem 0.4 proof]
-In the original proof, the event
-\[
-\mathcal E(u,v)=
-\left\{
-\bigl||\langle Z,u\rangle|-|\langle Z,v\rangle|\bigr|^2
-\ge \theta\,\distpm{u}{v}^{\,2}
-\right\}
-\]
-was bounded from below by Paley--Zygmund, using an
-\(L_{2+\alpha}\)-to-\(L_2\) equivalence.  Here the same VC argument is kept,
-but the probability lower bound is supplied by the compactness proposition
-instead.  This is the precise place where the new tool replaces
-Paley--Zygmund.
-\end{remark}
+\section{Conclusion}
+
+The VC discretization is sound as a conditional argument from a uniform
+orthogonal small-ball estimate.  The missing point is that the one-exception
+\(L^1\)-\(L^2\) hypotheses do not provide such a small-ball estimate.  They
+give enough information for stable \(L^2\) phase retrieval, where rare
+high-energy events are visible to quadratic observables, but they do not
+control the probability with which the modulus gap is visible in finitely many
+samples.  To recover the originally intended empirical theorem, one needs an
+additional assumption excluding the rare-spike obstruction, such as a genuine
+Paley--Zygmund input, a uniform \(L_{2+\alpha}\)-to-\(L_2\) condition, or some
+other small-ball hypothesis strong enough to imply
+Assumption~\ref{ass:orth-small-ball}.
 
 \end{document}
