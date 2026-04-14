@@ -1,0 +1,172 @@
+\section{The concentrated branch}\label{sec:head}
+
+In the concentrated case of the dichotomy
+(Lemma~\ref{lem:tail-dichotomy}), there exists $\tau = \pm 1$ such that
+$a$ and $\tau b$ nearly agree on the tail. Their difference is therefore
+concentrated on the head set $H$, and the head difference matrix $D_H$
+must be large. The strategy is to show that every entry of $D_H$ is
+controlled by $K \cdot \eps$, while the Frobenius norm of $D_H$ is forced
+to be at least $1$ by orthogonality. Together these give a lower bound on
+$\eps$. If $\eps$ is too small, a bootstrapping argument via the gluing
+estimate (Proposition~\ref{thm:gluing}) produces a contradiction.
+
+\subsection{Entry bounds via probes}
+
+\begin{proposition}[Head entry bound]\label{thm:head-entry}
+\leanname{Head\.HeadMatrix\.head\_entry\_bound\_fin}
+Let $a, b \in \R^n$ be unit vectors with $\ip{a}{b} = 0$ and let
+$H = H(A,a,b)$. For all $i, j \in H$,
+\[
+\abs{D_H(a,b)_{ij}} \le K(A,B) \cdot \eps(a,b).
+\]
+\end{proposition}
+
+\begin{proof}
+\emph{Diagonal entries.}
+Let $g$ be the quadratic probe for $\xi_i$
+(Lemma~\ref{lem:quadratic-probe}). Writing
+$X_c = c_i \xi_i + R$ with $R = \sum_{k \ne i} c_k \xi_k$ independent
+of $\xi_i$, the computation in Remark~\ref{rem:probe-extraction} gives
+$\E[X_c^2 \cdot g(\xi_i)] = c_i^2$.
+Applying this to both $a$ and $b$:
+\[
+\abs{a_i^2 - b_i^2}
+= \bigl\lvert\E\bigl[(X_a^2 - X_b^2) g(\xi_i)\bigr]\bigr\rvert
+\le \frac{2}{1-B} \cdot \eps
+\le K \cdot \eps.
+\]
+
+\emph{Off-diagonal entries.}
+Let $g_i, g_j$ be linear probes for $\xi_i, \xi_j$
+(Lemma~\ref{lem:linear-probe}). The same independence argument gives
+$\E[X_c^2 \cdot g_i(\xi_i) g_j(\xi_j)] = 2 c_i c_j$, whence
+\[
+\abs{a_i a_j - b_i b_j}
+\le \tfrac{1}{2} \cdot (2/A)^2 \cdot \eps
+= \frac{2}{A^2}\, \eps
+\le K \cdot \eps. \qedhere
+\]
+\end{proof}
+
+\subsection{Frobenius control}
+
+\begin{lemma}[Frobenius lower bound]\label{lem:head-frobenius}
+\leanname{Head\.HeadMatrix\.head\_dominant\_lower\_bound\_fin}
+Let $a, b \in \R^n$ be unit vectors with $\ip{a}{b} = 0$ and let
+$H \subseteq \{1, \dots, n\}$. If
+$\norm{\tail_H a}_2^2 + \norm{\tail_H b}_2^2 \le 1/100$,
+then $\norm{D_H(a,b)}_F \ge 1$.
+\end{lemma}
+
+\begin{proof}
+Write $\rho_a = \norm{\tail_H a}_2^2$ and
+$\rho_b = \norm{\tail_H b}_2^2$, so that
+$\norm{\restr_H a}_2^2 = 1 - \rho_a$ and
+$\norm{\restr_H b}_2^2 = 1 - \rho_b$. The global orthogonality
+$\ip{a}{b} = 0$ splits as
+$\ip{\restr_H a}{\restr_H b}
+= -\ip{\tail_H a}{\tail_H b}$,
+and Cauchy--Schwarz gives
+$\abs{\ip{\restr_H a}{\restr_H b}} \le \sqrt{\rho_a \rho_b}$.
+Writing $z = \ip{\restr_H a}{\restr_H b}$, the Frobenius norm satisfies
+\[
+\norm{D_H}_F^2
+= (1 - \rho_a)^2 + (1 - \rho_b)^2 - 2z^2.
+\]
+Since $\rho_a + \rho_b \le 1/100$ and
+$z^2 \le \rho_a \rho_b \le (\rho_a + \rho_b)^2/4$,
+one checks $\norm{D_H}_F^2 \ge 1$.
+\end{proof}
+
+Combining the entry bound with the Frobenius lower bound:
+if $\norm{\tail_H a}_2^2 + \norm{\tail_H b}_2^2 \le 1/100$, then
+$1 \le \norm{D_H}_F^2 \le \card{H}^2 (K\eps)^2$, giving
+$\eps \ge 1/(\card{H} \cdot K)$
+(\leanref{Head\.HeadMatrix\.threshold\_head\_lower\_bound\_fin}).
+
+\subsection{The one-line branch}\label{sec:one-line}
+
+We now close the concentrated case. The key algebraic ingredient is:
+
+\begin{lemma}[Rank-one algebra]\label{lem:rank-one}
+\privateleanname{Tail\.OneLine\.rank\_one\_sign\_selection}
+For $x, y \in \R^m$, let $D(x,y)_{ij} = x_i x_j - y_i y_j$. Then
+\[
+\norm{x - y}_2^2 \cdot \norm{x + y}_2^2
+\le 2\,\norm{D(x,y)}_F^2.
+\]
+\end{lemma}
+
+\begin{proof}
+Writing $s = \norm{x}_2^2$, $t = \norm{y}_2^2$, $c = \ip{x}{y}$, the
+left-hand side is $(s + t)^2 - 4c^2$ and the right is
+$2(s^2 + t^2 - 2c^2)$. The difference is $(s - t)^2 \ge 0$.
+\end{proof}
+
+\begin{lemma}[Head sign selection]\label{lem:head-sign-sel}
+\privateleanname{Tail\.OneLine\.head\_sign\_selection}
+Let $a, b \in \R^n$ be unit vectors with $\ip{a}{b} = 0$, let
+$H \subseteq \{1, \dots, n\}$, and let $\tau \in \{+1, -1\}$.
+If $\norm{\tail_H(a - \tau b)}_2 \le \theta(A)/32$ and every entry
+of $D_H$ satisfies
+$\abs{D_H(a,b)_{ij}} \le K(A,B) \cdot \eps(a,b)$,
+then
+\[
+\norm{\restr_H(a + \tau b)}_2
+\le 2\,\card{H} \cdot K(A,B) \cdot \eps(a,b).
+\]
+\end{lemma}
+
+\begin{proof}
+Apply Lemma~\ref{lem:rank-one} to
+$x = \restr_H a$, $y = \tau\,\restr_H b$:
+\[
+\norm{\restr_H(a - \tau b)}_2^2
+\cdot \norm{\restr_H(a + \tau b)}_2^2
+\le 2\,\card{H}^2 (K\eps)^2.
+\]
+Pythagoras gives
+$\norm{\restr_H(a - \tau b)}_2^2
+= 2 - \norm{\tail_H(a - \tau b)}_2^2 \ge 1$.
+Dividing through and taking square roots:
+$\norm{\restr_H(a + \tau b)}_2
+\le \sqrt{2}\,\card{H} \cdot K\eps
+\le 2\,\card{H} \cdot K\eps$.
+\end{proof}
+
+\begin{proposition}[One-line branch]\label{thm:one-line}
+\leanname{Tail\.OneLine\.one\_line\_branch}
+Let $a, b \in \R^n$ be unit vectors with $\ip{a}{b} = 0$, let
+$H \subseteq \{1, \dots, n\}$ with $\card{H} \le d^*(A)$, and let
+$\tau \in \{+1, -1\}$. If
+$\norm{\tail_H(a - \tau b)}_2 \le \theta(A)/32$,
+then $\eps(a,b) \ge c_{\mathrm{line}}(A,B)$.
+\end{proposition}
+
+\begin{proof}
+Suppose $\eps < c_{\mathrm{line}} = A^2/(2^8 d^* K)$. By
+Proposition~\ref{thm:head-entry}, every entry of $D_H$ satisfies
+$\abs{D_{ij}} \le K\eps$, so Lemma~\ref{lem:head-sign-sel} gives
+\[
+\norm{\restr_H(a + \tau b)}_2
+< 2 d^* K \cdot \frac{A^2}{2^8 d^* K}
+= \frac{A^2}{128} = \frac{\theta}{16}.
+\]
+Now swap the sign: the head of $a + \tau b$ has norm less than
+$\theta/16$, and the tail of $a - \tau b$ has norm at most $\theta/32$.
+The gluing estimate (Proposition~\ref{thm:gluing}) applied with sign
+$-\tau$ gives $\eps \ge \theta/2 > c_{\mathrm{line}}$, a contradiction.
+\end{proof}
+
+\begin{corollary}\label{cor:headset-one-line}
+\leanname{Tail\.OneLine\.headSet\_one\_line\_branch}
+Let $a, b \in \R^n$ be unit vectors with $\ip{a}{b} = 0$ and set
+$H = H(A,a,b)$. If
+$\norm{\tail_H(a - \tau b)}_2 \le \theta(A)/32$
+for some $\tau \in \{+1, -1\}$, then
+$\eps(a,b) \ge c_{\mathrm{line}}(A,B)$.
+\end{corollary}
+
+\begin{proof}
+Since $\card{H} \le d^*(A)$, Proposition~\ref{thm:one-line} applies.
+\end{proof}

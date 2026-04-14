@@ -1,0 +1,154 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\usepackage{xcolor}
+\definecolor{darkblue}{RGB}{0,0,139}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Notation
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\sign}{\operatorname{sign}}
+\newcommand{\card}[1]{\lvert #1 \rvert}
+\newcommand{\tail}{\operatorname{tail}}
+\newcommand{\restr}{\operatorname{head}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\supp}{\operatorname{supp}}
+\DeclareMathOperator{\concFn}{Q}
+\DeclareMathOperator{\smallBall}{\rho}
+
+% Lean cross-references (breakable at _ and .; always upright mono)
+\newcommand{\lnbrk}{\penalty100\hskip0pt plus 1pt\relax}
+\newcommand{\leanfont}{\normalfont\ttfamily\color{darkblue}}
+% block-level lean name (after a theorem statement)
+\newcommand{\leanname}[1]{%
+  \par\noindent\begingroup\footnotesize\leanfont
+  \def\_{\char`\_\lnbrk}\def\.{\char`\.\lnbrk}%
+  #1\endgroup\par\smallskip}
+\newcommand{\privateleanname}[1]{%
+  \par\noindent\begingroup\footnotesize\leanfont
+  \def\_{\char`\_\lnbrk}\def\.{\char`\.\lnbrk}%
+  #1\endgroup\par\smallskip}
+% inline lean name (within running text)
+\newcommand{\leanref}[1]{%
+  {\footnotesize\leanfont
+  \def\_{\char`\_\lnbrk}\def\.{\char`\.\lnbrk}%
+  #1}}
+
+\title{A Quantitative Proof of Stable Phase Retrieval}
+\author{Pedro Abdalla Teixeira\textsuperscript{1}}
+\author{Jaume de Dios Pont\textsuperscript{2}}
+\author{Jo\~ao Pedro Ramos\textsuperscript{3}}
+\author{Mitchell Taylor\textsuperscript{4}}
+
+\begin{document}
+\begin{abstract}
+We give a fully explicit stability bound for phase retrieval in spans of
+independent real-valued random variables under a uniform two-sided $L^1$
+bound. If $\xi_1,\dots,\xi_n$ are independent, centered, unit-variance random
+variables satisfying $A \le \E[\abs{\xi_i}] \le B$ for fixed $0 < A \le B < 1$,
+then for any orthogonal unit vectors $a,b \in \R^n$ the modulus gap
+$\sqrt{\E[(\abs{X_a}-\abs{X_b})^2]}$ is at least $c_\perp(A,B) > 0$, where
+$c_\perp$ depends only on $A$ and $B$.
+
+This result is the quantitative counterpart of the compactness proof of
+stable phase retrieval \cite{compactness}. Each step of the compactness
+argument---bounded probes, profile decomposition, head identification,
+tail rigidity---is replaced by an explicit finite-dimensional estimate
+with computable constants. The entire proof has been formalized in Lean~4
+using the Mathlib library; Lean theorem names are recorded throughout.
+\end{abstract}
+\maketitle
+\begingroup
+\renewcommand{\thefootnote}{\arabic{footnote}}
+\footnotetext[1]{Department of Mathematics, University of California, Irvine, Irvine, California 92697, USA}
+\footnotetext[2]{Center for Data Science, New York University, New York, New York 10011, USA}
+\footnotetext[3]{Instituto de Matem\'atica Pura e Aplicada (IMPA), Rio de Janeiro, RJ, Brazil}
+\footnotetext[4]{Department of Mathematics, ETH Z\"urich, Z\"urich, Switzerland}
+\endgroup
+
+\input{Introduction}
+\input{Dichotomy}
+\input{AuxiliaryEstimates}
+\input{HeadIdentification}
+\input{DiffuseBranch}
+
+\appendix
+\input{Appendix}
+
+\begin{thebibliography}{10}
+
+\bibitem{alaifari2017continuous}
+R.~Alaifari and P.~Grohs.
+\newblock Phase retrieval in the general setting of continuous frames for
+  {B}anach spaces.
+\newblock \emph{SIAM J.\ Math.\ Anal.}, 49(3):1895--1911, 2017.
+
+\bibitem{alaifari2021gabor}
+R.~Alaifari and P.~Grohs.
+\newblock Gabor phase retrieval is severely ill-posed.
+\newblock \emph{Appl.\ Comput.\ Harmon.\ Anal.}, 50:401--419, 2021.
+
+\bibitem{compactness}
+P.~Abdalla~Teixeira, J.~de~Dios~Pont, J.~P.~Ramos, and M.~Taylor.
+\newblock A compactness proof of stable phase retrieval.
+\newblock Preprint, 2025.
+
+\bibitem{bandeira2014saving}
+A.~S.~Bandeira, J.~Cahill, D.~G.~Mixon, and A.~A.~Nelson.
+\newblock Saving phase: injectivity and stability for phase retrieval.
+\newblock \emph{Appl.\ Comput.\ Harmon.\ Anal.}, 37(1):106--125, 2014.
+
+\bibitem{cahill2016infinite}
+J.~Cahill, P.~G.~Casazza, and I.~Daubechies.
+\newblock Phase retrieval in infinite-dimensional {H}ilbert spaces.
+\newblock \emph{Trans.\ Amer.\ Math.\ Soc.\ Ser.~B}, 3:63--76, 2016.
+
+\bibitem{calderbank2022stable}
+R.~Calderbank, I.~Daubechies, D.~Freeman, and N.~Freeman.
+\newblock Stable phase retrieval for infinite dimensional subspaces of
+  $L_2(\mathbb{R})$.
+\newblock arXiv:2203.03135, 2022.
+
+\bibitem{christ2022examples}
+M.~Christ, B.~Pineau, and M.~A.~Taylor.
+\newblock Examples of {H}\"older-stable phase retrieval.
+\newblock \emph{Math.\ Res.\ Lett.}, 31(5):1339--1352, 2024.
+
+\bibitem{eldar2014stability}
+Y.~C.~Eldar and S.~Mendelson.
+\newblock Phase retrieval: stability and recovery guarantees.
+\newblock \emph{Appl.\ Comput.\ Harmon.\ Anal.}, 36(3):473--494, 2014.
+
+\bibitem{FOTP}
+D.~Freeman, T.~Oikhberg, B.~Pineau, and M.~A.~Taylor.
+\newblock Stable phase retrieval in function spaces.
+\newblock \emph{Math.\ Ann.}, 390(1):1--43, 2024.
+
+\bibitem{grohs2020survey}
+P.~Grohs, S.~Koppensteiner, and M.~Rathmair.
+\newblock Phase retrieval: uniqueness and stability.
+\newblock \emph{SIAM Rev.}, 62(2):301--350, 2020.
+
+\end{thebibliography}
+
+\end{document}

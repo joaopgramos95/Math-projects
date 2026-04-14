@@ -1,0 +1,444 @@
+\documentclass[a4paper,12pt]{amsart}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{
+	a4paper,
+	textwidth=170mm,
+	left=18mm,
+	top=30mm,
+	bottom=30mm,
+    footskip=10mm}
+\savegeometry{paper}
+
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{graphicx}
+\usepackage{pstricks}
+\usepackage{appendix}
+\usepackage{dsfont}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{comment}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz,lipsum,lmodern}
+\usepackage[most]{tcolorbox}
+\newcommand{\cX}{\mathcal{X}}
+
+\usepackage{xcolor}
+\usepackage{blindtext}
+
+% \usepackage[nottoc]{tocbibind} % Commented out to avoid conflict with \tocchapter
+
+\numberwithin{equation}{section}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{Question}[theorem]{Question}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\tr}{Tr}
+
+\newcommand{\pedro}[1]{\textcolor{red}{\textbf{[PA: #1]}}}
+\newcommand{\N}{\mathbf N}
+\newcommand{\Z}{\mathbf Z}
+\newcommand{\Q}{\mathbf Q}
+\newcommand{\R}{\mathbf R}
+\newcommand{\C}{\mathbf C}
+\newcommand{\X}{\mathbf X}
+\newcommand{\E}{{\mathbb E}}
+\renewcommand{\P}{\mathbf P}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\ip}[2]{\ensuremath{\left\langle {#1}, {#2} \right\rangle}}
+\newcommand{\inlineip}[2]{\ensuremath{\langle {#1}, {#2} \rangle}}
+\newcommand{\norm}[1]{\lVert {#1} \rVert}
+\newcommand{\diag}{\operatorname{Diag}}
+\newcommand{\off}{\operatorname{Off}}
+\newcommand{\var}{\operatorname{Var}}
+
+
+\newcommand{\inr}[1]{\bigl< #1 \bigr>}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\conv}{\mathop{\rm conv}}
+\newcommand{\absconv}{\mathop{\rm absconv}}
+\newcommand{\gp}{\gamma_2(F,\psi_2)}
+\newcommand{\diamp}{{\rm diam}(F,\psi_1)}
+\newcommand{\pif}[1]{\pi_{#1}(f)}
+\newcommand{\ka}{\kappa}
+\newcommand{\VC}{{\rm VC}}
+\newcommand{\ariel}[2][\marginpar{*}]{#1\footnote{#2}}
+\newcommand{\cF}{{\cal F}}
+\newcommand{\cL}{{\cal L}}
+\newcommand{\cG}{{\mathcal{G}}}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\vc}{{\rm vc}}
+\newcommand{\ora}[1]{\overrightarrow{#1}}
+\newcommand{\PP}{\mathbb{P}}
+\DeclareMathOperator{\spn}{span}
+\def\fix#1{{\color{red} #1}}
+%\newcommand{\comment}[1]{\marginpar{\color{blue}#1}{\color{blue}$(\ast\ast)$} }
+
+
+
+\title{Stable Phase Retrieval for Subspaces of $L_2$}
+
+\begin{document}
+\author{}
+\maketitle
+\section{Introduction}
+The goal of this note is to characterize whether it is possible to perform stable phase retrieval for a subspace $\overline{\spn (X_i)_{i\ge 1}}$, where $X_i's$ are i.i.d copies of a centred random variable $X$ with variance one. 
+
+We say that $\overline{\spn (X_i)_{i\ge 1}}$ does stable phase retrieval with constant $C>0$ if for any $f,g \in \overline{\spn (X_i)_{i\ge 1}}$, it holds that
+\begin{equation*}
+    \| f-g \|_{L^2} \le C \| |f|- |g| \|_{L^2}.
+\end{equation*}
+We say that $\overline{\spn (X_i)_{i\ge 1}}$ does phase retrieval if $|f|=|g|$ (almost everywhere) implies $f=\pm g$. 
+
+Clearly, the subspace cannot do stable phase retrieval if phase retrieval fails. Moreover, it can be shown (Boss knows) that a small ball assumption is also needed: There exists constants $\beta_1,\beta_2>0$ for which
+\begin{equation*}
+   \inf_{\|f\|_{L_2}=1} \mathbb{P}(|f|\ge \beta_1) \ge \beta_2.
+\end{equation*}
+Our main goal is to show that $\overline{\spn (X_i)_{i\ge 1}}$ does stable phase retrieval (for some absolute constant $C$) if and only if it does phase retrieval and satisfies the small ball assumption (for some absolute constants $\beta_1,\beta_2$).
+
+\section{Main Argument}
+For notation simplicity, let $\X=(X_1, X_2,\ldots)$. We start by recalling Taylor's reduction: It suffices to prove SPR for orthogonal vectors. Next, suppose that $C$-SPR does not hold. Thus, there exist a sequence of vectors $(u_n)_{n\ge 1}$ with $\|u_n\|_{\ell_2}=1$ and $(v_n)_{n\ge 1}$ with $\|v_n\|_{\ell_2}\ge c>0$ pairwise orthogonal ($\langle u_n,v_n\rangle =0$) satisfying that 
+\begin{equation*}
+    \| | \langle \X, u_n \rangle| - | \langle \X, v_n \rangle| \|_{L_2} \le \frac{C}{n} \|u_n-v_n\|_{\ell_2}.
+\end{equation*}
+The first fact that follows immediately is that $| \langle \X, u_n \rangle| - | \langle \X, v_n \rangle|$ converges to zero in the $L_2$ sense and consequently, in probability by Chebyshev's inequality. By extracting a subsequence, we may also say that converges almost surely.
+
+\subsection{Case 1: Both $u_n$ and $v_n$ converges in the $\ell_2$ sense}
+The simplest case is when $u_n \rightarrow u_o$ and $v_n\rightarrow v_o$ both in the $\ell_2$ sense. Next, notice that 
+\begin{equation*}
+    \mathbb{E}\langle \X, u_n-u_o\rangle^2  = \|u_n-u_o\|_{\ell_2}^2 \rightarrow 0.
+\end{equation*}
+Similarly, $\langle \X,v_n\rangle$ converges to $\langle \X,v_o\rangle$ in $L_2$ sense as well. By the continuous mapping theorem, $|\langle \X,u_n\rangle| \rightarrow_{P} |\langle \X,u_o\rangle| $ and $|\langle \X,v_n\rangle| \rightarrow_{P} |\langle \X,v_o\rangle| $. Since the limit is unique for convergence in probability, we must have that $|\langle \X,u_o\rangle| = |\langle \X,v_o\rangle| $ almost surely.
+
+We assumed that $\overline{\spn (X_i)_{i\ge 1}}$ does phase retrieval, therefore $\langle \X, u_o \pm v_o\rangle =0$ almost surely and then by the small ball condition, we have that $u_o = \pm v_o$. On the other hand, since $u_n$ and $v_n$ are orthogonal vectors, we have that
+\begin{equation*}
+|-\langle u_n,v_0\rangle - \langle u_0,v_n\rangle +\langle u_0,v_0\rangle|   = \langle u_n-u_o,v_n-v_o\rangle \le \|u_n-u_0\|_{\ell_2}\|v_n-v_0\|_{\ell_2} \rightarrow 0.
+\end{equation*}
+The left-hand side converges to $\langle u_0,v_0\rangle$, therefore we obtain that $u_o$ and $v_o$ are orthogonal, which reaches a contradiction because $\|u_o\|_{\ell_2} =1$.
+
+\subsection{Case 2: Both $\ell^{\infty}$ norms vanish}
+We prove a general lemma to be used several times. 
+\begin{lemma}
+\label{lem:CLT_Triang}
+Let $w_n$ be a sequence of unit vectors in $\ell_2$ satisfying $\lim_n \|w_n\|_{\ell^{\infty}} =0$. Then the sequence $\langle \X,w_n\rangle$ converges in distribution to a standard Gaussian random variable.
+\end{lemma}
+\begin{proof}
+First, let us assume that all $w_n$ have finite support, so $w_i$ has $n_i$ nonzero entries. Notice that $Z_{ij}  = X_j (w_i)_j$ forms a triangular array, meaning that 
+\begin{itemize}
+    \item Each $Z_{ij}$ has mean zero.
+    \item For every $i$, $Z_{i,1},\ldots,Z_{i,n_{i}}$ are independent because all $X_j's$ are independent.
+    \item $\sum_{j=1}^{n_i}\E Z_{ij}^2 = \|w_i\|_{\ell_2} = 1$.
+\end{itemize}
+We need to check the Lindenberg condition: For any $\eps>0$, $$\lim_{i\rightarrow \infty} \sum_{j=1}^{n_i}\E Z_{ij}^2\mathds{1}_{|Z_{ij}|\ge \eps} = 0.$$
+
+Notice that $0\le \mathds{1}_{|Z_{ij}|\ge \eps} \le \mathds{1}_{|X_{j}|\ge \eps \|w_i\|_{\infty}^{-1}}$ which converges to zero as $\|w_i\|_{\infty}$ goes to infinity. Recalling that $\X$ has independent entries distributed as $X$, we have that
+\begin{equation*}
+\sum_{j=1}^{n_i}\E Z_{ij}^2\mathds{1}_{|Z_{ij}|\ge \eps} \le \E X^2\mathds{1}_{|X|\ge \eps\|w_i\|_{\infty}^{-1}} \sum_{j=1}^{n_i}(w_i)_j^2 = \E X^2\mathds{1}_{|X|\ge \eps\|w_i\|_{\infty}^{-1}},
+\end{equation*}
+which vanishes by the dominated convergence theorem (which is applicable because $\E X^2$ is finite).
+
+We now drop the restriction that $w_n$'s have finite support. For each vector $w_n$, we associate a finite support $S_n$ for which the restriction of $w_n$ to $S_n$, $\Tilde{w}_n$, satisfies $\|\Tilde{w}_n\|_{\ell_2} \ge 1- (0.1)^n$ (say). For convenience, we may assume that $S_{n}$ is non-decreasing with respect to inclusion. Next, notice that by construction $\|\Tilde{w}_n\|_2$ converges to one (recall that $\|w_n\|_{\ell_2}=1$) and also $|S_n|$ goes to infinity because 
+\begin{equation*}
+    0.9 \le \|\Tilde{w}_n\|_{\ell_2} \le \|\Tilde{w}_n\|_{\infty}. |S_n| \le \|w_n\|_{\infty}|S_n|.
+\end{equation*}
+Next, set $\Delta w_n := w_n -\Tilde{w}_n$ and consider the decomposition
+\begin{equation*}
+    \langle \X, w_n\rangle = \langle \X, \frac{\Tilde{w}_n}{\|\Tilde{w}_n\|_{\ell_2}}\rangle\|\Tilde{w}_n\|_{\ell_2} + \langle \X,\Delta w_n\rangle.
+\end{equation*}
+The first term converges to a standard Gaussian by the previous argument, the fact that $\|\Tilde{w}_n\|_{\ell_2}\rightarrow 1$ and Slutsky's theorem. The second term converges to zero in $L^2$ (and consequently in probability) as $\|\Delta w_n\|_{\ell_2}$ goes to zero. Since $\X$ has i.i.d entries and $\Tilde{w}_n$ and $\Delta w_n$ have disjoint support,  $\langle \X, w_n\rangle$ converges to a standard Gaussian because convergence in distribution is additive when the terms are independent.
+\end{proof}
+
+We claim that $(\langle \X,u_n\rangle, \langle \X,v_n\rangle)$ converges in distribution to a bi-dimensional Gaussian with independent entries. To this end, let $w_n = \alpha u_n + \beta \frac{1}{\|v_n\|_{\ell_2}}v_n$ for some $(\alpha, \beta) \in S^1$. Notice that by orthogonality, $w_n$ satisfies the hypothesis of Lemma \ref{lem:CLT_Triang}, therefore $\langle \X,w_n\rangle$ converges to a standard Gaussian, for any $(\alpha,\beta)\in S^1$. Cramer's device implies that $(\langle \X,u_n\rangle,\langle \X,\frac{1}{\|v_n\|_{\ell_2}}v_n\rangle)$ converges to a $2$-dimensional isotropic Gaussian.
+
+Since $\|v_n\|_{\ell_2}\ge c>0$, by passing to a sub-sequence $(v_{nk})$, we have that $\|v_{nk}\|_{\ell_2}$ converges to a constant $c'\in (c,1]$. Slutzky's theorem implies that 
+\begin{equation*}
+    (\langle \X, u_n\rangle, \langle \X, v_n\rangle) \rightarrow_{d} N\left((0,0)\diag(1,c')\right).
+\end{equation*}
+Recalling that a multivariate Gaussian has diagonal covariance matrix if and only if its entries are independent, we conclude that $\langle \X, u_n\rangle$ and $\langle \X, v_n\rangle$ converges to independent Gaussians, say $g$ and $g'$. We reach a contradiction to the fact that $|\langle X,u_n\rangle| - |\langle X,v_n\rangle|$ converges to zero in probability because the same quantity also converges to $|g|-|g'|$ (continuous mapping theorem) which is nonzero almost everywhere.
+
+
+
+\subsection{General Case}
+We prove the general case. To this end, we denote $g$ by a standard Gaussian random variable. Without loss of generality, we may assume that $\|v_n\|_{\ell_2}$ converges to some constant $L \in (0,1]$. 
+
+We then construct a family $J_n$ of indices, for each $n$ sufficiently large, as follows: since $\inf_n \max(\|u_n\|_{\infty},\|v_n\|_{\infty}) >0$, there is an index $j_n(0)$ such that $\max(\|u_n\|_{\infty},\|v_n\|_{\infty})$ equals either $|u_n(j_n(0))|$ or $|v_n(j_n(0))|$. Since the maximum before is uniformly bounded from below, we put $j_n(0)$ in $J_n^c$ for all $n$, and look at the sequences $u_n^{(1)}, v_n^{(1)}$ obtained by deleting that index. If $\limsup_n \max(\|u_n^{(1)}\|_{\infty},\|v_n^{(1)}\|_{\infty}) = 0$, we stop the process. Otherwise, we repeat it for such sequences, selecting $j_n(1), j_n(2),\dots$ to put in $J_n^c,$ with the condition that we stop adding elements to $J_n^c$ as soon as we reach an index $k > 0$ such that $\max(\|u_n^{(k)}\|_{\infty},\|v_n^{(k)}\|_{\infty}) < \frac{1}{n}$. 
+
+Note that the last condition ensures the process always stops after at most $2n+2$ rounds of iteration: indeed, 
+\[
+\frac{1}{n} \ge \frac{1}{n} \|u_n\|_{\ell_2}^2 \ge \frac{1}{n} \sum_{k=0}^{n-1} |u(j_n(k))|^2 \ge |u(j)|^2,
+\]
+whenever $j \not\in\{j_n(1),\dots,j_n(n-1)\}.$ Hence, there are at most $n+1$ indices to be selected ``coming from $u_n$'', and at most the same amount ``coming from $v_n$''. Let then $\Tilde{u}_n$ be defined entry-wise as $\Tilde{u}_n(j) = u_n(j)\mathds{1}(j\in J_n)$ and define $\Tilde{v}_n$ in the same way. 
+
+%{\color{red} Actually, we want to define $J$ as a function of $n$. We want a \emph{profile decomposition}, like the one in 
+
+%\noindent\textsc{https://terrytao.wordpress.com/2008/11/05/concentration- }}
+
+%{\color{red} \textsc{compactness-and-the-profile-decomposition/}}
+
+Since $\|\Tilde{u}_n\|_{\ell_2}$, $\|\Tilde{v}_n\|_{\ell_2}$ and $\langle \Tilde{u}_n,\Tilde{v}_n \rangle$ are uniformly bounded by one,  we may take (diagonally) a sub-sequence such that these three quantities converge and define their limits as $c_u,c_v$ and $r$, respectively. Next, we have that $\|\alpha \Tilde{u}_n + \beta \Tilde{v}_n\|_{\ell_2}$ converge to $\sqrt{\alpha^2 c_u^2 + 2\alpha\beta r + \beta^2 c_v^2}$ and arguing as in Case 2, we have that $\langle \X,\alpha \Tilde{u}_n + \beta \Tilde{v}_n\rangle $ converge to a centred Gaussian whose standard deviation is $\sqrt{\alpha^2 c_u^2 + 2\alpha\beta r + \beta^2 c_v^2}$.
+
+Now, we set $\Delta u_n:= u_n-\Tilde{u}_n$ and $\Delta v_n = v_n-\Tilde{v}_n $. Because $\Delta u_n$ and $\tilde{u}_n$ have disjoint support and $\|u_n\|_2 = 1$, $\|\Delta u_n\|_{\ell_2}$ converges to $1-c_u$. Analogously, $\|\Delta v_n\|_{\ell_2}$ converges to $L-c_v$.
+
+\medskip
+
+\subsubsection{\textbf{$c_u,c_v>0$:}} In this case, we use Prohorov's theorem to ensure that $\langle \X, \Delta u_n \rangle , \,\, \langle \X, \Delta v_n \rangle$ and the vector $(\langle \X , \Delta u_n \rangle, \langle \X, \Delta v_n\rangle)$ converge to $Z_1,Z_2$ and $\mathbf{Z},$ respectively. By the Cram\'er-Wold device again, convergence of 
+
+$$(\langle \X , \Delta u_n \rangle, \langle \X, \Delta v_n\rangle) \rightarrow_{d} \mathbf{Z}$$
+ is equivalent to $\alpha \langle \X , \Delta u_n \rangle + \beta \langle \X, \Delta v_n \rangle \to \alpha \mathbf{Z}_1 + \beta \mathbf{Z}_2$, where $\mathbf{Z} = (\mathbf{Z}_1, \mathbf{Z}_2).$ From this, we readily conclude that $\mathbf{Z}_1 \sim_d Z_1$ and $\mathbf{Z}_2 \sim_d Z_2$. 
+
+We then use the Cram\'er-Wold device once more: indeed, by Prohorov, we have that  
+$$
+\left(\langle \X, u_n\rangle, \langle \X, v_n\rangle \right) \rightarrow_{d} \mathbf{Y},
+$$
+for some two-dimensional random vector $\mathbf{Y}$. On the other hand, by independence between $\Tilde{u}_n$ and $\Delta u_n$ and between $\tilde{v}_n$ and $\Delta v_n$, we obtain that 
+\[
+\langle \X,u_n \rangle \to_d c_u g_1 + Z_1, \quad \langle \X, v_n \rangle \to_d c_v g_2 + Z_2,
+\]
+where $g_1,g_2$ are standard Gaussians, and $g_1 \perp Z_1, \, \, g_2 \perp Z_2$. The same argument as before shows that $\mathbf{Y}_1 \sim_d c_u g_1 + Z_1$ and $\mathbf{Y}_2 \sim_d c_v g_2 + Z_2.$ In other words, 
+\begin{equation*}
+\left(\langle \X, u_n\rangle, \langle \X, v_n\rangle \right) \rightarrow_{d} (c_ug_1 + Z_1, c_v g_2 + Z_2),
+\end{equation*}
+where $g_1,g_2$ are standard Gaussians not necessarily different from each other, and $Z_1,Z_2$ are two square-integrable random variables. Now, noticing that $\tilde{v}_n$ is actually also independent from $\Delta u_n$ (and similarly for $\tilde{u}_n$ and $\Delta v_n$), the proof above actually shows that $Z_i \perp g_j \, \, i,j=1,2$.  
+
+Recalling now that $\left| \  |\langle \X,u_n\rangle| - |\langle \X,v_n\rangle| \ \right|$ converges to zero in $L_2$, by the continuous mapping theorem we must have (almost surely)
+\begin{equation*}
+|c_u g_1 + Z_1| = |c_v g_2 +Z_2|.
+\end{equation*}
+We will need the following lemma in order to continue. 
+
+\begin{lemma}\label{lemma:SPR-rvs} Suppose $\mathcal{X}_i,\mathcal{Y}_i,\,i=1,2$ are non-zero random variables with $\mathcal{X}_i \perp \mathcal{Y}_j,\,i,j=1,2$ and $\E \mathcal{X}_i = \E \mathcal{Y}_i = 0, i =1,2.$ If 
+\[
+|\mathcal{X}_1 + \mathcal{Y}_1| = |\mathcal{X}_2 + \mathcal{Y}_2|
+\]
+almost surely, then there is $c_1 \in \{\pm 1\}$ such that 
+\[
+\mathcal{X}_1 = c_1 \mathcal{X}_2, \cY_1 = c_1 \cY_2 
+\]
+almost surely. 
+\end{lemma}
+
+\begin{proof} We start by squaring the given condition, which yields 
+\begin{equation}\label{eq:pr-rvs} 
+|\cX_1|^2 + 2 \cX_1 \cY_1 + |\cY_1|^2 = |\cX_2|^2 + 2 \cX_2 \cY_2 + |\cY_2|^2. 
+\end{equation} 
+We then take $\E(\cdot | (\cY_1,\cY_2))$ on both sides. This yields 
+\[
+\E |\cX_1|^2 + |\cY_1|^2 = \E |\cX_2|^2 + |\cY_2|^2
+\]
+almost surely. Replacing this back in the original equation, we obtain 
+\[
+|\cX_1|^2 - \E |\cX_1|^2 = |\cX_2|^2 - \E|\cX_2|^2
+\]
+almost surely. Using these considerations in \eqref{eq:pr-rvs}, we have 
+\[
+\cX_1 \cY_1 = \cX_2 \cY_2
+\]
+almost surely. Now, we distinguish some cases: the first is when $\cY_1 = \cY_2 = 0 $ a.s. This implies the claim direclty in \eqref{eq:pr-rvs}. If one of the $\cY_i$ is not zero, then either $\cX_1 = \cX_2 = 0$ a.s., which again implies the claim, or (if $\cY_1 \neq 0$)  
+\[
+\E( \cX_1 \cY_1 1(\cY_1 \in A) | (\cX_1,\cX_2)) = \E(\cX_2 \cY_2 1(\cY_1 \in A)| (\cX_1,\cX_2))
+\]
+a.s. Select $A$ contained in either $\R_+$ or $\R_{-}$, such that $\E(\cY_2 1(\cY_1 \in A)) \neq 0$. This is possible, since otherwise $\cY_1$ and $\cY_2$ have disjoint supports, which implies $\cX_1 = \cX_2 = 0 \text{ a.s.}$. We conclude from the properties of conditional expectation that 
+\[
+\cX_1 = c \cdot \cX_2 \text{ a. s.},
+\]
+for some $c \in \R$. A quick argument shows that either $\cX_1$ is constant almost surely, which cannot be the case since $\E \cX_i = 0$ and $\cX_i \neq 0$, or $|c|=1$. Since the same argument can be used for $\cY_i$, this concludes the proof. 
+\end{proof}
+
+The lemma directly implies that either $c_u g_1 = c_1 \cdot (c_v g_2)$ almost surely, or $|c_u||g_1| = |c_v| |g_2|$ a.s. Suppose first that we have the first case, and without loss of generality that $c_1 = 1$. Then we also know that $Z_1 = Z_2$ almost surely. Since 
+\[
+\langle \X, \tilde{u}_n-\tilde{v}_n\rangle \to_d c_u g_1 - c_v g_2 = 0, \quad \langle \X, \Delta u_n - \Delta v_n \rangle \to_d Z_1 - Z_2 = 0, 
+\]
+by independence, we have $\langle \X, u_n - v_n \rangle \to_d 0.$ For the case where $|c_u||g_1| = |c_v| |g_2|$ a.s., note that 
+\[
+\langle \X, \tilde{u}_n \pm \tilde{v}_n \rangle \to_d c_u g_1 \pm c_v g_2,
+\]
+but, since $\|\tilde{u}_n\|_{\infty} + \|\tilde{v}_n\|_{\infty} \to 0$, Lemma \ref{lem:CLT_Triang} shows that $\langle \X,\tilde{u}_n \pm \tilde{v}_n \rangle \to_d g_{\pm},$ where $g_{\pm}$ denote certain (possibly zero) Gaussians. Since 
+\[
+(c_u g_1 - c_v g_2)(c_u g_1 + c_v g_2) = 0 \text{ a.s.}, 
+\]
+and since $c_u g_1 \pm c_v g_2 \sim_d g_{\pm}$, we must have that either $c_u g_1 = c_v g_2$ a.s. or $c_u g_1 = - c_v g_2$ a.s. If, w.l.o.g., the first case is true, then this, together with the analogue of \eqref{eq:pr-rvs}, shows that $Z_1 = Z_2$ a.s., and the same argument from before can be repeated verbatim, concluding again that $\langle \X, u_n - v_n \rangle \to_d 0$. 
+
+
+We now observe that, since $\| \langle \X, u_n - v_n \rangle \|_{L_2} \le 2$, then convergence in distribution actually implies convergence of the first moment, and hence 
+\[
+\| \langle \X, u_n - v_n\rangle \|_{L_1} \to 0. 
+\]
+We now employ the small ball assumption:
+\[
+\| \langle \X, u_n - v_n\rangle \|_{L_1} \ge \beta_1 \mathbb{P} \left( | \langle \X, u_n - v_n\rangle| > \beta_1\right) \ge \beta_1 \cdot \beta_2,
+\]
+ because $\langle u_n,v_n\rangle=0$ and $\|u_n\|_{\ell_2}=1$. This is a contradiction. 
+\medskip
+
+
+
+
+\subsubsection{\textbf{ Just one $c_u$ or $c_v$ is nonzero:}} Suppose $c_u > 0 = c_v.$ In this case, the proof of Lemma \ref{lemma:SPR-rvs} shows that $c_u = 0$, a contradiction. 
+\medskip
+
+\subsubsection{\textbf{ Both $c_u,c_v$ are zero:}} 
+
+Notice that if $c_u=c_v=0$ then $\langle \Delta u_n,\Delta v_n \rangle$ converge to zero, $\|\Delta u_n\|_{\ell_2}$ converge to one and $\|\Delta v_n\|_{\ell_2}$ converges to $L$. Clearly, both $\Delta u_n$ and $\Delta v_n$ cannot converge to zero in this case, which means that there exist an index  $j_n \in J_n^c$ for which $\lim \sup_n |u_n(j_n)| >0$, without loss of generality. 
+
+We first make a bijection identifying $J_n^c$ with $\{1,\dots,|J_n^c|\} =: I_n$, and then split $I_n$ into three subsets: $I_n^{(1)}$ is the set of indices $k$ such that 
+$$\liminf_n \min(|u_n(j_n(k))|,|v_n(j_n(k))|) > 0,$$
+while $I_n^{(2)}$ is the set of indices where $\liminf_n |u_n(j_n(k))| > 0$ but $\liminf|v_n(j_n(k))| = 0$ -- that is, $u_n$ ``dominates'' those indices. Finally, the set $I_n^{(3)}$ is where $v_n$ ``dominates''. These three sets induce, naturally, a partition of $J_n^c = A_n^{(1)} \cup A_n^{(2)} \cup A_n^{(3)}.$
+
+We then apply a permutation of indices for each $n$, such that the indices of $A_n^{(1)}$ are mapped to the first $|A_n^{(1)}|$ natural numbers, the ones from $A_n^{(2)}$ are mapped to the next $|A_n^{(2)}|$ ones, and the ones from $A_n^{(3)}$ are mapped to the natural numbers between $|A_n^{(1)}| + |A_n^{(2)}| + 1$ and $|J_n^c|$, and move the terms in $J_n$ to the remaining natural numbers By a diagonal argument, we may suppose, upon taking subsequences, that $u_n(j_n(k)), v_n(j_n(k))$ both converge for each fixed $k$ -- where here we adopt the convention that $u_n(j_n(k)) = v_n(j_n(k)) = 0$ if $k > |J_n^c|$. 
+
+We hence identify the sequences $\Delta u_n, \Delta u_n$ with the rearranged sequences. Since the entries of $\X$ are i.i.d., this reordering is valid and does not change the problem. 
+
+%We enumerate $J_^c =\{j_1,j_2,\ldots\}$. If $J^c$ is finite then we extract sub-sequence (diagonally) such that for all indexes $j\in J^c$, both $\Delta u_n(j)$ and $\Delta v_n(j)$
+%converge. Since $J^c$ is finite, $\Delta u_n$ and $\Delta v_n$ have limit in $\ell_2$ norm and we argue as in Case 1 to finish the proof. 
+
+%The case when $J^c$ is infinite is more subtle. We consider a permutation $\pi$ in $J^c$, the index $j_1^{\ast}$ corresponding to the largest $\limsup |u_n(j)|$ is mapped to $j_1$, the index $j_2^{\ast}$ corresponding to the largest $\limsup |v_n(j)|$, the index $j_3^{\ast}$ corresponding to the second largest $\limsup |u_n(j)|$ is mapped to $j_3$ and so forth. Since $\X$ has i.i.d entries, $\langle \X, \alpha \Delta u_n + \beta \Delta v_n \rangle$ does not change its law by taking such permutation among indexes of $J^c$, while preserving the indexes in $J$. We apply $\pi$ to both $u_n$ and $v_n$, therefore the vanishing orthogonality between $\Delta u_n$ and $\Delta v_n$ is preserved.
+
+%Given any positive $\varepsilon$, since $\|\Delta u_n\|_{\ell_2}$ and $\|\Delta v_n\|_{\ell_2}$ are bounded by one, there exists $N_{\varepsilon}$ for which both $\sum_{k=1}^{N_{\varepsilon}} u_n(\pi^{-1}(j_k))^2$ and $\sum_{k=1}^{N_{\varepsilon}} v_n(\pi^{-1}(j_k))^2$ are at most $\varepsilon$ away from the limits $1$ and $L$, respectively, for sufficiently large $n$. The existence of such $N_{\varepsilon}$ may be proved as follows: 
+
+ Now, we further split our variables $\Delta u_n$ and $\Delta v_n$ according to the sets $A_n^{(i)}$ defined above, as $\Delta u_n^{(i)} = \Delta u_n \mathds{1} (j \in A_n^{(i)})$, and similarly for $\Delta v_n^{(i)}$. Upon passing to subsequences again, we may suppose that $\|\Delta u_n^{(i)}\|_{\ell_2},\|\Delta v_n^{(i)}\|_{\ell_2}$ all converge. \\
+
+\noindent\textit{2.3.3.1: The `non-central' intervals.} We then first deal with the `non-central' intervals $A_n^{(2)}$ and $A_n^{(3)}$. Indeed, fix first $A_n^{(2)}$, and let $u^{(2)}$ denote the entry-wise limit of $\Delta u_n^{(2)}$ (one has to be more precise here, but I am confident it is understandable from context). Upon restricting the index set, we may find $u_n^{(2),R}$ sequence given by restricting $\Delta u_n^{(2)}$ to a certain sub-set of indices, such that $u_n^{(2),R} \to u^{(2)}$ in $\ell_2$. Take the sequence of indices associated with the support of $u_n^{(2),R}$, call it $I_n^{R}$. Let $v_n^{(2),R}$ be given by the restriction of $\Delta v_n^{(2)}$ to $I_n^{R}$. 
+
+ By Prohorov, we may assume (upon passing to subsequences) that 
+ \[
+( \langle \X, u_n^{(2),R}\rangle, \langle \X, v_n^{(2),R} \rangle) \to_d (Y_1,Y_2). 
+ \]
+ Take $u_n^{(2),T}, v_n^{(2),T}$ to be the restriction of $u_n,v_n$ (respectively) to  $\N \setminus I_n^{R}$. By Prohorov again, we have 
+ \[
+ ( \langle \X, u_n^{(2),T}\rangle, \langle \X, v_n^{(2),T} \rangle) \to_d (Z_1,Z_2). 
+ \]
+ By construction, we have $Z_i \perp Y_j, i,j=1,2$, and furthermore $Y_1 = \langle X,u^{(2)}\rangle$, $Y_2$ is a Gaussian random variable. Arguing exactly as in the first case here, we have that 
+ \[
+ |Y_1 + Z_1|^2 = |Y_2 + Z_2|^2
+ \]
+ almost surely. By Lemma \ref{lemma:SPR-rvs}, we either have $Z_1 = Z_2 = 0$ a.s., which implies $|Y_1|^2 = |Y_2|^2$, or $Y_1 = \pm Y_2$. Let us show that this actually holds in general: indeed, since 
+ \[
+ (Y_1 - Y_2)(Y_1 + Y_2) = 0 \text{ a.s.}, 
+ \]
+ it follows that one of the two variables vanishes on a positive measure set. On the other hand, by the Cram\'er-Wold device, we have 
+ \[
+ \langle \X, u_n^{(2),R}\pm v_n^{(2),R}\rangle \to_d Y_1 \pm Y_2. 
+ \]
+ We then have two cases to consider: \textbf{case 1} is when $v_n^{(2),R} \to 0$ in $\ell_2$. In that case, 
+ \[
+ \langle \X, u_n^{(2),R}\pm v_n^{(2),R}\rangle \to \langle \X, u^{(2)} \rangle 
+ \]
+    in $L_2$-norm, and hence also in distribution. Thus, we have that $\langle \X, u^{(2)} \rangle = 0$ a.s., which implies by phase retrieval that $u^{(2)} = 0$, a contradiction. On the other hand, for \textbf{case 2} when $\limsup_n \|v_n^{(2)}\|_{\ell_2} > 0$ we need the following lemma: 
+
+    \begin{lemma}
+    Let $\{w_n\}_n$ denote a sequence of elements in $\ell_2$ such that 
+    $$\liminf_n \|w_n\|_{\infty} > 0$$
+    but $w_n$ does not converge in $\ell_2$. If $\langle \X, w_n\rangle \to_d Z$, then $Z$ is absolutely continuous. 
+    \end{lemma}
+
+    \begin{proof}
+    Since $\X$ has i.i.d. entries, we may suppose without loss of generality that $w_n$ has non-increasing entries. Hence, by diagonally taking convergent subsequences, let $w_0$ denote the element of $\ell_2$ which is a pointwise limit of $w_n$. 
+
+    Consider then a a subset $\mathcal{I}_n$ of the indices of $w_n$ such that $w_n \cdot \mathds{1}_{\mathcal{I}_n} \to w_0$ in $\ell_2$. Since $w_n$ does \emph{not} converge in $\ell_2$, we have $w_n \mathds{1}_{\mathcal{I}_n^c}$ converges to $0$ in $\ell_{\infty}$ norm, but has positive $\ell_2$ norm. We have then 
+    \[
+    \langle \X, w_n \mathds{1}_{\mathcal{I}_n}\rangle \to_{L_2} \langle \X, w_0 \rangle,
+    \]
+    as well as $\langle \X, w_n\mathds{1}_{\mathcal{I}_n^c}\rangle \to_d \alpha \cdot g$, 
+    where $g$ is a standard Gaussian and $\alpha >0$.  By independence, this implies that 
+    \[
+    \langle \X, w_n \rangle \to_d \langle \X,w_0\rangle + \alpha \cdot g,
+    \]
+    where $g \perp \langle \X,w_0 \rangle$. By independence, the distribution of the right-hand side above is absolutely continuous (as a convolution of an absolutely continuous probability measure with an arbitrary one). This concludes the proof. 
+    \end{proof}
+
+ In order to finish the argument for that part, note that $u_n^{(2),R} \pm v_n^{(2),R}$ satisfies the conditions of the lemma, since if it converged in $\ell_2$, its limit would necessarily need to be $u^{(2)}$, which is not the case by assumption. Naturally, the lemma yields that $\langle \X, u_n^{(2),R} \pm v_n^{(2),R}\rangle \to_d Y_1 \pm Y_2$, and $Y_1 \pm Y_2$ are both absolutely continuous. On the other hand, since $(Y_1-Y_2)(Y_1+Y_2) = 0$ a.s., we arrive at a contradiction. 
+
+ This shows that, whenever the `non-central' intervals $A_n^{(2)}$ (and $A_n^{(3)}$ by directly repeating the proof above) are non-empty for sufficiently large $n$, we are able to conclude our result. Hence, we may suppose that the only non-trivial interval constituting $J_n^c$ is $A_n^{(1)}$. \\
+
+\noindent\textit{2.3.3.2: The central interval dominates.}  In that case, we have to further divide into cases. \\
+
+ \noindent \textbf{Case 2.3.3.2.1:} Both $\Delta u_n^{(1)}$ and $\Delta v_n^{(1)}$ converge in $\ell_2$ to $u_0,v_0$, respectively. In that case, we are back to the first overall case: 
+ \[
+ \langle \X, u_n \rangle = \langle \X, \Delta u_n^{(1)} \rangle + \langle \X, \tilde{u}_n\rangle \to_d \langle \X, u_0\rangle. 
+ \]
+This implies that $|\langle \X, u_0 \rangle| = |\langle \X,v_0 \rangle|$ almost surely. Phase retrieval then implies that $u_0 = \pm v_0$. Now, using the $\ell_2$ convergence of the sequences, we have that $0 = \lim_n \langle \Delta u_n^{(1)}, \Delta v_n^{(1)} \rangle = \langle u_0,v_0\rangle$, which is a contradiction. \\
+
+\noindent\textbf{Case 2.3.3.2.2:} $\Delta u_n^{(1)}$ converges in $\ell_2$, while $\Delta v_n^{(1)}$ does not. In this case, let $u_0$ be the $\ell_2$-limit of $\Delta u_n^{(1)}$, and $v_0$ denote the pointwise limit of $\Delta v_n^{(1)}$. 
+
+We split $\Delta v_n^{(1)}$ into two disjointly supported elements $\Delta v_n^{(1),C} + \Delta v_n^{(1),R}$, where $\Delta v_n^{(1),C} \to v_0$ in $\ell_2$, and $\|\Delta v_n^{(1),R}\|_{\infty} \to 0$ but $\liminf_n \| \Delta v_n^{(1),R}\|_2>0$. Denote by $\Delta u_n^{(1),C}$ and $\Delta u_n^{(1),R}$ the restriction of $\Delta u_n^{(1)}$ to the index-sets induces by $\Delta v_n^{(1),C}$ and $\Delta v_n^{(1),R}$, respectively. 
+
+By convergence of $\Delta u_n^{(1)}$, we have that there exists $u_{0,C}$ and $u_{0,R}$ such that $\Delta u_n^{(1),C} \to u_{0,C}$ and $\Delta u_n^{(1),R} \to u_{0,R}$. Hence, 
+\[
+|\langle \X, u_{0,C} \rangle + \langle \X, u_{0,R} \rangle| = |\langle \X, v_0 \rangle + \beta \cdot g|,
+\]
+for some $\beta > 0$. Moreover, we have that the supports of $u_{0,C}$ and $u_{0,R}$ are \emph{disjoint}, and $\langle \X, u_{0,C} \rangle$ is independent of $g$, $\langle X,v_0 \rangle$ independent of $g$. By Lemma \ref{lemma:SPR-rvs}, we have that $|\langle \X,u_{0,R} \rangle| = | \beta \cdot g|$. By the same argument we employed for the ``non-central'' cases, this implies in a contradiction. \\
+
+\noindent\textbf{Case 2.3.3.2.3:} Neither of $\Delta u_n^{(1)}, \Delta v_n^{(1)}$ converges. We then basically repeat the process above, taking a sequence $\Delta u_n^{(1),C_1} \to u_0$ in $\ell_2$, while $\Delta u_n^{(1),R_1}$ plays the role of a remainder which vanishes in $\ell_{\infty}$ norm, but has non-trivial $\ell_2$-mass. We do the same for $v_n$, obtaining $\Delta v_n^{(1),C_2} \to v_0$ in $\ell_2$, with $\Delta v_n^{(1),R_2}$ as the non-trivial remainder. \\
+
+\vspace{2mm}
+
+\noindent\textbf{Case 2.3.3.2.3.1:} $\text{supp}(\Delta u_n^{(1),C_1}) \cap \text{supp}(\Delta v_n^{(1),R_2}) \neq \emptyset$ for infinitely many $n$. In that case, we repeat the analysis employed for the ``non-central'' intervals above: indeed, let $B_n = \text{supp}(\Delta u_n^{(1),C_1}) \cap \text{supp}(\Delta v_n^{(1),R_2})$, and consider $s_n = \Delta u_n^{(1),C_1} \cdot \mathds{1}_{B_n}, \, r_n = \Delta v_n^{(1),R_2} \cdot \mathds{1}_{B_n}$. We have that $s_n$ converges in $\ell_2$ by assumption, and $r_n$ converges to $0$ in $\ell_{\infty}$. 
+
+Suppose that $\|s_n\|_{\ell_2} + \|r_n\|_{\ell_2} > c_0$ for a sequence of $n$ sufficiently large. Then either $s_n \to_{\ell_2} s_0 \neq 0$, or $\liminf_n \|r_n\|_{\ell_2} > 0$, or both. If only the first of these alternatives happens, then we promptly obtain a contradiction, and similarly only if the second one holds. We suppose then that both hold. 
+
+In that case, we obtain directly that $|\langle \X, s_0 \rangle| = \gamma |g|$, for some $\gamma > 0$, where $g$ is a Gaussian random variable. But now we have that both $\langle \X, s_n \pm r_n\rangle$ converge to absolutely continuous random variables. By the same argument as above, this is a contradiction too. 
+
+Hence, the only way we do not reach a contradiction is if $\|s_n\|_{\ell_2} + \|r_n\|_{\ell_2} \to 0$ with $n$. In that case, we move the indices in $B_n$ to the set $J_n^c$, which shows that we may always suppose that $\text{supp}(\Delta u_n^{(1),C_1}) \cap \text{supp}(\Delta v_n^{(1),R_2}) = \emptyset$. The exact same argument shows that we may also suppose that $\text{supp}(\Delta u_n^{(1),R_1}) \cap \text{supp}(\Delta v_n^{(1),C_2}) = \emptyset$ without loss of generality. \\
+
+\vspace{2mm}
+
+\noindent\textbf{Case 2.3.3.2.3.2:} Remaining cases. We then replace the whole sequence $u_n$ by $\Delta u_n^{(1)}$ and $v_n$ by $\Delta v_n^{(1)}$. By our previous reductions, we have that $\|\tilde{u}_n\|_{\ell_2} + \|\tilde{v}_n\|_{\ell_2} \to 0$ with $n$, and hence $\langle \Delta u_n^{(1)}, \Delta v_n^{(1)} \rangle_{\ell_2} \to 0$, with the additional property that $\|\Delta u_n^{(1)}\|_{\ell_2} \to 1, \, \|\Delta v_n^{(1)}\|_{\ell_2} \to L$. 
+
+Moreover, by the previous cases, we have that $u_n^{C_1}$ has disjoint support from $v_n^{R_2}$, as well as $u_n^{R_1}$ has disjoint support from $v_n^{C_2}$. Take then the set of indices $C_n = \text{supp}(u_n^{R_1}) \cup \text{supp}(v_n^{R_2})$. By our previous reduction, we actually have $\text{supp}(u_n^{R_1}) = \text{supp}(v_n^{R_2}) = C_n$. We then redo the proof of $c_u,c_v>0$ above, with $C_n$ in place of $J_n^c$. 
+
+By the considerations above, this yields once more a contradiction. Since this was the final case in our analysis, this concludes the proof. 
+
+
+ 
+
+
+\section{References}
+https://www.stat.berkeley.edu/users/pitman/s205f02/lecture10.pdf - Triangular Arrays and CLT. Slutzky's theorem can be found in Wikipedia. 
+
+
+
+
+
+
+
+
+
+
+
+\end{document} 
+
+ {\color{red} Add argument}
+
+ $ I=\{\pi(j_1),\ldots,\pi(j_{N_{\varepsilon}})\}$ is a finite set, therefore $\Delta u_n$ restricted to $I$ and $\Delta v_n$ restricted to $I$ converge in $\ell_2$ sense to some limits $\Delta u_{lim}(\varepsilon)$ and $\Delta v_{lim}(\varepsilon)$. Let's consider the remainder terms $u^r$ and $v^r$ defined entrywise by $u^r(j) = \Delta u_n (j) \mathds{1}(j \notin I)$ and $v^r(j) = \Delta v_n (j) \mathds{1}(j \notin I)$. 
+
+
+ 
+ We apply Prohorov's theorem to ensure that $\langle X, \alpha u^r + \beta v^r \rangle$ which is bounded in $L^2$ by $2\varepsilon$ regardless the value of $\alpha,\beta$ (provided that they are at most one each) converge to some distribution $Z(\alpha,\beta)$ bounded in $L^2$ by $2\varepsilon$.
+
+We conclude that for any given $\varepsilon>0$, there exists $u_{lim}(\varepsilon)$ and $v_{lim}(\varepsilon)$ such that the following holds: For any $\alpha, \beta$, there exists a random variable $Z(\alpha,\beta)$ satisfying $\sup_{(\alpha,\beta)\in S^1} \|Z(\alpha,\beta)\|_{L^2} \le \varepsilon$ and 
+\begin{equation*}
+    \langle \X, \alpha u_n +\beta v_n\rangle \rightarrow_{d} \langle \X, \alpha u_{lim}(\varepsilon) + \beta v_{lim}(\varepsilon)\rangle + Z(\alpha,\beta).
+\end{equation*}
+By Cramer's device, we obtain that 
+\begin{equation*}
+\left(\langle \X, u_n\rangle, \langle \X, v_n\rangle\right) \rightarrow_{d} \left(\langle \X, u_{\lim}\rangle, \langle \X, v_{\lim}\rangle \right) + (Z_1,Z_2) ,
+\end{equation*}
+for some $Z_1,Z_2$ independent from $\X$. Arguing as in Case 1, for any given $\varepsilon>0$, we obtain that almost surely,
+\begin{equation*}
+    | \langle \X, u_{lim}(\varepsilon) \rangle + Z_1| = | \langle \X, v_{lim}(\varepsilon) \rangle + Z_2|.
+\end{equation*}
+We constructed $u_{lim}(\varepsilon)$ by restricting the coordinates of $\Delta u_n$ to a sufficiently large set $I$. Notice that for any $\varepsilon' < \varepsilon$, the support of $u_{lim}(\varepsilon)$ is contained in the support of $u_{lim}(\varepsilon ')$. Moreover, since the $\ell_2$ norm of $u_{\lim}(\varepsilon)$ gets closer and closer to $1$ as $\varepsilon$ decreases, we may take a decreasing sequence $\varepsilon_{k}:=2^{-k}$ (say) for which $u_{lim}(\varepsilon_k)$ is a Cauchy sequence. Therefore $u_{lim}(\varepsilon_k)$ has a limit $u_o \in \ell^2$ as $\ell_2$ is a complete space. The same argument holds for $v_{lim}(\varepsilon_k)$. Moreover, as $\varepsilon_k$ decreases, $Z_1(\varepsilon_k),Z_2(\varepsilon_k)$ converge to zero in $L^2$. Finally, we obtain that there exists two orthogonal vectors $u_o$ and $v_o$ such that almost surely
+\begin{equation*}
+    |\langle \X, u_0\rangle | = |\langle \X, v_o\rangle |.
+\end{equation*}
+Arguing exactly as in Case 1, we conclude the proof.

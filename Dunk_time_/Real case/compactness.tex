@@ -1,0 +1,145 @@
+\documentclass{inprogress}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\sign}{\operatorname{sign}}
+\newcommand{\law}{\operatorname{Law}}
+\newcommand{\Span}{\operatorname{Span}}
+\newcommand{\erfc}{\operatorname{erfc}}
+\newcommand{\eps}{\varepsilon}
+
+\newlist{hypotheses}{enumerate}{2}
+\setlist[hypotheses]{leftmargin = 5em}
+\newcommand{\Hyp}[1]{\item[\textsc{#1}]\label{hyp:#1}\!\!\!\textsc{:}}
+\newcommand{\hyp}[1]{\textsc{#1}}
+
+
+\title{A compactness approach to $L^2$ stable phase retrieval for independent random variables}
+
+\begin{document}
+\maketitle
+
+Let us recall the definition of stable phase retrieval.
+\begin{theorem}
+    Let $E$ be a subspace of $L^p(\mu)$ and fix $C\geq 1$. We say that $E$ does $C$-SPR if for all $f,g\in E$ we have
+    \begin{equation}\label{C-SPR}
+        \inf_{|\lambda|=1}\|f-\lambda g\|\leq C \| |f|-|g|\|.
+    \end{equation}
+\end{theorem}
+
+
+The purpose of this document is to prove the following theorem.
+
+\begin{theorem}
+    \label{thm:goal}
+    Let $X_1, \dots, X_n, \dots$ be independent random variables and let $\delta>0$ be such that for all $i\in \mathbb{N}$, we have
+    \begin{hypotheses}
+        \Hyp{XNorm} $\|X_i\|_2 = 1$,
+        \Hyp{XMean} $\mathbb E[X_i] =  0$,
+        \Hyp{XEquiv} $\delta \|X_i\|_2 \le \|X_i\|_1 \le (1-\delta) \|X_i\|_2$.
+    \end{hypotheses}
+    Then the family of $X_i$ performs SPR in $L^2$ with constant $C=C_\delta$. More specifically, for any $X, Y \in \Span(X_1, \dots, X_n \dots)$ one has \[
+    \inf_{|\lambda|=1}\mathbb E[|X-\lambda Y|^2]\le C_\delta \mathbb E[||X|-|Y||^2].
+    \]
+\end{theorem}
+
+
+We will prove \Cref{thm:goal} by contradiction, together with the standard Taylor-style orthogonality-reduction.
+
+
+\begin{proposition}\label{by_contradiction}
+Let $X_i^n$ be a sequence (of sequences) of random variables, all satisfying \hyp{XNorm}, \hyp{XMean}, \hyp{XEquiv}. Let $a^n$, $b^n$ be sequences in $l^2(\mathbb N)$, and define $X_n:= \sum_i a_i^n X_i^n, Y_n:= \sum_i a_i^n Y_i^n, $. There are no sequences $a^n, b^n$ satisfying all of the following:
+\begin{hypotheses}
+\Hyp{SNorm} $\|a^n\|_2 = \|b^n\|_2 = 1$, or equivalently $\|X^n\|_{L^2}=\|Y^n\|_{L^2}=1$
+\Hyp{SOrth} $\langle a^n, b^n \rangle = 0$, or equivalently $\langle X^n,Y^n\rangle_{L^2}=1$
+\Hyp{ASmall} $\| |X^n| - |Y^n| \|_2 \to 0$.
+\end{hypotheses}
+
+\end{proposition}
+
+In order to do this, we will use the following compactness/rearrangement result.
+\newcommand{\CovFin}{\operatorname{CovFin}}
+\begin{lemma}\label{compactness_rearrangement}
+    Let $a^n,b^n$ be two sequences of vectors in $\ell^2$ such that $\|a^n\|_2 = \|a^n\|_2 = 1$, $\langle a^n, a^\infty \rangle = 0$. Then, after possible re-indexing of the elements in each $a^n$ (shuffling in the $i$ variable, with a shuffling depending on $n$) and passing to a subsequence in $n$, one can extract sequences  $a^\infty, b^\infty \in L^2$ such that 
+    \begin{enumerate}
+        \item $a_n \to a^\infty$ in $l^{\infty}$ and $b^n \to b^\infty$ in $l^\infty$
+        \item $\lim_{n_0\to\infty} \sup_{n,m\ge n_0} |a_n^m| = 0$ and $\lim_{n_0\to\infty} \sup_{n,m\ge n_0} |b_n^m| = 0$.
+    \end{enumerate}
+    In this case there exists a symmetric matrix 
+    $$\CovFin(a^\infty, b^\infty):= \begin{pmatrix} \langle a^\infty, a^\infty \rangle & \langle a^\infty, b^\infty \rangle \\ \langle b^\infty, a^\infty \rangle & \langle b^\infty, b^\infty \rangle \end{pmatrix}.$$
+    By Fatou, $0\preceq \CovFin(a^\infty, b^\infty) \preceq I$.
+
+    Moreover, one can split each sequence $a^n \in l^2$ into a sequence $a^{n} = a^n_{head}+a^n_{tail}$ such that
+    \begin{enumerate}
+        \item $a^n_{head}$ and $a^n_{tail}$ have disjoint support
+        \item $\lim_{n\to\infty} \|a^n_{head}-a^{\infty}\|_{2} = 0$
+    \end{enumerate}
+    and equivalently for $b_n$. One can do it in such a way that the heads of $a$ and $b$  may have overlapping support, but no head (for $a$ or $b$) overlaps any tail (for $a$ or $b$).
+\end{lemma}
+
+\begin{proof}
+    For each index $n$, re-order the indices so that $\max (|a_i^n|,|v_i^n|)$ is decreasing. One can then extract a weakly convergent subsequence.
+    Then separate \emph{head} from \emph{tail} by a cut-off index $i_0(n)$ that grows slow enough to ensure there is no exess mass.
+\end{proof}
+
+
+The matrix $\CovFin(a^\infty, b^\infty)$ captures how much of the $l^2$-mass escapes to infinity. The part "escaping at infinity" will still be "split" into two parts one coming from an "infinitely divisible" CLT-type term.
+
+From here on, we will assume that the coefficents $a_n$, $b_n$ that we are considering have the property of the Lemma (i.e. that they have been reshufled). This does not change the problem at hand.
+
+Now we will prove some weak facts, 
+
+\begin{lemma} 
+    {Phase retrieval}
+    Under the hypotnesis of Proposition \ref{by_contradiction}, assuming a rearrangement of the form of Lemma \ref{compactness_rearrangement}, we have
+    $
+    a^\infty = \pm b^\infty
+    $.
+\end{lemma}
+
+\begin{proof}
+    We can compute $a_i^2$ and $a_i\cdot a_j$ continuously (in $L^1$) from $|X^n|^2$, but $|X^n|^2-|Y^n|^2 \to 0 $ in $L^1$.
+\end{proof}
+
+We define the random variables $X^n_{head},X^n_{tail},Y^n_{head},Y^n_{tail}$, noting that by constructions the two heads are independent from the two tails (but the heads are not independent from the heads and vice-versa). The quadruple $(X^n_{head},X^n_{tail},Y^n_{head},Y^n_{tail})$ is tight, and in particular we can extract a convergent subsequence (where all the functions growing strictly slower than quadratically will converge as well). Independence is of course preserved. Moreover,
+
+\begin{lemma}
+The tuple $Y^n_{head},Y^n_{tail}$  converges in law to an infinitely-divisible random variable $Y^\infty_{head},Y^\infty_{tail}$. Moreover, the support of $Y^\infty_{head},Y^\infty_{tail}$ is supported on a line if and only if there exists a non-zero vector $(\alpha, \beta)$ such that
+$$
+\|\alpha a^n - \beta b^n\|_{l^2} \to 0
+$$
+\end{lemma}
+
+\begin{proof}
+    The infinite divisibility follows from the fact that the variables tight and the moments of each of the summands vanish. The variable $(Y^\infty_{head},Y^\infty_{tail})$ has mean $(0,0)$. In particular if it is concentrated on a line, it is a line going through the origin, and there exists a non-zero vector $(s,t)$ such that $\alpha X^\infty_{tail} + \beta+ Y^{\infty}_{tail} = 0$.
+
+    But $\alpha X^\infty_{tail} + \beta+ Y^{\infty}_{tail}$ is equal (in law) to the limit of $Z_n := \sum_{i} (\alpha (a^n_{tail})_i+\beta (b^n_{tail})_i)X_i$. But we have that $0 = \mathbb E [|\lim Z_n|] = \lim \mathbb E [| Z_n|] \approx \lim \mathbb E [| Z_n|^2] $ (TODO this step uses that iid sums preserve up to a constant the $L^/L^2$ ratio)
+\end{proof}
+
+By taking limits,
+
+$$
+\||X^\infty_{head}+X^\infty_{tail}|-|Y^\infty_{head}+Y^\infty_{tail}|\|_{L^{1}} = 0
+$$
+this is only possible if the random variable $(X^\infty_{tail}, Y^\infty_{tail})$ is supported on the union of two lines (there must exist some values $x,y$ such that)
+
+$$
+|x+X^\infty_{tail}|-|y+Y^\infty_{tail}| = 0 \text{ a. s.}
+$$
+\begin{lemma}
+    If an infinitely-divisible random variable $Z$ in $\mathbb R^2$ is supported on the  union of two secant lines, then it is actually supported in one of the lines. 
+\end{lemma}
+\begin{proof}
+    This already holds for $2-$divisible random variables. If $Z$ is not supported on a line, and $Z  = Y + Y$, then $Y$ cannot be supported on a line. In this case neither can $Y+Y$.
+\end{proof}
+
+In particular, in this case we must have $X^{\infty}_{tail} = \pm Y^{\infty}_{tail} \neq 0$. By changing signts, assume equality. Since we also have $X^\infty_{head} = \pm Y^\infty_{head}$, going back to 
+
+$$
+|X^\infty_{head}+X^\infty_{tail}| = |\pm X^\infty_{head}+X^\infty_{tail}| \text{ a. s.}
+$$
+we see that the sign has to be a $+$. 
+
+At this point we have shown that the heads converge in $L^2$ and so do the tails, contradicting orthogonality.
+
+
+
+\end{document}

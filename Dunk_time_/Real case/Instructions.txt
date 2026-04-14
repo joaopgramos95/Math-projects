@@ -1,0 +1,17 @@
+In the file compactness_formal.tex there are the contents of the mathematical characterization of when the span of independent random variables satisfying basic nondegeneracy estimates does stable phase retrieval. This is achieved by doing a compactness argument and deriving the result by contradiction: indeed, we show that the limit distribution would have to fail phase retrieval, but we are able to explcitly characterize the limit in terms of infinitely divisible laws, which helps us finish.
+
+In the directory QuantPR, on the other hand, there is quantitative proof of the same result, where the last compactness argument may be replaced by an explicit part where we use anticoncentration estimates in order to show that the diffuse part actually helps us. 
+
+Your task is to write a paper - by the same author as in both files - on the solution of the problem at hand. Your paper should follow the structure below: 
+
+1. Introduction. Write an extensive introduction speaking of the history of the problem, the relevance, and the results. After the statement of the results, there should be a brief (10-15 lines) description of the methods of proof. At the end of the introduction, write a paragraph containing the description of the contents of the sections. Do not forget to mention that, although we have a quantiative proof by now, the compactness one was included due to its adaptability and rubustness in other contexts. 
+
+2. Preliminaries. Write a section with the relevant mathematical preliminaries to the paper. In this first pass, be as complete and precise as you can: include all relevant results in both manuscripts, and then some more at your own discretion. The results should be clearly and consistently stated across the sections, and the proofs should be rigorous and precise.
+
+3. First proof: compactness. In this section, write the proof contained in compactness_formal.tex. Subdivide this section into subsections, each of which contains the main parts of the compactness proof of the main result. Here, you should take a look at the file complex_spr_one_exception.tex in order to add a remark: the last part about the limit law being infinitely divisible and concentrated on lines may be replaced by showing that the limit law has nontrivial Gaussian part (as in the complex_spr_one_exception.tex file shows towards its end); prove that remark explciitly and carefully. 
+
+4. Second proof: anticoncentration. Write the second proof here, explaining how the limit law part may be bypassed by a clever decomposition argument together with anticoncentration estimates. Be precise here again, and fully rigorous (as you shall be throughout the manuscript). 
+
+5. Comments. Add a section with whatever comments you may think are relevant here: extensions to other models (as the complex case; do not mention it as ongoing work or anything, rather mention it as a direction worth exploring; as well as to phase retrieval modulo more general symmetries) and open problems (if you can think of any such TRULY interesting ones. 
+
+Wrap up with the bibliography; ideally it should be a comprehensive of 40-60 papers directly/almost directly related to this one, trying to always include important papers in the area and published in prestigious journals/authored by important people, whenever this is not a stretch. 

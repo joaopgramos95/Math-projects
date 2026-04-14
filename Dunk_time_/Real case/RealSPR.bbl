@@ -1,0 +1,250 @@
+\begin{thebibliography}{10}
+
+\bibitem{akrami2021note}
+F~Akrami, PG~Casazza, MA~Fard, and A~Rahimi.
+\newblock A note on phase (norm) retrievable real {H}ilbert space (fusion)
+  frames.
+\newblock {\em arXiv preprint arXiv:2107.09606}, 2021.
+
+\bibitem{alaifari2017continuous}
+Rima Alaifari and Philipp Grohs.
+\newblock Phase retrieval in the general setting of continuous frames for
+  {B}anach spaces.
+\newblock {\em SIAM J. Math. Anal.}, 49(3):1895--1911, 2017.
+
+\bibitem{AG-continuous-frames}
+Rima Alaifari and Philipp Grohs.
+\newblock Phase retrieval in the general setting of continuous frames for
+  {B}anach spaces.
+\newblock {\em SIAM J. Math. Anal.}, 49(3):1895--1911, 2017.
+
+\bibitem{alaifari2021gabor}
+Rima Alaifari and Philipp Grohs.
+\newblock {G}abor phase retrieval is severely ill-posed.
+\newblock {\em Appl. Comput. Harmon. Anal.}, 50:401--419, 2021.
+
+\bibitem{localphase}
+W.~Alharbi, S.~Alshabhi, D.~Freeman, and D.~Ghoreishi.
+\newblock Locality and stability for phase retrieval.
+\newblock {\em Sampling Theory, Signal Processing, and Data Analysis, to
+  appear}, 2023.
+
+\bibitem{MR2011364}
+Charalambos~D. Aliprantis and Owen Burkinshaw.
+\newblock {\em Locally solid {R}iesz spaces with applications to economics},
+  volume 105 of {\em Mathematical Surveys and Monographs}.
+\newblock American Mathematical Society, Providence, RI, second edition, 2003.
+
+\bibitem{balan2013}
+R.~Balan.
+\newblock Stability of phase retrievable frames.
+\newblock {\em SPIE Optical Engineering + Applications, International Society
+  for Optics and Photonics}, 2013.
+
+\bibitem{bandeira2014saving}
+Afonso~S. Bandeira, Jameson Cahill, Dustin~G. Mixon, and Aaron~A. Nelson.
+\newblock Saving phase: injectivity and stability for phase retrieval.
+\newblock {\em Appl. Comput. Harmon. Anal.}, 37(1):106--125, 2014.
+
+\bibitem{bartusel2021phase}
+David Bartusel, Hartmut F{\"u}hr, and Vignon Oussa.
+\newblock Phase retrieval for affine groups over prime fields.
+\newblock {\em arXiv preprint arXiv:2109.07123}, 2021.
+
+\bibitem{casazza2017weak}
+S.~Botelho-Andrade, P.G. Casazza, D.~Ghoreishi, S.~Jose, and J.C. Tremain.
+\newblock Weak phase retrieval.
+\newblock {\em Compressed Sensing and its Applications}, pages 221--234, 2017.
+
+\bibitem{casazza2013}
+J.~Cahill, P.G. Casazza, J.~Peterson, and L.~Woodland.
+\newblock Using projections for phase retrieval.
+\newblock {\em Proc. {SPIE} 8858, Wavelets and Sparsity {XV}}, 2013.
+
+\bibitem{cahill2016infinite}
+Jameson Cahill, Peter~G. Casazza, and Ingrid Daubechies.
+\newblock Phase retrieval in infinite-dimensional {H}ilbert spaces.
+\newblock {\em Trans. Amer. Math. Soc. Ser. B}, 3:63--76, 2016.
+
+\bibitem{calderbank2022stable}
+Robert Calderbank, Ingrid Daubechies, Daniel Freeman, and Nikki Freeman.
+\newblock Stable phase retrieval for infinite-dimensional subspaces of
+  {$L_2(\mathbb R)$}, 2022.
+
+\bibitem{MR3260258}
+Emmanuel~J. Cand\`es and Xiaodong Li.
+\newblock Solving quadratic equations via {P}hase{L}ift when there are about as
+  many equations as unknowns.
+\newblock {\em Found. Comput. Math.}, 14(5):1017--1026, 2014.
+
+\bibitem{MR3069958}
+Emmanuel~J. Cand\`es, Thomas Strohmer, and Vladislav Voroninski.
+\newblock Phase{L}ift: exact and stable signal recovery from magnitude
+  measurements via convex programming.
+\newblock {\em Comm. Pure Appl. Math.}, 66(8):1241--1274, 2013.
+
+\bibitem{CDOS}
+P.~G. Casazza, S.~J. Dilworth, E.~Odell, Th. Schlumprecht, and A.~Zs\'{a}k.
+\newblock Coefficient quantization for frames in {B}anach spaces.
+\newblock {\em J. Math. Anal. Appl.}, 348(1):66--86, 2008.
+
+\bibitem{CHL}
+P.~G. Casazza, D.~Han, and D.~Larson.
+\newblock Frames for {B}anach spaces.
+\newblock {\em Contemp. Math.}, 247:149--182, 1999.
+
+\bibitem{CCS-JMAA}
+Pete Casazza, Ole Christensen, and Diana~T. Stoeva.
+\newblock Frame expansions in separable {B}anach spaces.
+\newblock {\em J. Math. Anal. Appl.}, 307(2):710--723, 2005.
+
+\bibitem{casazza2017norm}
+Peter~G Casazza, Dorsa Ghoreishi, Shani Jose, and Janet~C Tremain.
+\newblock Norm retrieval and phase retrieval by projections.
+\newblock {\em Axioms}, 6(1):6, 2017.
+
+\bibitem{chen2019phase}
+Yang Chen, Cheng Cheng, and Qiyu Sun.
+\newblock Phase retrieval of complex and vector-valued functions.
+\newblock {\em arXiv preprint arXiv:1909.02078}, 2019.
+
+\bibitem{MR4298599}
+Cheng Cheng, Ingrid Daubechies, Nadav Dym, and Jianfeng Lu.
+\newblock Stable phase retrieval from locally stable and conditionally
+  connected measurements.
+\newblock {\em Appl. Comput. Harmon. Anal.}, 55:440--465, 2021.
+
+\bibitem{christ2022examples}
+Michael Christ, Ben Pineau, and Mitchell~A. Taylor.
+\newblock Examples of {H}{\"o}lder-stable phase retrieval.
+\newblock {\em Math. Res. Lett.}, 31(5):1339--1352, 2024.
+
+\bibitem{DPSTT}
+F.~Dai, A.~Prymak, A.~Shadrin, V.~Temlyakov, and S.~Tikhonov.
+\newblock Sampling discretization of integral norms.
+\newblock {\em Constr. Approx.}, 54(3):455--471, 2021.
+
+\bibitem{DB}
+Dylan Domel-White and Bernhard~G. Bodmann.
+\newblock Phase retrieval by random binary questions: Which complementary
+  subspace is closer?
+\newblock {\em Constructive Approx.}, 56:1--33, 2022.
+
+\bibitem{eldar2014stability}
+Yonina~C. Eldar and Shahar Mendelson.
+\newblock Phase retrieval: stability and recovery guarantees.
+\newblock {\em Appl. Comput. Harmon. Anal.}, 36(3):473--494, 2014.
+
+\bibitem{FG-atomic}
+H.~G. Feichtinger and K.~Gr\"ochenig.
+\newblock A unified approach to atomic decompositions via integrable group
+  representations.
+\newblock {\em Proc. Conf. Function Spaces and Applications, Lecture Notes in
+  Math.}, 1302:52--73, 1988.
+
+\bibitem{our-paper}
+D.~Freeman, T.~Oikhberg, B.~Pineau, and M.~A. Taylor.
+\newblock Stable phase retrieval in function spaces, 2022.
+
+\bibitem{MR3275625}
+D.~Freeman, D.~Poore, A.~R. Wei, and M.~Wyse.
+\newblock Moving {P}arseval frames for vector bundles.
+\newblock {\em Houston J. Math.}, 40(3):817--832, 2014.
+
+\bibitem{FOTP}
+Dan Freeman, Timur Oikhberg, Ben Pineau, and Mitchell~A. Taylor.
+\newblock Stable phase retrieval in function spaces.
+\newblock {\em Math. Ann.}, 390(1):1--43, 2024.
+
+\bibitem{fg22}
+Daniel Freeman and Dorsa Ghoreishi.
+\newblock Discretizing {$L_p$} norms and frame theory.
+\newblock {\em J. Math. Anal. Appl.}, 519(2):Paper No. 126846, 17, 2023.
+
+\bibitem{MR3367650}
+Daniel Freeman, Ryan Hotovy, and Eileen Martin.
+\newblock Moving finite unit norm tight frames for {$S^n$}.
+\newblock {\em Illinois J. Math.}, 58(2):311--322, 2014.
+
+\bibitem{MR3901674}
+Daniel Freeman and Darrin Speegle.
+\newblock The discretization problem for continuous frames.
+\newblock {\em Adv. Math.}, 345:784--813, 2019.
+
+\bibitem{gnedenko-kolmogorov}
+B.~V. Gnedenko and A.~N. Kolmogorov.
+\newblock {\em Limit Distributions for Sums of Independent Random Variables}.
+\newblock Addison-Wesley, 1954.
+\newblock Translated by K.~L.~Chung.
+
+\bibitem{grohs2020survey}
+Philipp Grohs, Sarah Koppensteiner, and Martin Rathmair.
+\newblock Phase retrieval: uniqueness and stability.
+\newblock {\em SIAM Rev.}, 62(2):301--350, 2020.
+
+\bibitem{grohs2021stable}
+Philipp Grohs and Lukas Liehr.
+\newblock Stable {G}abor phase retrieval in {G}aussian shift-invariant spaces
+  via biorthogonality.
+\newblock {\em Constructive Approximation}, pages 1--51, 2023.
+
+\bibitem{grohs20212}
+Philipp Grohs and Martin Rathmair.
+\newblock {$L_2$}-stability analysis for {G}abor phase retrieval.
+\newblock {\em arXiv preprint arXiv:2108.06154}, 2021.
+
+\bibitem{kashin2021sampling}
+B.~Kashin, E.~Kosov, I.~Limonova, and V.~Temlyakov.
+\newblock Sampling discretization and related problems.
+\newblock {\em J. Complexity}, 71:Paper No. 101653, 55, 2022.
+
+\bibitem{MR3746047}
+Felix Krahmer and Yi-Kai Liu.
+\newblock Phase retrieval without small-ball probability assumptions.
+\newblock {\em IEEE Trans. Inform. Theory}, 64(1):485--500, 2018.
+
+\bibitem{KS}
+Felix Krahmer and Dominik St\"{o}ger.
+\newblock Complex phase retrieval from subgaussian measurements.
+\newblock {\em J. {F}ourier Anal. Appl.}, 26(6):Paper No. 89, 27, 2020.
+
+\bibitem{LT21}
+I.~Limonova and V.~Temlyakov.
+\newblock On sampling discretization in {$L_2$}.
+\newblock {\em J. Math. Anal. Appl.}, 515(2):Paper No. 126457, 14, 2022.
+
+\bibitem{luef2021gaussian}
+Franz Luef and Xu~Wang.
+\newblock {G}aussian {G}abor frames, {S}eshadri constants and generalized
+  {B}user--{S}arnak invariants.
+\newblock {\em arXiv preprint arXiv:2107.04988}, 2021.
+
+\bibitem{NOU}
+Shahaf Nitzan, Alexander Olevskii, and Alexander Ulanovskii.
+\newblock Exponential frames on unbounded sets.
+\newblock {\em Proc. Amer. Math. Soc.}, 144(1):109--118, 2016.
+
+\bibitem{ramos-sousa-pauli}
+Jo{\~a}o P.~G. Ramos and Mateus Sousa.
+\newblock On {P}auli pairs and {F}ourier uniqueness problems.
+\newblock {\em J. Lond. Math. Soc.}, 112(6):e70358, 2025.
+
+\bibitem{sanz1984phase}
+Jorge~LC Sanz and Thomas~S Huang.
+\newblock Phase reconstruction from magnitude of band-limited multidimensional
+  signals.
+\newblock {\em Journal of Mathematical Analysis and Applications},
+  104(1):302--308, 1984.
+
+\bibitem{MR0423039}
+Helmut~H. Schaefer.
+\newblock {\em Banach lattices and positive operators}.
+\newblock Die Grundlehren der mathematischen Wissenschaften, Band 215.
+  Springer-Verlag, New York-Heidelberg, 1974.
+
+\bibitem{steinerberger2020stability}
+Stefan Steinerberger.
+\newblock On the stability of {F}ourier phase retrieval.
+\newblock {\em arXiv preprint arXiv:2004.06671}, 2020.
+
+\end{thebibliography}

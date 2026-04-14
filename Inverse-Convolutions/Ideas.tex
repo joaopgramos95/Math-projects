@@ -1,0 +1,502 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\title{Ideas and Transcript on the Inverse Convolution Rigidity Question}
+\author{}
+\date{April 10, 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Problem Under Discussion}
+
+We considered the following setup. Let
+\[
+\sigma=\delta(t-\psi(x))\,dx\,dt
+\]
+on $\mathbb{R}^n_x\times \mathbb{R}_t$, and define
+\[
+F(x,t):=(\sigma * \sigma)\bigl(x,t+2\psi(x/2)\bigr).
+\]
+The question was whether the condition that $F(x,t)$ is constant for all $x\in\mathbb{R}^n$ and $t>0$ forces $\psi$ to be quadratic, and in particular whether this pins down the dimension.
+
+The initial candidate claim was:
+\begin{quote}
+If $\psi\in C^2(\mathbb{R}^n)$ and $F(x,t)$ is independent of $(x,t)$ for all $x\in\mathbb{R}^n$, $t>0$, then necessarily $n=2$ and
+\[
+\psi(x)=a+b\cdot x+\frac12 x^T Hx
+\]
+with $H$ symmetric positive definite. Conversely, such quadratic $\psi$ do give constant $F$.
+\end{quote}
+
+We then analyzed a proposed proof, found a serious gap, repaired the $C^2$ argument using J\"orgens' theorem, and then investigated how much of the result survives under the weaker assumption that $\psi$ is merely convex.
+
+\section*{Stage 1: The Basic Reduction}
+
+The first part of the original proof was sound.
+
+For test functions $\varphi$,
+\[
+\langle \sigma,\varphi\rangle=\int_{\mathbb{R}^n}\varphi(x,\psi(x))\,dx.
+\]
+Hence
+\[
+(\sigma * \sigma)(x,s)
+=\int_{\mathbb{R}^n}\delta\bigl(s-\psi(y)-\psi(x-y)\bigr)\,dy.
+\]
+
+Setting $x=2u$ and writing $y=u+z$, one gets
+\[
+F(x,t)
+=\int_{\mathbb{R}^n}\delta\bigl(t-D_u(z)\bigr)\,dz,
+\]
+where
+\[
+D_u(z):=\psi(u+z)+\psi(u-z)-2\psi(u).
+\]
+
+Thus the hypothesis becomes: there exists a constant $C$ such that for all $u\in\mathbb{R}^n$ and $t>0$,
+\[
+\int_{\mathbb{R}^n}\delta\bigl(t-D_u(z)\bigr)\,dz=C.
+\tag{1}
+\]
+
+Introducing the sublevel volume
+\[
+V_u(s):=\bigl|\{z\in\mathbb{R}^n:D_u(z)<s\}\bigr|,
+\]
+one has distributionally
+\[
+V_u'(s)=\int_{\mathbb{R}^n}\delta(s-D_u(z))\,dz.
+\]
+So from (1),
+\[
+V_u'(s)=C,
+\]
+and therefore
+\[
+V_u(s)=Cs,\qquad s>0.
+\tag{2}
+\]
+
+This identity,
+\[
+\bigl|\{D_u<s\}\bigr|=Cs
+\quad\text{for every }u\text{ and every }s>0,
+\]
+became the central object for the rest of the discussion.
+
+\section*{Stage 2: Consequences in the Smooth Case}
+
+Assume first that $\psi\in C^2(\mathbb{R}^n)$.
+
+Since $D_u(0)=0$ and $V_u(s)\to 0$ as $s\downarrow 0$, one must have
+\[
+D_u(z)\geq 0
+\quad\forall u,z.
+\]
+By Taylor expansion,
+\[
+D_u(z)=z^T\bigl(\nabla^2\psi(u)\bigr)z+o(|z|^2)
+\qquad(z\to 0).
+\]
+Hence $\nabla^2\psi(u)$ is positive semidefinite for every $u$.
+
+Using the small-sublevel asymptotics for a positive definite quadratic form,
+\[
+\bigl|\{z:z^TAz<s\}\bigr|
+=\omega_n\frac{s^{n/2}}{\sqrt{\det A}},
+\]
+one compares this with $V_u(s)=Cs$ and obtains:
+\begin{enumerate}[label=\arabic*.]
+\item the dimension must satisfy $n/2=1$, hence
+\[
+n=2;
+\]
+\item in dimension $2$,
+\[
+\det \nabla^2\psi(u)\equiv \left(\frac{\pi}{C}\right)^2.
+\]
+\end{enumerate}
+
+So the centered-convolution identity implies in the $C^2$ setting that $\psi$ is an entire convex $C^2$ solution of the constant Monge--Amp\`ere equation
+\[
+\det \nabla^2\psi = c>0
+\qquad\text{on }\mathbb{R}^2.
+\]
+
+\section*{Stage 3: The Gap in the Original Proof}
+
+The original proposed proof attempted to continue by asserting that in dimension $2$, if
+\[
+K_t:=\{z:D_u(z)<t\}
+\]
+is a nested family of bounded convex sets with
+\[
+|K_t|=Ct,
+\]
+then necessarily $K_t=\sqrt{t}\,K_1$, so that $D_u$ would be exactly 2-homogeneous and therefore quadratic.
+
+This was the decisive gap.
+
+The claim is false as stated. A counterexample is the family of ellipses
+\[
+K_t=\left\{(x,y):\frac{x^2}{t^{3/2}}+\frac{y^2}{t^{1/2}}<1\right\}.
+\]
+Then:
+\begin{enumerate}[label=\arabic*.]
+\item each $K_t$ is convex and nested in $t$;
+\item
+\[
+|K_t|=\pi\, t^{3/4}t^{1/4}=\pi t;
+\]
+\item but the eccentricity varies with $t$, so the family is not homothetic.
+\end{enumerate}
+
+Therefore the proposed Step 5, which tried to deduce exact 2-homogeneity of $D_u$ solely from exact linear area growth of the sections, was invalid.
+
+There was also a second issue in the original Step 6: from a midpoint identity
+\[
+g(u+z)+g(u-z)=2g(u),
+\]
+one may conclude that a continuous $g$ is affine, but not that the affine part must vanish merely because the relation is symmetric in the increment.
+
+\section*{Stage 4: Repair of the Smooth Proof}
+
+The correct way to finish the $C^2$ case is shorter.
+
+Once one has proved
+\[
+n=2
+\quad\text{and}\quad
+\det \nabla^2\psi \equiv \left(\frac{\pi}{C}\right)^2,
+\]
+one invokes J\"orgens' theorem:
+
+\begin{quote}
+Any entire convex $C^2$ solution $\psi:\mathbb{R}^2\to\mathbb{R}$ of
+\[
+\det \nabla^2\psi = c>0
+\]
+is a quadratic polynomial.
+\end{quote}
+
+This gives
+\[
+\psi(x)=a+b\cdot x+\frac12 x^T Hx
+\]
+with $H$ constant, symmetric, and positive definite.
+
+The converse is easy to check. Indeed, if
+\[
+\psi(x)=a+b\cdot x+\frac12 x^T Hx,
+\]
+then
+\[
+D_u(z)=\psi(u+z)+\psi(u-z)-2\psi(u)=z^THz,
+\]
+independent of $u$, and therefore
+\[
+F(x,t)=\int_{\mathbb{R}^2}\delta(t-z^THz)\,dz
+=\frac{1}{\sqrt{\det H}}\int_{\mathbb{R}^2}\delta(t-|w|^2)\,dw
+=\frac{\pi}{\sqrt{\det H}}.
+\]
+
+So the $C^2$ theorem is correctly established by:
+\begin{enumerate}[label=\arabic*.]
+\item reduction to the exact section law;
+\item small-scale asymptotics giving $n=2$ and constant determinant;
+\item J\"orgens' theorem.
+\end{enumerate}
+
+\section*{Stage 5: Lowering Regularity to Mere Convexity}
+
+We then asked whether the same conclusion should hold if $\psi$ is only convex.
+
+The first reaction was that the same classification should still be true, but that one must work in Alexandrov/Monge--Amp\`ere language rather than with a classical Hessian.
+
+The initial rough idea was:
+\begin{enumerate}[label=\arabic*.]
+\item use the exact section law
+\[
+|\{D_u<t\}|=Ct;
+\]
+\item at Alexandrov almost every point, use second-order differentiability of convex functions to recover the same small-scale asymptotics;
+\item infer that $n=2$ and $\det D^2\psi$ is constant almost everywhere;
+\item then try to invoke the Alexandrov version of J\"orgens' theorem.
+\end{enumerate}
+
+However, this turned out to be too fast. The missing issue was whether ``constant determinant almost everywhere'' is enough to conclude that the Alexandrov Monge--Amp\`ere measure is exactly constant Lebesgue measure.
+
+It is not.
+
+\section*{Stage 6: Why ``Constant Determinant a.e.'' Is Not Enough}
+
+The key correction was the following warning example:
+\[
+\psi(x_1,x_2)=\frac12(x_1^2+x_2^2)+|x_1|.
+\]
+Then:
+\begin{enumerate}[label=\arabic*.]
+\item $\psi$ is convex;
+\item $D^2\psi = I$ almost everywhere, so the a.e. Hessian determinant is constant;
+\item but $\psi$ is not quadratic;
+\item and the Alexandrov Monge--Amp\`ere measure has a singular contribution on the line $\{x_1=0\}$.
+\end{enumerate}
+
+So even if one proves
+\[
+\det D^2\psi = \left(\frac{\pi}{C}\right)^2
+\quad\text{a.e.},
+\]
+that still does not justify an application of Alexandrov--J\"orgens, unless one first rules out all singular Monge--Amp\`ere mass.
+
+This was the precise flaw in the earlier convex-case claim.
+
+\section*{Stage 7: What the Convex Argument Actually Gives}
+
+Despite that gap, several strong facts can still be proved directly from the centered section identity.
+
+\subsection*{7.1. Dimension Two Still Follows}
+
+At Alexandrov almost every point $u$, a convex function has a quadratic tangent:
+\[
+\psi(u+z)=\psi(u)+p\cdot z+\frac12 z^T H(u)z+o(|z|^2).
+\]
+Then
+\[
+D_u(z)=z^TH(u)z+o(|z|^2).
+\]
+Comparing the small-sublevel asymptotics with
+\[
+|\{D_u<t\}|=Ct,
+\]
+still gives
+\[
+n=2
+\]
+and
+\[
+\det H(u)=\left(\frac{\pi}{C}\right)^2
+\quad\text{for a.e. }u.
+\]
+
+\subsection*{7.2. Nondifferentiability Is Impossible}
+
+This was a substantial point that \emph{can} be proved exactly.
+
+Suppose $\psi$ is convex but not differentiable at some point $u$. Then the directional derivative
+\[
+\psi'(u;v)=\sup_{p\in \partial\psi(u)} p\cdot v
+\]
+is sublinear and not linear. Consider
+\[
+L_u(v):=\psi'(u;v)+\psi'(u;-v).
+\]
+Then $L_u$ is convex, even, 1-homogeneous, and nonzero.
+
+Moreover,
+\[
+\frac{D_u(rv)}{r}\to L_u(v)
+\qquad(r\downarrow 0),
+\]
+locally uniformly in $v$.
+
+Since the sublevel sets of a nontrivial 1-homogeneous function in dimension $2$ scale like $t^2$, one gets
+\[
+|\{D_u<t\}| \asymp t^2
+\qquad(t\downarrow 0),
+\]
+contradicting the exact law
+\[
+|\{D_u<t\}|=Ct.
+\]
+
+Therefore
+\[
+\boxed{\psi \text{ is differentiable everywhere, hence } \psi\in C^1(\mathbb{R}^2).}
+\]
+
+This rules out all kink singularities.
+
+\subsection*{7.3. A Concrete Nonsmooth Model Fails}
+
+For example,
+\[
+\psi(x)=\frac12|x|^2+\lambda |x_1|
+\]
+cannot satisfy the identity. At a point $u$ with $u_1=0$,
+\[
+D_u(z)=|z|^2+2\lambda |z_1|.
+\]
+The small sublevel area of
+\[
+\{z: |z|^2+2\lambda |z_1|<t\}
+\]
+behaves like a constant times $t^{3/2}$, not like $t$. So the exact linear section law breaks immediately.
+
+\section*{Stage 8: Blowups at an Arbitrary Point}
+
+After proving $\psi\in C^1$, we looked at second-order blowups.
+
+Fix $u$ and define
+\[
+\psi_r(y):=\frac{\psi(u+ry)-\psi(u)-r\nabla\psi(u)\cdot y}{r^2}.
+\]
+By compactness for convex functions, every sequence $r_k\downarrow 0$ has a subsequence along which $\psi_{r_k}$ converges locally uniformly to a convex limit $h$.
+
+Because $\psi$ is differentiable at $u$, such a tangent object is 2-homogeneous:
+\[
+h(\lambda y)=\lambda^2 h(y).
+\]
+
+The exact centered section law passes to the limit, yielding
+\[
+\left|\left\{z: h(v+z)+h(v-z)-2h(v)<t\right\}\right|=Ct
+\quad \forall v\in\mathbb{R}^2,\ \forall t>0.
+\tag{3}
+\]
+
+Thus every tangent blowup is a global convex 2-homogeneous solution of the same centered law.
+
+\section*{Stage 9: Classification of Quadratic Blowups}
+
+At Alexandrov almost every point, one already knows the tangent is quadratic and has determinant $(\pi/C)^2$. This suggests that any 2-homogeneous blowup $h$ should satisfy
+\[
+\det D^2 h = \left(\frac{\pi}{C}\right)^2
+\quad\text{a.e.}
+\]
+
+We then classified such 2-homogeneous convex functions.
+
+Write in polar coordinates
+\[
+h(r,\theta)=r^2 g(\theta),
+\qquad g(\theta)>0.
+\]
+A direct computation gives
+\[
+\det D^2 h = 2g(2g+g'')-(g')^2.
+\]
+So constant determinant yields
+\[
+2g(2g+g'')-(g')^2 = \left(\frac{\pi}{C}\right)^2.
+\tag{4}
+\]
+
+Setting $y=\sqrt{g}$ converts this to the Pinney equation
+\[
+y''+y=\frac{(\pi/C)^2}{4y^3}.
+\]
+Its positive $2\pi$-periodic solutions are exactly the quadratic ones. Equivalently,
+\[
+g(\theta)=A\cos^2\theta+2B\sin\theta\cos\theta+C_0\sin^2\theta
+\]
+with
+\[
+AC_0-B^2=\frac14\left(\frac{\pi}{C}\right)^2.
+\]
+Hence
+\[
+h(y)=\frac12 y^T H y
+\]
+for some positive definite symmetric matrix $H$ satisfying
+\[
+\det H = \left(\frac{\pi}{C}\right)^2.
+\]
+
+So every blowup is quadratic.
+
+\section*{Stage 10: The Remaining Obstruction}
+
+At first sight this looks like it should finish the proof, but it does not.
+
+What has been proved is:
+\begin{enumerate}[label=\arabic*.]
+\item every tangent blowup at every point is a quadratic form;
+\item all such tangent matrices have the same determinant.
+\end{enumerate}
+
+What remains unproved is:
+\begin{quote}
+At each point $u$, the quadratic tangent is unique.
+\end{quote}
+
+In principle, one could imagine a convex $C^1$ function whose second-order rescalings along different sequences converge to different quadratic forms
+\[
+\frac12 y^T H_1 y,
+\qquad
+\frac12 y^T H_2 y,
+\]
+with
+\[
+\det H_1=\det H_2.
+\]
+
+And the limiting section law does not by itself exclude this, because for any positive definite matrix $H$,
+\[
+\bigl|\{z:z^THz<t\}\bigr|=\frac{\pi}{\sqrt{\det H}}\,t,
+\]
+so the section law only remembers the determinant and loses the anisotropy.
+
+This is the core unresolved issue in the convex case.
+
+\section*{Stage 11: Final Verified Status}
+
+By the end of the discussion, the fully verified conclusions were:
+
+\subsection*{11.1. In the $C^2$ Case}
+
+The theorem is correct:
+\begin{quote}
+If $\psi\in C^2(\mathbb{R}^n)$ is convex and the centered convolution quantity $F(x,t)$ is constant for all $x$ and $t>0$, then necessarily $n=2$ and
+\[
+\psi(x)=a+b\cdot x+\frac12 x^THx
+\]
+with $H$ symmetric positive definite.
+\end{quote}
+
+The correct proof is:
+\begin{enumerate}[label=\arabic*.]
+\item derive the exact section law
+\[
+|\{D_u<t\}|=Ct;
+\]
+\item use small-scale quadratic asymptotics to show $n=2$ and $\det \nabla^2\psi$ is constant;
+\item apply J\"orgens' theorem.
+\end{enumerate}
+
+\subsection*{11.2. In the Merely Convex Case}
+
+What is rigorously established from the same identity is:
+\[
+n=2,
+\]
+\[
+\psi\in C^1(\mathbb{R}^2),
+\]
+\[
+\det D^2\psi = \left(\frac{\pi}{C}\right)^2
+\quad\text{for Alexandrov-a.e. points},
+\]
+and every tangent blowup at every point is a quadratic form.
+
+What is \emph{not yet proved} is the uniqueness of the quadratic tangent at each point, or equivalently the absence of a singular Alexandrov Monge--Amp\`ere component that is invisible to the a.e. Hessian determinant.
+
+So the convex case remains open at the end of this transcript. It is plausible that the same rigidity theorem should hold, but the argument discussed here does not yet complete it.
+
+\section*{Potential Next Step}
+
+The natural next place to attack is the additional algebraic structure of the centered second difference, for example the four-point identity
+\[
+D_u(z+w)+D_u(z-w)-2D_u(z)=D_{u+z}(w)+D_{u-z}(w).
+\]
+This relation is stronger than the bare section law and may be the mechanism that enforces uniqueness of the quadratic tangent. We did not complete that step here.
+
+\end{document}

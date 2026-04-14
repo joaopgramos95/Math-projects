@@ -1,0 +1,858 @@
+\documentclass[12pt,leqno]{amsart}
+\usepackage[latin1]{inputenc}
+\textheight=8.6truein
+ \textwidth=7truein \hoffset=-1truein
+\usepackage{color}
+\usepackage{amssymb,amsmath,amsthm,amscd,amsfonts}
+\usepackage{enumerate}
+\usepackage[shortlabels]{enumitem}
+\usepackage[all]{xy}
+\vfuzz2pt
+\hfuzz2pt
+\usepackage{hyperref,cleveref,graphics,mathrsfs}
+ %\voffset=-.5truein
+%\usepackage{showkeys}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\numberwithin{equation}{section}
+\def\hangbox to #1 #2{\vskip3pt\hangindent #1\noindent \hbox to #1{#2}$\!\!$}
+\def\Item#1{\hangbox to 50pt {#1\hfill}}
+
+%%%%%%%  ENVIRONMENT SETTINGS %%%%
+
+\newcommand\scalemath[2]{\scalebox{#1}{\mbox{\ensuremath{\displaystyle #2}}}}
+
+\usepackage{hyperref,cleveref,amssymb,mathtools}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{numbered}[theorem]{}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{definition}[theorem]{Definition}
+
+\renewcommand{\theenumi}{\roman{enumi}} % Use small romans for items
+\renewcommand{\labelenumi}{(\theenumi)}
+
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\bigabs}[1]{\bigl\lvert#1\bigr\rvert}
+\newcommand{\bignorm}[1]{\bigl\lVert#1\bigr\rVert}
+\newcommand{\Bigabs}[1]{\Bigl\lvert#1\Bigr\rvert}
+\newcommand{\biggabs}[1]{\biggl\lvert#1\biggr\rvert}
+\newcommand{\Bignorm}[1]{\Bigl\lVert#1\Bigr\rVert}
+\newcommand{\biggnorm}[1]{\biggl\lVert#1\biggr\rVert}
+\newcommand{\Biggnorm}[1]{\Biggl\lVert#1\Biggr\rVert}
+\newcommand{\term}[1]{{\textit{\textbf{#1}}}}   % To introduce a term
+\newcommand{\marg}[1]{\marginpar{\tiny #1}}     % A margin note
+\renewcommand{\mid}{\::\:}
+
+\DeclareSymbolFont{bbold}{U}{bbold}{m}{n}
+\DeclareSymbolFontAlphabet{\mathbbold}{bbold}
+\def\one{\mathbbold{1}}
+%\def\one{\mathbb 1}
+
+%\DeclareMathOperator{\Range}{Range}
+\DeclareMathOperator{\FLA}{FLA}
+\DeclareMathOperator{\FLAu}{FLA^1}
+\DeclareMathOperator{\FLAuplus}{FLA^{1+}}
+\DeclareMathOperator{\FBLA}{FBLA}
+\DeclareMathOperator{\FBL}{FBL}
+\DeclareMathOperator{\FVL}{FVL}
+\renewcommand{\le}{\leqslant}
+\renewcommand{\ge}{\geqslant}
+
+\renewcommand{\baselinestretch}{1.2}
+
+%%%%%%  MACROS %%%%%%%%%%%%%%
+
+\def\C{{\mathbb C}}
+\def\N{{\mathbb N}}
+\def\R{{\mathbb R}}
+\def\Q{{\mathbb Q}}
+\def\Z{{\mathbb Z}}
+\def\F{{\mathbb F}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\bC{{\mathbf C}}
+\def\bE{{\mathbf E}}
+\def\bF{{\mathbf F}}
+\def\bG{{\mathbf G}}
+\def\bH{{\mathbf H}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\a{{\rm a}}
+\def\b{{\rm b}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\cA{{\mathcal A}}
+\def\cB{{\mathcal B}}
+\def\cC{{\mathcal C}}
+\def\cG{{\mathcal G}}
+\def\cL{{\mathcal L}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\trivert}{|\!|\!|}
+\newcommand{\btrivert}{\big|\!\big|\!\big|}
+\newcommand{\cBtrivert}{\Big|\!\Big|\!\Big|}
+\newcommand{\ra}{\rangle}
+\newcommand{\la}{\langle}
+\newcommand{\itemEq}[1]{%
+        \begingroup%
+        \setlength{\abovedisplayskip}{0pt}%
+        \setlength{\belowdisplayskip}{0pt}%
+        \parbox[c]{\linewidth}{\begin{flalign}#1&&\end{flalign}}%
+        \endgroup}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\sfrac#1#2{\kern.1em\raise.5ex\hbox{$#1$}
+        \kern-.1em/\kern-.05em\lower.25ex\hbox{$#2$}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\ov#1{\overline{#1}}
+\def\To{\Rightarrow}
+\def\ds{\displaystyle}
+\def\vp{\varepsilon}
+\def\dim{\operatorname{dim}}
+\def\Id{\operatorname{Id}}
+\def\NORM#1{{|\!|\!| #1 |\!|\!|}}
+\def\Talpha{{T_{c,\alpha}}}
+\def\Talphas{{T_{c,\alpha}^*}}
+\def\Tac{{T_{\cA,c}}}
+\def\Tacs{{T_{\cA,c}^*}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\keq}{\!=\!}
+\newcommand{\kleq}{\!\leq\!}
+\newcommand{\kge}{\!\ge\!}
+\newcommand{\kle}{\!<\!}
+\newcommand{\kgr}{\!>\!}
+\newcommand\kin{\!\in\!}
+\newcommand{\ksubset}{\!\subset\!}
+\newcommand{\ksetminus}{\!\setminus\!}
+\newcommand{\kplus}{\!+\!}
+\newcommand{\kcdot}{\!\cdot\!}
+\newcommand{\ktimes}{\!\times\!}
+\newcommand{\kotimes}{\!\otimes\!}
+
+\newcommand{\RE}{\mathrm{Re}}
+\newcommand{\IM}{\mathrm{Im}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\sign}{\text{\rm sign}}
+\newcommand{\wb}{\overline{\text{\rm w}}}
+\newcommand{\wu}{\underline{\text{\rm w}}}
+\newcommand{\w}{\text{w}}
+\newcommand{\fw}{\text{\fw}}
+\newcommand{\age}{\hbox{\text{\rm age}}}
+\newcommand{\rk}{\hbox{\text{\rm rk}}}
+\newcommand{\rg}{\text{\rm rg}}
+\newcommand{\loc}{{\text{\rm loc}}}
+\newcommand{\supp}{{\rm supp}}
+\newcommand{\coo}{c_{00}}
+\newcommand{\cof}{{\rm cof}}
+\newcommand{\cuts}{{\rm cuts}}
+\newcommand{\dist}{{\rm dist}}
+\newcommand{\f}{{\rm f}}
+\newcommand{\spa}{{\rm span}}
+
+\newcommand{\cBb}{\overline{B}}
+\def\ran{\operatorname{ran}}
+
+
+\def\bC{{\mathbf C}}
+\def\bE{{\mathbf E}}
+\def\bF{{\mathbf F}}
+\def\bG{{\mathbf G}}
+\def\bH{{\mathbf H}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\cA{{\mathcal A}}
+\def\cB{{\mathcal B}}
+\def\cC{{\mathcal C}}
+\def\cG{{\mathcal G}}
+\def\cF{{\mathcal F}}
+
+
+\newcommand{\raw}{\to}
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+
+\newcommand{\fb}{\ensuremath{\mathfrak{B}}}
+\newcommand{\db}{{\mathrm{dist}}_{\fb}}
+
+\newcommand{\ce}{\ensuremath{\mathcal{E}}}
+\newcommand{\cep}{{\ce}^\prime}
+\newcommand{\se}{\ensuremath{\mathcal{S}_{\ce}}}
+\newcommand{\bbe}{\ensuremath{\boldsymbol{\beta}}}
+\newcommand{\maxprod}{\widehat{\otimes}}
+\newcommand{\ii}{\mathcal{I}}
+\newcommand{\tra}{\mathbf{tr}}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\bs}{\mathbf{S}}
+\newcommand{\ks}{{\mathbf{K}}_\sigma}
+\newcommand{\eks}{E_{\ks}}
+\newcommand{\ssim}{\overset{*}{\sim}}
+\newcommand{\nn}{\mathbf{n}}
+\newcommand{\bfy}{\mathbf{Y}}
+\newcommand{\cq}{\tilde{\mathbb{Q}}}
+\newcommand{\om}{{\mathcal{O}}_m}
+\newcommand{\subsp}{\mathbf{S}}
+\newcommand{\sing}{\mathbf{s}}
+\newcommand{\tn}{\tilde{\N}}
+\newcommand{\bon}{\mathbf{n}}
+\newcommand{\bom}{\mathbf{m}}
+\newcommand{\osa}{\overline{S}_A}
+\newcommand{\fami}{\boldsymbol{\mathfrak{F}}}
+\newcommand{\comp}{\boldsymbol{\mathfrak{C}}}
+\newcommand{\xd}{X^d}
+
+\newcommand{\coi}[1]{\overset{#1}{\simeq}}
+\newcommand{\is}{\mathcal{S}}
+\newcommand{\hs}{\is_2}
+\newcommand{\pp}{\mathfrak{P}}
+\newcommand{\uu}{\mathfrak{U}}
+\newcommand{\injtens}{\check{\otimes}}
+\newcommand{\projtens}{\hat{\otimes}}
+\newcommand{\anytens}{\tilde{\otimes}}
+\newcommand{\spn}{{\mathrm{span} \, }}
+
+\newcommand{\timur}[1]{{\textcolor{blue}{{\bf T.O:} #1}}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\ifx\color@cmyk\@undefined\else
+%\definecolor{cyan}{cmyk}{1,0,0,0}
+%\definecolor{purple}{rgb}{128,0,128}
+%\definecolor{yellow}{cmyk}{0,0,1,0}
+%\fi
+
+
+
+%%%%%  BODY  %%%%%%%%%%%%%%%%%
+\title[Phase retrieval ideas/notes]{Phase retrieval ideas/notes}
+%\author{D.\ Freeman}
+%\address{Department of Mathematics and Statistics\\
+%St Louis University\\
+%St Louis, MO   USA} \email{daniel.freeman@slu.edu}
+%\author{T.~Oikhberg}
+%\address{Dept. of Mathematics, University of Illinois, Urbana IL 61801, USA}
+%\email{oikhberg@illinois.edu}
+%\author{B.\ Pineau}
+%\address{Department of Mathematics\\
+%University of California at Berkeley
+%} \email{bpineau@berkeley.edu}
+%\author{M.~A.\ Taylor}
+%\address{Department of Mathematics\\
+%ETH Z\"urich
+%} \email{mitchell.taylor@math.ethz.ch}
+\date{\today}
+
+\subjclass[2020]{46B42, 43A46, 42C15} %Banach lattices; vector lattices; free lattices; linear operators on ordered spaces
+
+\keywords{Phase retrieval; stable phase retrieval.}
+
+
+
+
+\begin{document}
+\begin{abstract}
+   We should put all of our ideas, open questions, inspirations, etc.~here so that we don't forget them.
+\end{abstract}
+
+\maketitle
+\allowdisplaybreaks
+%\tableofcontents
+
+
+
+Some cool directions: 
+\begin{enumerate}
+\item Cryo-EM+phase retrieval. In practice, one only measures 2d images, but then one rotates the sample, measures again, etc. So one is left with many phaseless measurements of many slices of rotated specimens. One then has to recover the phase, with a rotation ambiguity, and not have too many rotations as at each stage you burn the sample, hence corrupt it. This leads to a general question of other ``quotients". For example if you also don't care about translation of conjugate reflection symmetries, can you do $\mathcal{F}$-SPR on huge subspaces?
+\item Phase retrieval and PDE. In particular, scattering problems.
+\item Blind problems, one-bit and Poisson, structured random measurements and Jonathon Dong.
+\item Other problems: Convex sets and operator/quantum SPR.  See \cite{MR3959732} or \cite{balan2021lipschitz}
+\item Blow up of the SPR constant when $m\approx 2n$. \cite{MR3323113} conjectures exponential, I can only prove $\sqrt{n}$. 
+\end{enumerate}
+\setlength\parindent{0pt}
+\section{Introduction}
+
+
+Some more concrete problems to look at:
+\begin{enumerate}
+\item Finish the proof characterizing independent r.v.s doing SPR in both the real and complex case. Can we go below $L^2$ at least in the iid case? For example to $L^{1+\epsilon}$? Jaume also mentioned at some point that our argument may have a vector-valued version, where we look at $\R^n$-valued random variables and recover from the norm in $\mathbb{R}^n$ up to $O(n)$ or $SO(n)$-symmetry, which would generalize real SPR, complex SPR, and conjugate SPR.
+\item Can we make the concentration compactness argument more robust, i.e., prove that there actually is some compactness in an appropriate topology and that injective inverse problems are automatically stable and perhaps also quantitatively stable under some perturbations?
+\item Can we prove that $span\{\sin(2\pi nx) : n\in \Lambda\}$ does SPR in $L^p$ iff $\Lambda \in \Lambda(p)$?\footnote{It seems there's a chance we can do this when $p$ is at least $4$. Going below $4$ (even in the Pauli case) would be cool.} Connection to Nazarov and the book on uncertainty principles. There are also interesting problems here for declipping, as declipping for \emph{some} $\lambda$ is exactly equivalent to $\Lambda(p)$.
+\item In the iid case, can we characterize declipping for all $\lambda$ = reverse small ball and declipping for all $\lambda$ with optimal constant = strong reverse small ball.
+\item Quantitative proof + verify with lean.
+
+\end{enumerate}
+
+
+
+
+
+
+\bibliographystyle{plain}
+\bibliography{refs.bib}
+
+
+\end{document}
+
+
+
+
+\begin{thebibliography}{10}
+
+ \bibitem{AB}
+ C.~D. Aliprantis and O.~Burkinshaw, \emph{Positive operators}, Springer,
+   Dordrecht, 2006, Reprint of the 1985 original. \MR{2262133}.
+
+
+
+\bibitem{Lambdap} S.V.~Astashkin, $\Lambda(p)$-spaces, Journal of Functional Analysis 266 (2014) 5174-5198.
+
+\bibitem{AT} A.~Avil\'es and P.~Tradacete.
+Amalgamation and injectivity in {B}anach lattices, preprint.
+
+
+\bibitem{AK} F.~Albiac and N.~Kalton. Topics in Banach space theory. Second edition.
+% With a foreword by Gilles Godefory. Graduate Texts in Mathematics, 233. 
+Springer, Cham, 2016. % xx+508 pp. ISBN: 978-3-319-31555-3; 978-3-319-31557-7 
+
+\bibitem{Bog} V.~Bogachev.
+Gaussian measures. % Mathematical Surveys and Monographs, 62. 
+American Mathematical Society, Providence, RI, 1998. % xii+433 pp. ISBN: 0-8218-1054-5 
+
+% \bibitem{BLM} J.~Bourgain, J.~Lindenstrauss, and V.~Milman. Approximation of zonoids by zonotopes. Acta Math. 162 (1989),  73--141. 
+
+\bibitem{DJT}  J.~Diestel, H.~Jarchow, and A.~Tonge, 
+\emph{Absolutely summing operators},
+%   Cambridge Studies in Advanced Mathematics, vol.~43,
+Cambridge University Press, Cambridge, 1995. \MR{1342297}.
+
+\bibitem{FHHMZ} M. Fabian, P. Hajek, P. Habala, V. Montecinos, V. Zizler.
+Banach space theory. The basis for linear and nonlinear analysis.
+% CMS Books in Mathematics/Ouvrages de Mathématiques de la SMC.
+Springer, New York, 2011.
+
+\bibitem{FLM} T.~Figiel, J.~Lindenstrauss, and V.~Milman.
+The dimension of almost spherical sections of convex bodies.
+Acta Math. 139 (1977), 53--94. 
+
+\bibitem{GMM}
+Manuel Gonz{\'a}lez, Antonio  Mart{\'\i}nez-Abej{\'o}n, and Antonio Martin{\'o}n, Disjointly non-singular operators on Banach lattices, Journal of Functional Analysis, 280, 8, 2021.
+
+\bibitem{Hei} S. Heinrich.
+Ultraproducts in Banach space theory.
+J. Reine Angew. Math. 313 (1980), 72--104. 
+
+\bibitem{IS} M.~Indyk and S.~Szarek. 
+Almost-Euclidean subspaces of $\ell_1^N$ via tensor products: a simple approach to randomness reduction.
+Approximation, randomization, and combinatorial optimization, 632--641,
+Lecture Notes in Comput. Sci., 6302, Springer, Berlin, 2010. 
+
+\bibitem{Ja64} R.~James.
+Uniformly non-square Banach spaces.
+Ann. of Math. (2) 80 (1964), 542--550. 
+
+\bibitem{JS} W.~Johnson and G.~Schechtman.
+Finite dimensional subspaces of $L_p$. Handbook of the geometry of Banach spaces, Vol. I, 837--870, North-Holland, Amsterdam, 2001. 
+
+\bibitem{Kechris} A.~Kechris.
+Classical descriptive set theory. % Graduate Texts in Mathematics, 156. 
+Springer-Verlag, New York, 1995. % xviii+402 pp. ISBN: 0-387-94374-9 
+
+\bibitem{Lacey74} E.~Lacey.
+The isometric theory of classical Banach spaces.
+% Die Grundlehren der mathematischen Wissenschaften, Band 208. 
+Springer-Verlag, New York-Heidelberg, 1974. % x+270 pp. 
+
+\bibitem{LQ} D.~Li and H.~Queffelec.
+\footnote{There is an English translation as well, but I haven't seen it yet}
+Introduction \`a l'\'etude des espaces de Banach. [Introduction to the study of Banach spaces]
+% Analyse et probabilités. [Analysis and probability theory] Cours Spécialisés [Specialized Courses], 12. 
+Soci\'et\'e Math\'ematique de France, Paris, 2004. % xxiv+627 pp. % ISBN: 2-85629-155-4 
+
+\bibitem{LT1} J. Lindenstrauss and L. Tzafriri. Classical Banach spaces I, Springer-Verlag, Berlin, 1979.
+
+\bibitem{LT2} J. Lindenstrauss and L. Tzafriri. Classical Banach spaces II, Springer-Verlag, Berlin, 1979.
+
+% \bibitem{MN} Meyer-Nieberg.
+
+\bibitem{MS} V.~Milman and G.~Schechtman.
+Asymptotic theory of finite-dimensional normed spaces. With an appendix by M. Gromov.
+% Lecture Notes in Mathematics, 1200. 
+Springer, Berlin, 1986. % viii+156 pp. ISBN: 3-540-16769-2 
+
+\bibitem{PisFACT} G.~Pisier.
+Factorization of linear operators and geometry of Banach spaces.
+% CBMS Regional Conference Series in Mathematics, 60. Published for the Conference Board of the Mathematical Sciences, Washington, DC; by the 
+American Mathematical Society, Providence, RI, 1986. % x+154 pp. ISBN: 0-8218-0710-2 
+
+\bibitem{Tay} M.~Taylor. Personal communication.
+
+\bibitem{Woj} P. Wojtaszyk. Banach spaces for analysts.
+% Cambridge Studies in Advanced Mathematics, 25. 
+Cambridge University Press, Cambridge, 1991. % xiv+382 pp. ISBN: 0-521-35618-0 
+
+\end{thebibliography}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{proposition}
+Let $E$ be a subspace of a real Banach lattice $X$. TFAE:
+\begin{enumerate}
+\item $E$ does stable phase retrieval;
+\item $E$ does not contain almost disjoint pairs.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+A classical Banach lattice fact (see, e.g., \cite[Remark after Lemma 3.3]{AT}) is that every Banach lattice embeds lattice isometrically into some space of the form
+$$\left(\bigoplus_{i\in I}L_1(X_i,\Sigma_i,\mu_i)\right)_\infty.$$
+Since properties (i) and (ii) are stable under passing to and from closed sublattices, we may assume WLOG that $X$ is of this form.
+\\
+
+Suppose $E$ does not do stable phase retrieval. Fix $N$ and take $f=(f_i),g=(g_i)\in E$ such that $\|f-g\|,\|f+g\|>N\||f|-|g|\|.$
+For each $i\in I$ let 
+$$I_i=\{t\in X_i : \sgn\left(f_i(t)\right)=\sgn\left(g_i(t)\right), \  \text{or one of}\  f_i(t),g_i(t) \ \text{is zero}\}.$$
+Then
+$$I_i^c:=X_i\setminus I_i=\{t\in X_i : \sgn\left(f_i(t)\right)=-\sgn\left(g_i(t)\right)\}.$$
+We compute that 
+
+$$|f|-|g|=(|f_i|-|g_i|)_{i\in I}=(|{f_i}_{|I_i}|-|{g_i}_{I_i}|)_{i\in I}+(|{f_i}_{|I_i^c}|-|{g_i}_{I_i^c}|)_{i\in I}.$$
+So, since the modulus is additive on disjoint vectors,
+$$\left||f|-|g|\right|=(\left||{f_i}_{|I_i}|-|{g_i}_{I_i}|\right|)_{i\in I}+(\left||{f_i}_{|I_i^c}|-|{g_i}_{I_i^c}|\right|)_{i\in I}.$$
+Now, by definition of $I_i$ we have 
+$$(\left||{f_i}_{|I_i}|-|{g_i}_{I_i}|\right|)_{i\in I}=(\left|{f_i}_{|I_i}-{g_i}_{I_i}\right|)_{i\in I}$$
+and 
+$$(\left||{f_i}_{|I_i^c}|-|{g_i}_{I_i^c}|\right|)_{i\in I}=(\left|{f_i}_{|I_i^c}+{g_i}_{I_i^c}\right|)_{i\in I}.$$
+Notice next that $d_1:=({f_i}_{|I_i^c}-{g_i}_{I_i^c})_{i\in I}$ and $d_2:=({f_i}_{|I_i}+{g_i}_{I_i})_{i\in I}$ are disjoint. Moreover,
+\begin{align*}
+  \|f-g-({f_i}_{|I_i^c}-{g_i}_{I_i^c})_{i\in I}\| & =\|({f_i}_{|I_i}-{g_i}_{I_i})_{i\in I}\| \\ & =\|(\left||{f_i}_{|I_i}|-|{g_i}_{I_i}|\right|)_{i\in I}\|\leq \||f|-|g|\|<\frac{1}{N}\|f-g\|.  
+\end{align*}
+Similarly,
+$$\|f+g-({f_i}_{|I_i}+{g_i}_{I_i})_{i\in I}\|=\|({f_i}_{|I_i^c}+{g_i}_{I_i^c})_{i\in I}\|=\|(\left||{f_i}_{|I_i^c}|-|{g_i}_{I_i^c}|\right|)_{i\in I}\|\leq \||f|-|g|\|<\frac{1}{N}\|f+g\|.$$
+
+By assumption, we have that both $f+g$ and $f-g$ are non-zero. Hence, by \cite[Lemma 1.4]{AB}, and the fact that $|d_1|\wedge|d_2|=0$ we have 
+
+$$\frac{|f-g|}{\|f-g\|}\wedge \frac{|f+g|}{\|f+g\|}\leq \frac{|f-g-d_1|}{\|f-g\|}\wedge \frac{|f+g|}{\|f+g\|}+\frac{|d_1|}{\|f-g\|}\wedge\frac{|f+g|}{\|f+g\|}$$
+$$\leq\frac{|f-g-d_1|}{\|f-g\|}\wedge \frac{|f+g|}{\|f+g\|}+\frac{|d_1|}{\|f-g\|}\wedge\frac{|f+g-d_2|}{\|f+g\|}.$$
+It follows that 
+
+$$\|\frac{|f-g|}{\|f-g\|}\wedge \frac{|f+g|}{\|f+g\|}\|\leq \frac{\|f-g-d_1\|}{\|f-g\|}+\frac{\|f+g-d_2\|}{\|f+g\|}\leq\frac{2}{N}. $$
+
+
+%Hence, by Positive operatorsLemma 1.4,
+
+%$$|f+g|\wedge |f-g|\leq |f-g-d_1|\wedge |f+g|+|d_1|\wedge|f+g|$$
+%$$\leq|f-g-d_1|\wedge |f+g|+|d_1|\wedge|f+g-d_2|+|d_1|\wedge|d_2|.$$
+%It follows that 
+
+%$$\||f+g|\wedge |f-g|\|\leq %\|f-g-d_1\|+\|f+g-d_2\|\leq\frac{1}{N}\left(\|f+g\|+\|f-g\|\right). $$
+%Finally, it is clear that both of $f+g$ and $f-g$ are non-zero.
+%\\
+Thus, we have constructed almost disjoint vectors $f+g$ and $f-g$ in $E$.
+\\
+
+Conversely, suppose we can find $d_1,d_2\in S_E$ such that $\||d_1|\wedge|d_2|\|\leq \varepsilon.$ Define $f=d_1+d_2$ and $g=d_1-d_2.$ Then $\|f+g\|=2\|d_1\|=2$ and $\|f-g\|=2\|d_2\|=2$ but by \cite[Theorem 1.7]{AB}
+
+$$\| |f|-|g|\|=\||d_1+d_2|-|d_1-d_2|\|=2\||d_1|\wedge |d_2|\|\leq 2 \varepsilon.$$
+Hence, if we did $C$-stable phase retrieval we would have 
+$$1\leq C\varepsilon.$$
+This is impossible.
+
+\end{proof}
+\begin{rem}
+One can probably be more quantitative and relate existence of an $\varepsilon$-almost disjoint pair to lack of $\sim \varepsilon^{-1}$-stable phase retrieval. Should also add counterexample in the complex case, and check that the quantitative version is sharp.
+\end{rem}
+\begin{rem}
+I think the above proof also shows that doing phase retrieval is the same as not having disjoint non-zero vectors, at least for Banach lattices, but probably for all vector lattices as well by similar reasoning. 
+\end{rem}
+
+
+\begin{rem}
+What about stable phase retrieval for Bergman/Hardy spaces or in non-commutative settings such as the Shatten classes? For the former, modulus makes sense on the boundary. For the latter, one can probably work in the space of self-adjoint elements, or adjust the definition to work more generally. Seems we can do phase retrieval in a subspace of any Banach lattice ordered by unconditional basis, hence every BL has a subspace doing phase retrieval. However, it isn't clear if every subspace has a further subspace doing phase retrieval.
+\end{rem}
+\begin{rem}
+If the p-stable approach works out, we get stable phase retrieval in $L^r$ for $r<p\leq 2$ What about when $p\leq r$? In particular, can we get $\ell_1$ to do stable phase retrieval in $L^1$. Can we get $\ell_r\oplus \ell_2$ to do so (or any other space you think is natural)?
+
+{\bf T.O.}
+\end{rem}
+\begin{rem}
+Recall that no subspace of a space ordered by an  unconditional basis can do stable phase retrieval. I think for every separable $E$ one can find an isometric copy of $E$ in $\ell_\infty$ that does stable phase retrieval. Therefore, the question of which atomic spaces have subspaces doing stable phase retrieval is unclear. Probably $c$ doesn't
+\end{rem}
+
+
+
+\begin{proof}
+First note that $\|\cdot\|_{L^1}\sim \|\cdot\|_{L^p}$ on $E$. For the sake of contradiction, let us suppose that when $E$ is viewed in $L^1$, it fails stable phase retrieval. By \Cref{Thm1} we may choose a sequence of pairs $(x_n,y_n)_{n=1}^\infty$ in $E$ and $\alpha>0$ such that $\|x_n\|_{L_p}= \|y_n\|_{L_p}=1$, with
+\begin{equation}
+    \||x_n|\wedge |y_n|\|_{L^1}\rightarrow 0, \ \text{but} \  \||x_n|\wedge |y_n|\|_{L^p}\geq 2\alpha.
+\end{equation}
+By applying \Cref{rem on split} to the sequence $(|x_n|\wedge |y_n|)_{n=1}^\infty$ we may pass to a subsequence and find a sequence of disjoint subsets $(\Omega_n)_{n=1}^\infty$ such that  
+\begin{equation}
+    \|(|x_n|\wedge |y_n|) \one_{\Omega_n^c}\|_{L_p}=\||x_n|\wedge |y_n|-(|x_n|\wedge |y_n|) \one_{\Omega_n}\|_{L_p}\to 0.
+\end{equation}
+
+Let $\vp_n\searrow0$ with $\vp_1<\alpha/2$.  After passing to a subsequence, we may assume that $\|x_n \one_{\Omega_n}\|_{L_p}\geq \alpha$ for all $n\in\N$.  As $(\Omega_n)_{n=1}^\infty$ is a sequence of disjoint subsets of the probability space $(\Omega,\mu)$, we have that $\mu(\Omega_n)\rightarrow 0$.  Thus, after passing to a further subsequence we may assume that $\|x_j \one_{\Omega_n}\|_{L_p}<\vp_n$ for all $j<n$.  Again, after passing to a further subsequence we may assume that there exists values $(\beta_n)_{n=1}^\infty$ such that $\lim_{j\rightarrow\infty}\|x_j\one_{\Omega_n}\|_{L_p}=\beta_n$ for all $n\in\N$.  Furthermore, we may assume that $\|x_j\one_{\Omega_n}\|_{L_p}<\beta_n+\vp_n/2$ for all $j>n$. As $(\Omega_j)_{j=1}^\infty$ is a sequence of disjoint sets, we have for all $N\in \N$ that
+$$\lim_{j\rightarrow\infty}\|x_j\|^p_{L_p}\geq \lim_{j\rightarrow\infty}\sum_{n=1}^N \|x_j\one_{\Omega_n}\|_{L_p}^p=\sum_{n=1}^N \beta_n^p.
+$$
+In particular, we have that $\beta_n\rightarrow 0$.  Hence, after passing to a further subsequence of $(x_n)_{n=1}^\infty$ we may assume that $\beta_n<\vp_n/2$ for all $n\in\N$.  Thus,
+$\|x_j\one_{\Omega_n}\|_{L_p}<\vp_n$ for all $j>n$. In summary, we have that for all $n\in \mathbb{N}$, $\|x_n\one_{\Omega_n}\|_{L_p}\geq \alpha$ and for all $j\neq n$, we have $\|x_j\one_{\Omega_n}\|_{L_p}<\varepsilon_n.$
+\\
+
+As $\vp_1<\alpha/2$, we have in particular that $\|x_j-x_n\|_{L_p}\geq \alpha/2$ for all $j\neq n$.  As $(x_n)_{n=1}^\infty$ is a semi-normalized sequence in $L_p$, we may assume after passing to a subsequence that $(x_n)_{n=1}^\infty$ is weakly convergent.  Thus, the sequence $(x_{2n}-x_{2n-1})_{n=1}^\infty$ converges weakly to $0$.  We have that $\alpha/2\leq \|x_{2n}-x_{2n-1}\|_{L_p}\leq 2$ for all $n\in\N$.  Hence, $(x_{2n}-x_{2n-1})_{n=1}^\infty$ is a semi-normalized weakly null sequence in $L_p$ for $1<p<2$.  Thus, after passing to a further subsequence, we may assume that $(x_{2n}-x_{2n-1})_{n=1}^\infty$ is a perturbation of a semi-normalized block sequence of the Haar basis and is hence  $C$-unconditional for some constant $C$.  
+Hence, since $L_p$ has type $p$ this implies that $(x_{2n}-x_{2n-1})_{n=1}^\infty$ is dominated by the unit vector basis of $\ell_p$.  We will prove that there exists a constant $K$ so that for all $N\in\N$ there exists $k\in\N$ such that the finite sequence $(x_{2n}-x_{2n-1})_{n=k+1}^{k+N}$ $K$-dominates the unit vector basis of $\ell_p^N$. By \cite[Theorem 13]{MR312222}, this implies that $E$ contains a subspace isomorphic to $\ell_p$ and that $\|\cdot\|_{L_1}\not\sim \|\cdot\|_{L_p}$ on $E$, which contradicts that $E$ does stable phase retrieval in $L_p$.
+\\
+
+Let $N\in\N$ and $\vp>0$.  Let $k\in\N$ be large enough so that $ 2\varepsilon_k N<2^{-1}\alpha$. Let $(a_j)_{j=k+1}^{k+N}$ be a sequence of scalars.  We have that
+\begin{align*}
+    \|\sum_{j=k+1}^{k+N} &a_j(x_{2j}-x_{2j-1})\|_{L_p}^p 
+     \geq\sum_{n=k+1}^{k+N}\|\sum_{j=k+1}^{k+N} a_j(x_{2j}-x_{2j-1})\|_{L_p(\Omega_{2n})}^p\\
+     &\geq\sum_{n=k+1}^{k+N}\Big(2^{1-p}\|a_n(x_{2n}-x_{2n-1})\|_{L_p(\Omega_{2n})}^p-\|\sum_{j\neq n} a_j(x_{2j}-x_{2j-1})\|_{L_p(\Omega_{2n})}^p\Big)\\
+     &\geq\sum_{n=k+1}^{k+N}\Big(2^{1-p}\alpha^p |a_n|^p-2^p\vp_k^p\left(\sum_{j\neq n}|a_j|\right)^p\Big)\\
+     &\geq\sum_{n=k+1}^{k+N}\Big(2^{1-p}\alpha^p |a_n|^p-2^p\vp_k^p N^{p-1}\sum_{j\neq n}|a_j|^p\Big)\\
+        &\geq\left( 2^{1-p}\alpha^p-2^p\varepsilon_k^p N^p\ \right) \sum_{n=k+1}^{k+N} |a_n|^p.\\
+        &\geq 2^{-p}\alpha^p \sum_{n=k+1}^{k+N} |a_n|^p.
+\end{align*}
+Here, $c=c_{N,p}=N^{1-\frac{1}{p}}$ is the constant making the $\ell_p^N$ and $\ell_1^N$ norms equivalent.
+\end{proof}
+
+\begin{question}
+Can we extend  \Cref{Example not down} to general $1\leq p<q$? By the above remark, it suffices to take $p=1$. Below, we seem to prove that SPR in $L_q$ implies SPR in $L_1$ for $q<2$; this should be false for $q>2$, by adapting the above argument.
+\end{question}
+\begin{remark}\label{rem on split}
+From Pedro's thesis we have the following possibly useful fact: If $(x_n)\subseteq L_p$ is normalized, then either $\|x_n\|_{L^1}$ is bounded away from zero or there exists a subsequence $(x_{n_k})$ and a disjoint $(z_k)\subseteq L_p$ such that $\|z_k-x_{n_k}\|\to 0$ in $L_p$.
+\end{remark}
+
+
+\begin{remark}
+By \cite{alspach2009good},  for every $\varepsilon>0$, every $E\subseteq L_p$, $p>2$, with $E\sim \ell_2$ contains a further subspace $(1+\varepsilon)$-equivalent to $\ell_2$. This should imply that every subspace of $L^p$, $p>2$ that has no almost disjoint sequence has a further SPR subspace. Does every infinite dimensional subspace of $L_p$ with no almost disjoint sequence contain an infinite dimensional SPR subspace when $p< 2$? The answer is yes. Indeed, by \cite{MR636897}, every subspace of $L_p$ is stable. Hence, $E$ must almost isometrically contain some $\ell_r$ for some $r$. Since $E$ contains no almost disjoint sequence, it cannot contain $\ell_p$, thus $r>p$. For $\varepsilon>0$ small enough, a $(1+\varepsilon)$  $\ell_r$-subspace must do SPR. These argument don't work for $p=2$, however. For $p=2$, if we have no almost disjoint sequence, then $\|\cdot\|_2\sim \|\cdot\|_1$. Then we can argue that $E$ contains an SPR subspace in $L_1$, hence in $L_2$ by the arguments in this section. This argument might actually work in any order continuous Banach lattice.
+\end{remark}
+
+
+
+
+
+%\subsection{Incomplete proofs from the North Carolina trip}
+\begin{theorem}
+For all $p\geq 2$, there exists a closed subspace $E\subseteq L_p[0,1]$ such that $E$ does stable phase retrieval in $L_p$ but fails stable phase retrieval in $L_1$. 
+\end{theorem}
+\begin{proof}
+(To be completed) For convenience, we will build a closed subspace of $L_p[0,2]$ which does stable phase retrieval in $L_p[0,2]$ but does not do stable phase retrieval in $L_1[0,2]$.  This will be sufficient as $L_p[0,2]$ and $L_1[0,2]$ are lattice isometric to $L_p[0,1]$ and $L_1[0,1]$ respectively.
+\\
+\\
+Let $(R_j)_{j=1}^\infty$ be the sequence of Rademacher functions on the interval $[0,1]$.  Let $y_j=R_j+2^{j/p}\one_{[1+2^{-j},1+2^{-j+1})}$ and let $E$ be the closed span of $(y_j)_{j=1}^\infty$ in $L_p[0,2]$.  We first note that $E$ fails to do stable phase retrieval in $L_1[0,2]$.  Indeed, for all $m\neq n$ and all $|\lambda|=1$ we have that
+$$\|y_m-\lambda y_n\|_{L_1}\geq\|R_m-\lambda R_n\|_{L_1}=1.
+$$
+On the other hand, as $|R_n|=|R_m|$ for all $m,n\in\N$, we have that
+$$\lim_{n\rightarrow\infty}\big\||y_n|-|y_{n+1}|\big\|_{L_1}=\lim_{n\rightarrow\infty}\left(2^{n(1/p-1)}+2^{(n+1)(1/p-1)}\right)=0.
+$$
+Thus, $E$ does not do stable phase retrieval in $L_1[0,2]$.
+\\
+
+The goal now is to prove that $E$ does do stable phase retrieval in $L_p[0,2]$.  We first note that by Khintchines inequality, we have that the Rademacher sequence in $L_p[0,1]$ is equivalent to an ortho-normal basis in a Hilbert space.  As $(2^{j/p}\one_{[1+2^{-j},1+2^{-j+1})})_{j=1}^\infty$ is a sequence of unit vectors in $L_p$ with disjoint support, we have that $(2^{j/p}\one_{[1+2^{-j},1+2^{-j+1})})_{j=1}^\infty$ is equivalent to the unit vector basis of $\ell_p$.  As $p>2$, we have that $(y_j)_{j=1}^\infty$ is equivalent to an ortho-normal basis in a Hilbert space.  
+
+
+
+
+\end{proof}
+
+%\begin{theorem}
+%Let $E$ be a closed subspace of real $L_1(\Omega,\mu)$. TFAE:
+%%\begin{enumerate}
+ %   \item $E$ does stable phase retrieval in $L_1(\Omega)$;
+ %   \item There exists $\epsilon>0$ such that for any $x,y\in E$ with $\|x\|_{L_1}=\|y\|_{L_1}=1$, we have 
+  %  \begin{equation}
+  %      \mu(\{t\in \Omega: |x(t)|>\epsilon \ \text{and} \ |y(t)|>\epsilon\})>\epsilon.
+  %  \end{equation}
+%\end{enumerate}
+%\end{theorem}
+%\begin{proof}
+%(ii)$\Rightarrow$(i) is trivial, as (ii) implies no normalized $\epsilon^{1+\frac{1}{p}}$-almost disjoint pairs exist in $E$.
+%\end{proof}
+
+
+
+
+
+
+%\begin{theorem}
+%Suppose $1\leq p<q<\infty$, and $E\subseteq L^q[0,1]\subseteq L^p[0,1].$ Then
+%\begin{enumerate}
+  %  \item If $E$ does SPR in $L^q,$ then $E$ does SPR in $L^p$;
+  %  \item If $E$ does SPR in $L^p$, then $E$ does SPR in $L^q$ if and only if $\|\cdot\|_p\sim \|\cdot\|_q$ on $E$.
+%\end{enumerate}
+%Hence, $E$ does SPR in $L^q$ if and only if $E$ does SPR in $L^p$ and $\|\cdot\|_p\sim \|\cdot\|_q$ on %$E$.
+%\end{theorem}
+%\begin{proof}
+%(i):  Since $E$ does SPR in $L^q$, $\|\cdot\|_p\sim \|\cdot\|_q$ on $E$. The idea now is to use this to rule out the existence of ``spiky" functions in $E$. We will then rephrase the almost disjoint pair characterization in terms of the measure of overlapping supports.
+%\\
+
+%(ii): If $E$ does SPR in $L^q$, then $\|\cdot\|_p\sim \|\cdot\|_q$ on $E$. Conversely, suppose $E$ does SPR in $L^p$ and $\|\cdot\|_p\sim \|\cdot\|_q$ on $E$. Then it follows easily from the almost disjoint pair characterization (and also probably directly) that SPR holds in $L^q$.
+
+%\end{proof}
+
+
+
+\begin{theorem}
+There exists an isometric copy of $\ell_\infty$ in $\ell_\infty$ that does stable phase retrieval.
+\end{theorem}
+\begin{proof}
+(Incomplete) Let $(x_n)$ be a dense subset of the unit sphere of $\ell_1$. Define $\psi:\ell_\infty\to\ell_\infty$ by $\psi(f)=(f(x_1),f(x_2),...)$. This map is clearly contractive. Moreover, for any $f\in \ell_\infty$ one can find $x_j$ such that $f(x_j)\geq (1-\varepsilon)\|f\|$, which implies that $\psi$ is an isometry.  We claim that $\psi(\ell_\infty)$ does SPR in $\ell_\infty.$
+\\
+
+For computations, it is probably good to pick $(x_n)$ smartly. For example, to contain all $e_n$ and to contain some combinations of them. Indeed, we have that to within an $\varepsilon$, there exists $m,n$ such that $$\min_{|\lambda|=1}\|\psi(f)-\lambda \psi(g)\|_\infty=\min_{|\lambda|=1}\|f-\lambda g\|_\infty=\min\{|f(n)-g(n)|,|f(m)+g(m)|\}.$$
+Using the $e_n$, we have 
+$$\||\psi(f)|- |\psi(g)|\|_\infty\geq \max\{\left||f(n)|-|g(n)|\right|,\left||f(m)|-|g(m)|\right|\}.$$
+This tells us that we are done unless $f(n)$ and $g(n)$ have different signs and $f(m)$ and $g(m)$ have the same signs. In this case, we have 
+$$\left||f(n)|-|g(n)|\right|=\left|f(n)+g(n)\right| \ \text{and}\ \left||f(m)|-|g(m)|\right|=\left|f(m)-g(m)\right|.$$
+Now, we use the fact that we can add more elements to the sequence $(x_n)$, as long as we keep it countable and contained in the ball of $\ell_1$. A good choice might be $\frac{e_j}{2}\pm \frac{e_i}{2}$, or something like this.
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+ 
+ \marg{\timur{Edits start here}}
+ \begin{remark}
+ Conditions \eqref{8.4} and \eqref{8.5} state that replacing $(f,g)$ by $(f',g')$ tightens the SPR inequality up to the universal factor $K$. The condition \eqref{8.6} states that $f'$ and $g'$ are ``almost orthogonal''; it also permits us to witness the failure of SPR on $f', g'$ with controlled norm.
+ \\
+ 
+ The constant $K$ appearing in the theorem is the supremum of the Banach-Mazur distance between a $2$-dimensional subspace of $X$ and $\ell_2^2$. In general, by John's Theorem, $K \leq \sqrt2$, but in certain cases a better estimate can be obtained. For instance, if $X$ is a Banach lattice, which is $r$-convex and $s$-concave ($1 \leq r \leq 2 \leq s \leq \infty$) with constants $M^{(r)}(X)$ and $M_{(s)}(X)$ respectively, then, by \cite[Theorem 28.6]{TJ},
+ $$
+ K_X \leq M^{(r)}(X) M_{(s)}(X) 2^\alpha , \, {\textrm{  where }} \, \alpha = \max \Big\{ \frac1r - \frac12 , \frac12 - \frac1s \Big\} .
+ $$
+ In particular, for $X = L_p$, $K_X \leq 2^{|1/p-1/2|}$. \cite[Corollary 28.7]{TJ} provides similar results for operator ideals (Schatten spaces).
+ \end{remark}
+ 
+ To prove \Cref{thm hspr}, we need to represent elements of $X$ as measurable functions.
+ As mentioned in the proof of \Cref{Thm1}, every (real) Banach lattice $X$ embeds lattice isometrically into a space of the form $\left(\bigoplus_{i\in I}L_1(\Omega_i,\Sigma_i,\mu_i)\right)_\infty.$
+ Hence, throughout the proof we can assume that elements of $X$ are functions on a measure space. In the complex case, a similar reduction is possible. Indeed, let $X$ be a complex Banach lattice. By the discussion in \Cref{CBL}, we can assume that $X=Z_\mathbb{C}$ is the complexification of some (real) Banach lattice $Z$. We can then let $T:Z\to \left(\bigoplus_{i\in I}L_1(\Omega_i,\Sigma_i,\mu_i)\right)_\infty$ be a lattice isometric embedding. The complexification $T_\mathbb{C}$ maps $X$ into the complexification of $\left(\bigoplus_{i\in I}L_1(\Omega_i,\Sigma_i,\mu_i)\right)_\infty$. The codomain of this map is still $\left(\bigoplus_{i\in I}L_1(\Omega_i,\Sigma_i,\mu_i)\right)_\infty$,  but now interpreted as a Banach lattice over the complex field (cf.~\cite[Exercises 3 and 5 on page 110]{MR1921782}). Since $T$ is one-to-one, the definition of $T_\mathbb{C}$ tells us that $T_\mathbb{C}$ is one-to-one. Moreover, as mentioned in \Cref{CBL}, $T_\mathbb{C}$ preserves moduli. Finally, by \cite[Lemma 3.18 or Corollary 3.23]{MR1921782},
+$T_\mathbb{C}$ preserves norm. Thus, everything in the SPR inequality is preserved, so, analogously to the real case,  we may assume throughout the proof that the complex Banach lattice $X$ is a space of complex-valued functions.
+\\
+ 
+ We also need an elementary result about complex numbers.
+ 
+ \begin{lemma}\label{complex numbers}
+ If $x, y \in \C$, then
+ $$
+ \big||x| - |y|\big| \geq \big| | x - r (x+y) | - | y - r (x+y) | \big| \, {\textrm{  whenever  }} \, 0 \leq r \leq \frac12 .
+ $$
+ \end{lemma}
+ 
+ \begin{proof}
+ By re-labeling, we can assume that $|x| > |y|$. Write $x = u+v$ and $y = u-v$, where $u = (x+y)/2$ and $v = (x-y)/2$; then
+ $$
+ x - r(x+y) = tu + v \, {\textrm{  and  }} \, y - r(x+y) = tu - v , \, {\textrm{  where  }} t = 1 - 2r \in [0,1] .
+ $$
+ We shall therefore show that $\big| |u+tv| - |u-tv| \big|$ is a decreasing function of $t$ on $[0,1]$.
+ 
+ We represent the complex numbers involved as vectors in $\R^2$. Denote the length of $u$ by $a$, that of $v$ -- by $b$, and the angle between them -- by $\theta$. As $|u+v\ \geq |u-v|$, the angle $\theta$ is obtuse, hence $\gamma := -\cos \theta \geq 0$. By Cosine Theorem,
+ $$
+ |tu+v| = \sqrt{ a^2 t^2 + b^2 + 2 \gamma t ab } \geq |tu-v| = \sqrt{ a^2 t^2 + b^2 - 2 \gamma t ab } ,
+ $$
+ hence we need to show that
+ $$
+ \phi(t) := |tu+v| - |tu-v| = \sqrt{ a^2 t^2 + b^2 + 2 \gamma t ab } - \sqrt{ a^2 t^2 + b^2 - 2 \gamma t ab } 
+ $$
+ is a decreasing function of $t$. In other words, we need to establish that
+ \begin{equation}
+     \label{eq:phi'}
+ \phi'(t) = a \Big( \frac{at + \gamma b}{\sqrt{ a^2 t^2 + b^2 + 2 \gamma t ab }} - \frac{at - \gamma b}{\sqrt{ a^2 t^2 + b^2 - 2 \gamma t ab }} \Big) \geq 0 .
+ \end{equation}
+ Note that
+ $$
+ \Big( \frac{at + \gamma b}{\sqrt{ a^2 t^2 + b^2 + 2 \gamma t ab }} \Big)^2 = \frac{a^2 t^2 + 2 \gamma t ab + \gamma^2 b^2}{a^2 t^2 + b^2 + 2 \gamma t ab} = 1 - \frac{(1-\gamma^2)b^2}{a^2 t^2 + b^2 + 2 \gamma t ab} ,
+ $$
+ and likewise,
+ $$
+ \Big( \frac{at - \gamma b}{\sqrt{ a^2 t^2 + b^2 + 2 \gamma t ab }} \Big)^2 = 1 - \frac{(1-\gamma^2)b^2}{a^2 t^2 + b^2 - 2 \gamma t ab} .
+ $$
+ Together, the two preceding inequalities give us \eqref{eq:phi'}.
+ \end{proof}
+ 
+ \begin{remark}
+ The preceding proof shows that, for any vectors $x,y$ in a Hilbert space, we have
+ $$
+ \big| \|x\| - \|y\| \big| \geq \big| \|x - r(x+y)\| - \|y - r(x+y)\| \big| 
+ $$
+ \end{remark}
+ 
+ 
+ \begin{proof}[Proof of \Cref{thm hspr}]
+Let $Y=\text{span} \{f,g\}$. This is a $2$-dimensional Banach space. Hence, there exists an equivalent norm $\|\cdot\|_H$ such that $(Y,\|\cdot\|_H)$ is Hilbert, and 
+$$\|\cdot\|\leq \|\cdot\|_H\leq \sqrt{2}\|\cdot\|.$$
+By replacing $g$ by a unimodular scalar times $g$, we assume
+$$\min_{|\lambda|=1}\|f-\lambda g\|_H=\|f- g\|_H.$$
+ This latter condition is equivalent to $\langle f,g\rangle\geq 0.$ Indeed,
+$$\|f-\lambda g\|_H^2=\langle f,f\rangle+\langle g,g\rangle-2\Re\left(\lambda \langle f,g\rangle\right).$$
+This is minimized when $\lambda $ is the conjugate phase of $\langle f,g\rangle$. This is minimized when $\lambda=1$ iff $\langle f,g\rangle\geq 0$.
+\\
+
+Consider $f_r:=f-r(f+g)$ and $g_r:=g-r(f+g)$ for $r\in [0,1/2]$. We let $R$ be the first instance of $\langle f-r(f+g),g-r(f+g)\rangle=0.$ This is possible since when $r=0$, the inner product is non-negative, and when $r=\frac{1}{2}$, it is negative. Note that 
+$$\|f_r-g_r\|_H=\|f-g\|_H.$$
+Thus, 
+$$\min_{|\lambda|=1}\|f_R-\lambda g_R\|_H=\min_{|\lambda|=1}\|f-\lambda g\|_H.$$
+We will take $f'=f_R$ and $g'=g_R$. To see \eqref{8.4}, we compute
+\begin{equation}
+    \begin{split}
+      \min_{|\lambda|=1}\|f-\lambda g \|\leq \min_{|\lambda|=1}\|f-\lambda g\|_H=\min_{|\lambda|=1}\|f'-\lambda g'\|_H\leq \sqrt{2}\min_{|\lambda|=1}\|f'-\lambda g'\|.
+    \end{split}
+\end{equation}
+Moreover, as $f'$ and $g'$ are orthogonal in $H$,
+\begin{equation}
+K\min_{|\lambda|=1}\|f'-\lambda g'\|\geq \min_{|\lambda|=1}\|f'-\lambda g'\|_H=(\|f'\|_H^2+\|g'\|_H^2)^\frac{1}{2}\geq(\|f'\|^2+\|g'\|^2)^\frac{1}{2}.
+\end{equation}
+This gives \eqref{8.6}. % Note that in the worst case scenario, we have $K\leq \sqrt{2}.$ However, if the Banach-Mazur distance to $\ell_2^2$ is less than $\sqrt{2}$, the constant improves.
+\\
+
+We now verify \eqref{8.5}. To see this, we prove \begin{equation}\left||f_r|-|g_r|\right|\leq \left||f|-|g|\right| \ \text{for} \  r\in [0,\frac{1}{2}].
+\end{equation}
+We represent $X\subseteq L^0(\Omega)$ and let $t\in \Omega$. Then
+$$
+\left||f_r(t)|-|g_r(t)|\right|\leq \left||f(t)|-|g(t)|\right| \ \text{for} \  r\in [0,\frac{1}{2}]
+$$
+follows from \Cref{complex numbers}.
+
+\medskip \hrule \medskip
+
+\timur{Shall we delete the rest of the proof?}
+
+We will prove that
+\begin{equation}\left||f_r(t)|-|g_r(t)|\right|\leq \left||f(t)|-|g(t)|\right| \ \text{for} \  r\in [0,\frac{1}{2}].
+\end{equation}
+Write $f(t)=a+ib$ and $g(t)=c+id$. Multiplying $f(t)$ and $g(t)$ by a unimodular scalar, we rotate so that $d=-b.$ WLOG, $|a|\geq |c|$; then, multiplying by $-1$ if necessary, we also assume $a\geq 0$. We have 
+$$f_r(t)=a-r(a+c)+ib, \ \ \ g_r(t)=c-r(a+c)-ib.$$
+%We first deal with the trivial case, $|a|=|c|.$ In this case, we have that \
+Now, we note that our assumptions give $\left||f_r(t)|-|g_r(t)|\right|=|f_r(t)|-|g_r(t)|$ for $0\leq r\leq \frac{1}{2}.$ Indeed, $\Im (f_r(t))=-\Im(g_r(t))$ and $\left(\Re(f_r(t))\right)^2\geq \left(\Re(g_r(t))\right)^2 $ for $0\leq r\leq \frac{1}{2}$ by elementary computations. Taking $r=0$, $\left||f(t)|-|g(t)|\right|=|f(t)|-|g(t)|.$ Hence, we must prove
+$$|f_r(t)|-|g_r(t)|\leq |f(t)|-|g(t)| \ \text{for}\ r\in [0,\frac{1}{2}].$$
+This inequality is true for all $r\geq 0$. Indeed, recall first that $a>c$. By Fundamental Theorem of Calculus, for any convex function $\phi$ and $w > 0$, we have $\phi(a-w) - \phi(c-w) \leq \phi(a) - \phi(c)$.
+In our case, the function $h(s)=\sqrt{s^2+b^2}$ is convex and $r(a+c)>0$; therefore,
+\marg{\timur{Changes here}}
+$$|f_r(t)|-|g_r(t)|=h(a-r(a+c))-h(c-r(a+c))\leq h(a)-h(c)=|f(t)|-|g(t)|. \qedhere$$
+% The latter inequality follows since $-r(a+c)\leq 0$, and properties of differences of shifts of convex functions, i.e., the fundamental theorem of calculus.
+ \end{proof}
+
+
+\medskip \hrule \medskip
+
+
+We now  show that certain important random subspaces  do SPR. Throughout this subsection, the word ``subspace'' refers to a closed infinite dimensional one, unless specified otherwise.
+\begin{proposition}\label{c:gaussian and stable}
+Let $(\Omega,\mu)$ be a probability space. In the following cases, $E$ is an SPR-subspace of $L_p(\Omega,\mu)$.
+\begin{enumerate}
+ \item $1 \leq p < \infty$, and $E$ is the span of independent Gaussian random variables.
+ \item $1 \leq p < 2$, and $E$ is the span of independent $q$-stable random variables, for $p < q < 2$.
+\end{enumerate}
+\end{proposition}
+We will provide two proofs of \Cref{c:gaussian and stable}. The first is entirely based on the Banach space properties of these subspaces. Indeed, by  \cite[Theorem 6.4.17]{AK}, the span of independent $q$-stable random variables in $L_p$  for $1\leq p<2$ and $p<q<2$ is isometric to $\ell_q$. Hence, by \Cref{rem-clark}, such a space must do SPR in $L_p$. On the other hand, for all $1\leq p<\infty$, the span of independent Gaussians is isometric to a Hilbert space by \cite[Proposition 6.4.12]{AK}. Hence, if $p<2$, such a subspace must do SPR by \Cref{rem-clark}. Similarly, if $p>2$, then if $E$ denotes the span of independent Gaussian random variables, then any $2$-dimensional subspace of $E$ must be isometric to $\ell_2^2$. However, if $E$ failed SPR, $E$ would contain $2$-dimensional subspaces arbitrarily close to $\ell_p^2$ by \Cref{Thm1}, which gives a contradiction. Finally, for $p=2$, we combine our knowledge that iid Gaussians do SPR in $L_1$ with \Cref{summary} to obtain:
+\begin{equation*}
+    \inf_{|\lambda=1}\|f-\lambda g\|_{L_2}\sim \inf_{|\lambda=1}\|f-\lambda g\|_{L_1}\lesssim  \||f|-|g|\|_{L_1}\leq  \||f|-|g|\|_{L_2}.
+\end{equation*}
+Our second proof of \Cref{c:gaussian and stable} is based on elementary properties of independent Gaussian and $q$-stables, together with the following proposition:
+% permits us to exhibit a large class of SPR-subspaces.
+
+\begin{proposition}\label{p:criterion}
+ Suppose $(\Omega,\mu)$ is a probability measure space, and $E$ is a subspace of $L_p(\Omega,\mu)$, with the property that there exist $\alpha > 1/2$ and $\beta > 0$ so that, for any norm one $f\in E$, we have
+ \begin{equation}
+  \mu \left(\big\{ \omega \in \Omega : |f(\omega)| \geq \beta \big\}\right) \geq \alpha .
+ \end{equation}
+ Then $E$ is an SPR-subspace.
+\end{proposition}
+
+%This proposition allows us to build random SPR-subspaces.
+
+%Note that, in case (1), the span of Gaussians is isometric to a Hilbert space by \cite[Proposition 6.4.12]{AK}. \Cref{summary} shows that, for $p \in [2,\infty)$, any SPR-subspace of $L_p[0,1]$ must be isomorphic to a Hilbert space. %In contrast to that, the span of $q$-stable random variables is isometric to $\ell_q$ by \cite[Theorem 6.4.17]{AK}.
+
+
+
+
+%{\color{blue} I would bet that some of these results work in Lorentz spaces, as they have a similar Kadec-Pelczynski structure to $L_p$.  For example, Pedro proves in \cite{MR2600381} that a subspace of $L_{p,q}$ which contains uniform $\ell_p^n$ or $\ell_{p,q}^n$ must also contain an almost disjoint sequence spanning $\ell_q$. Moreover, he looks a bit at $r$-stables random variables. See  Dilworth's article in the handbook \cite{Handbook} for related information }
+%\\
+
+% We follow the lines of \cite[Section 2.1]{JS}.
+%We now proceed with the proofs of the above results.
+
+\begin{proof}[Proof of  \Cref{p:criterion}]
+ Suppose $f, g \in E$ have norm $1$. By the Inclusion-Exclusion Principle,
+ $$
+ \mu\left( \big\{ \omega \in \Omega : |f(\omega)| \geq \beta , |g(\omega)| \geq \beta  \big\}\right) \geq 2 \alpha - 1 .
+ $$
+ Thus, $\| |f| \wedge |g| \| \geq \beta (2\alpha-1)^{1/p}$.
+\end{proof}
+
+% For the proof of Corollary \ref{c:gaussian and stable}, we need to recall some background.
+% Gaussian random variables are well known; a wealth of information on the topic can be found in \cite{Bog}.
+% For $r$-stable random variables, we refer the reader to \cite[Section 4.I]{LQ}, \cite[Chapter 8}{MS}, or \cite[Section III.A]{Woj}.
+
+\begin{proof}[Proof of  \Cref{c:gaussian and stable}]
+First, we recall some background. A random variable $Y$ is called $q$-stable ($0 < q \leq 2$) if its density function $f_Y$ has Fourier transform $\exp\big(-|t|^q\big)$. For more information on such random variables the reader is referred to e.g.~\cite[Section 6.4]{AK}, \cite[Section 4.I]{LQ}, \cite[Chapter 8]{MS}, or \cite[Section III.A]{Woj}; \cite{Bog} covers Gaussian random variables extensively.
+When $q=2$, after re-normalizing, we obtain the standard normal random variable, with density $f_Y(x) = \exp(-x^2/2)/\sqrt{2\pi}$; this function belongs to $L_p$ for any finite $p$ (in other words, ${\mathbb{E}} (|Y|^p) < \infty)$.
+For $q \in (1,2)$ (here we ignore the case of $q \in (0,1]$), it is known that $f_Y$ belongs to $L_p$ iff $p < q$. The Fourier inversion formula gives
+$$
+f_Y(x) = \frac1\pi \int_0^\infty \cos(tx) e^{-t^q} \, dt .
+$$
+By Dominated Convergence Theorem, the function $f_Y$ is continuous, hence there exists $\varepsilon > 0$ so that $f_Y(x) \leq 2 f_Y(0)$ for $|x| \leq \varepsilon$. For a fixed $p<q$, we can find $c > 0$ so that ${\mathbb{E}}(|cY|^p) = 1$. By the above, we can find $\beta > 0$ so that ${\mathbb{P}}(|cY| > \beta) > 3/4$. \marg{I'm not completely confident I understand this part of the proof. Timur may also have a new proof that works in more general r.i.~spaces.  As an FYI, Pedro looks at $r$-stables and Kadec/Pelcynski theory in Lorentz spaces in \cite{MR2600381}. Dilworth's article in the handbook \cite{Handbook} may also have some information.}
+\\
+
+To finish the proof, we need to invoke the well-known fact that, if $f_1, \ldots, f_n \in L_p$ are normalized $q$-stable random variables, then the same is true for $\alpha_1 f_1 + \ldots + \alpha_n f_n$ whenever $\sum_i |\alpha_i|^q = 1$.
+\end{proof}
+
+\medskip \hrule \medskip
+
+===============================================
+
+
+\begin{proof}[Proof of \Cref{stability under 1H}, the real case]
+Suppose $E$ is SPR with constant $C$. We show that, if $d_{1H}(E,F) < 1/(4C)$, then $F$ is SPR with constant $1(C^{-1} -  4d_{1H}(E,F))^{-1}$. In light of \Cref{Thm1}, it suffices to show that, for any norm one $x, y \in F$, we have 
+\begin{equation}
+\| |x| \wedge |y| \| \geq \frac1C - 4d_{1H}(E,F) .
+\label{eq:1H lower bound}
+\end{equation}
+
+Fix $\delta > d_{1H}(E,F)$. By the discussion above, there exist norm one $x', y' \in E$ so that $\|x - x'\| , \|y - y'\| < 2 \delta$. By \Cref{Thm1}, $\| |x'| \wedge |y'| \| \geq 1/C$, hence
+$$
+\| |x| \wedge |y| \| \geq \| |x'| \wedge |y'| \| - 4 \delta \geq \frac1C - 4 \delta .
+$$
+As $\delta$ is arbitrary, \eqref{eq:1H lower bound} follows.
+\end{proof}

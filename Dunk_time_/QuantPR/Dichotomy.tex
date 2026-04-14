@@ -1,0 +1,37 @@
+\section{The tail sign dichotomy}\label{sec:dichotomy}
+
+The vectors $a + b$ and $a - b$ partition the energy of the pair $(a,b)$
+into two complementary directions. On the tail $H^c$, at least one of these
+directions must carry significant energy---but it may be that both do, or that
+one is negligible. This dichotomy determines which branch of the proof
+applies.
+
+\begin{lemma}[Tail sign dichotomy]\label{lem:tail-dichotomy}
+\privateleanname{Main\.UniformAB\.tail\_sign\_dichotomy}
+Let $a, b \in \R^n$ be unit vectors with $\ip{a}{b} = 0$ and set
+$H = H(A,a,b)$. Exactly one of the following holds:
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Diffuse:}
+$\norm{\tail_H(a - b)}_2^2 \ge 16\, s_0(A)$ and
+$\norm{\tail_H(a + b)}_2^2 \ge 16\, s_0(A)$.
+
+\item \textbf{Concentrated:}
+there exists $\tau \in \{+1, -1\}$ with
+$\norm{\tail_H(a - \tau b)}_2 < \theta(A)/32$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+If $\norm{\tail_H(a - b)}_2^2 < 16\, s_0$, take $\tau = 1$; if instead
+$\norm{\tail_H(a + b)}_2^2 < 16\, s_0$, take $\tau = -1$. Since
+$16\, s_0 = A^4/2^{16} = (\theta/32)^2$, the squared bound yields the norm
+bound in~(ii). If neither holds, both squared norms are at least $16\, s_0$
+and we are in~(i).
+\end{proof}
+
+\begin{remark}
+In the concentrated case, $a$ and $\tau b$ nearly agree on the tail, so
+their difference is concentrated on the finite head set $H$. In the diffuse
+case, both $a \pm b$ have energy spread across many small tail coefficients,
+precisely the regime where anticoncentration is effective.
+\end{remark}

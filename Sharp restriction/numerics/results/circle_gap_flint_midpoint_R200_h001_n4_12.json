@@ -1,0 +1,134 @@
+{
+  "rigorous_finite_mode_certificate": true,
+  "finite_mode_range": [
+    4,
+    12
+  ],
+  "target_ratio": "0.12",
+  "meaning": "If every listed ratio is <= 0.12, then the checked finite modes satisfy |5 I_n - Lambda0| >= 0.4 Lambda0 and |I_n - Lambda0| >= 0.4 Lambda0.",
+  "not_yet_certified": "Large n > nmax still require a separate mode-tail estimate. The r-tail bound also depends on the stated Bessel majorant.",
+  "parameters": {
+    "precision_bits": 128,
+    "R": "200",
+    "h": "0.01",
+    "tail_bound_used": true,
+    "finite_interval_method": "midpoint-derivative",
+    "finite_interval_method_hypotheses": "|J_m(r)| <= 1 and |J'_m(r)| <= 1 for integer m and real r",
+    "tail_hypothesis": "|J_m(r)| <= sqrt(2/(pi r)) for r >= R and m in {0,n}"
+  },
+  "J0_lower_positive": true,
+  "J0": {
+    "ball": "[0.3 +/- 0.0569]",
+    "lower": "0.317344582487228424996744757471",
+    "upper": "0.356813555256328644008051520167",
+    "radius": "0.0197344863845501095056533813477"
+  },
+  "Lambda0": {
+    "ball": "[5e+2 +/- 56.2]",
+    "lower": "494.595957051977505560264769000",
+    "upper": "556.110145520433773870811644000",
+    "radius": "30.7570942342281341552734375000"
+  },
+  "rows": [
+    {
+      "n": 4,
+      "J_n": {
+        "ball": "[0.02 +/- 4.75e-3]",
+        "lower": "0.0152582414099624186526281255777",
+        "upper": "0.0229648436231099806498033422525",
+        "radius": "0.00385330110657378099858760833740"
+      },
+      "J_n_over_J0_upper": "[0.0723656394040827964697053200864 +/- 3.90e-32]",
+      "certifies_ratio_below_target": true
+    },
+    {
+      "n": 5,
+      "J_n": {
+        "ball": "[0.02 +/- 7.34e-3]",
+        "lower": "0.0126620637547657624174052110540",
+        "upper": "0.0187667198497419975984984269964",
+        "radius": "0.00305232804748811759054660797119"
+      },
+      "J_n_over_J0_upper": "[0.0591367267172341495359057882059 +/- 1.84e-32]",
+      "certifies_ratio_below_target": true
+    },
+    {
+      "n": 6,
+      "J_n": {
+        "ball": "[0.01 +/- 5.98e-3]",
+        "lower": "0.00978316873701612302810954973096",
+        "upper": "0.0159778001314806456282834999263",
+        "radius": "0.00309731569723226130008697509766"
+      },
+      "J_n_over_J0_upper": "[0.0503484256962970978821092112727 +/- 2.87e-32]",
+      "certifies_ratio_below_target": true
+    },
+    {
+      "n": 7,
+      "J_n": {
+        "ball": "[0.01 +/- 4.15e-3]",
+        "lower": "0.00868946870926450989976585386628",
+        "upper": "0.0141483086090666247142857360684",
+        "radius": "0.00272941994990105740725994110107"
+      },
+      "J_n_over_J0_upper": "[0.0445834256825103522266430153523 +/- 5.22e-33]",
+      "certifies_ratio_below_target": true
+    },
+    {
+      "n": 8,
+      "J_n": {
+        "ball": "[+/- 0.0125]",
+        "lower": "0.00705474324512724463755720532705",
+        "upper": "0.0124372318214151140015804139452",
+        "radius": "0.00269124428814393468201160430908"
+      },
+      "J_n_over_J0_upper": "[0.0391915681179641755922969957126 +/- 4.18e-32]",
+      "certifies_ratio_below_target": true
+    },
+    {
+      "n": 9,
+      "J_n": {
+        "ball": "[+/- 0.0116]",
+        "lower": "0.00652519213431677696630369372566",
+        "upper": "0.0115117843317000652603806132813",
+        "radius": "0.00249329609869164414703845977783"
+      },
+      "J_n_over_J0_upper": "[0.0362753453721345898651659451375 +/- 1.15e-32]",
+      "certifies_ratio_below_target": true
+    },
+    {
+      "n": 10,
+      "J_n": {
+        "ball": "[+/- 0.0103]",
+        "lower": "0.00544274983591301772147519860554",
+        "upper": "0.0102754176001892838194976595430",
+        "radius": "0.00241633388213813304901123046875"
+      },
+      "J_n_over_J0_upper": "[0.0323793698309087074768363191467 +/- 2.12e-32]",
+      "certifies_ratio_below_target": true
+    },
+    {
+      "n": 11,
+      "J_n": {
+        "ball": "[+/- 9.83e-3]",
+        "lower": "0.00513905919891955894768000815216",
+        "upper": "0.00982733875665987474262477133575",
+        "radius": "0.00234413977887015789747238159180"
+      },
+      "J_n_over_J0_upper": "[0.0309674067212266883434861488372 +/- 4.69e-32]",
+      "certifies_ratio_below_target": true
+    },
+    {
+      "n": 12,
+      "J_n": {
+        "ball": "[+/- 8.81e-3]",
+        "lower": "0.00440959554884185211589942197250",
+        "upper": "0.00880376917097319977214942197250",
+        "radius": "0.00219708681106567382812500000000"
+      },
+      "J_n_over_J0_upper": "[0.0277419866505126446751166766718 +/- 1.99e-32]",
+      "certifies_ratio_below_target": true
+    }
+  ],
+  "elapsed_seconds": 23.699237823486328
+}

@@ -1,0 +1,2125 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[shortlabels]{enumitem}
+\usepackage{hyperref}
+\usepackage{setspace}
+
+\numberwithin{equation}{section}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Question}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\N}{\mathbb N}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\sgn}{\operatorname{sign}}
+\newcommand{\conc}{\operatorname{Q}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}
+
+\title[Stable Phase Retrieval for Independent Coordinates]{Stable Phase Retrieval for Spans of Independent Random Variables}
+
+\author{Pedro Abdalla Teixeira\textsuperscript{1}}
+\author{Jaume de Dios Pont\textsuperscript{2}}
+\author{Jo\~ao Pedro Ramos\textsuperscript{3}}
+\author{Mitchell Taylor\textsuperscript{4}}
+
+\begin{document}
+\setstretch{1.2}
+
+\begin{abstract}
+We study stable phase retrieval for closed spans of independent real-valued
+random variables in $L^2$.  We prove the sufficiency direction of the
+Calderbank--Daubechies--Freeman--Freeman conjecture up to one exceptional
+coordinate: after $L^2$ normalization and relabeling, stable phase retrieval
+holds whenever all but possibly one coordinate satisfy a uniform two-sided
+$L^1$ bound.  The paper gives two proofs.  The first is a compactness proof
+based on a head--tail decomposition, bounded probe functions, and infinitely
+divisible limits.  The second is a quantitative proof in the homogeneous case,
+using an explicit dichotomy and anticoncentration estimates for diffuse tails.
+\end{abstract}
+
+\maketitle
+\begingroup
+\renewcommand{\thefootnote}{\arabic{footnote}}
+\footnotetext[1]{Department of Mathematics, University of California, Irvine, Irvine, California 92697, USA}
+\footnotetext[2]{Center for Data Science, New York University, New York, New York 10011, USA}
+\footnotetext[3]{Instituto de Matem\'atica Pura e Aplicada (IMPA), Rio de Janeiro, RJ, Brazil}
+\footnotetext[4]{Department of Mathematics, ETH Z\"urich, Z\"urich, Switzerland}
+\endgroup
+\setcounter{footnote}{0}
+
+\section{Introduction}
+
+The phase retrieval problem asks whether an unknown vector or function can be
+recovered from phaseless data.  In the real setting, the unavoidable symmetry
+is multiplication by a global sign, and the central issue is whether this is
+the only obstruction.  In finite dimensions, phase retrieval has by now a
+substantial theory, spanning injectivity, stability, convex relaxations,
+random measurements, and structured models
+\cite{bandeira2014saving,eldar2014stability,MR3069958,MR3260258,KS,DB}.
+Infinite-dimensional phase retrieval is subtler.  Recovery itself can hold in
+Hilbert spaces \cite{cahill2016infinite}, but uniform stability can fail for
+continuous frames \cite{alaifari2017continuous}, and natural measurement
+systems such as Gabor families can be severely ill-posed
+\cite{alaifari2021gabor,grohs2021stable,grohs20212,steinerberger2020stability}.
+For general background we refer to \cite{grohs2020survey}.
+Further landmarks include early reconstruction and finite-dimensional stability
+results
+\cite{sanz1984phase,ramos-sousa-pauli,balan2013,bandeira2014saving,eldar2014stability,MR3069958,MR3260258,KS,DB,MR3746047},
+variants for affine, vector-valued, and projection-based models
+\cite{bartusel2021phase,chen2019phase,casazza2013,casazza2017weak,casazza2017norm,akrami2021note},
+and infinite-dimensional or structured-measurement results
+\cite{calderbank2022stable,localphase,MR4298599}.
+For the surrounding frame-theoretic and discretization background we also refer
+to
+\cite{AG-continuous-frames,CHL,CCS-JMAA,CDOS,FG-atomic,MR3275625,MR3367650,MR3901674,fg22,kashin2021sampling,LT21,DPSTT,NOU,MR2011364,MR0423039,luef2021gaussian}.
+
+Two themes run through the subject.  The first is uniqueness: does the map
+$f\mapsto |f|$ distinguish points of the model space modulo the natural
+symmetry?  The second is stability: can one recover the signal in a uniformly
+continuous, or even Lipschitz, fashion from phaseless data?  In applications,
+the second question is indispensable.  Exact injectivity without stability is
+too weak for numerical reconstruction, and many infinite-dimensional models
+exhibit precisely this pathology.  One of the main conceptual contributions of
+\cite{FOTP} is to make the stability question intrinsic to the geometry of the
+subspace rather than to a particular discretized frame.  This point of view is
+particularly well suited to random subspaces of $L^2$, where the ambient
+structure is probabilistic from the outset and where orthogonality interacts
+naturally with independence.  In a complementary direction, Christ, Pineau,
+and Taylor \cite{christ2022examples} constructed examples with only
+H\"older-stable recovery, underscoring that even when phase retrieval remains
+possible the quantitative modulus can deteriorate substantially.
+
+The model considered here is also connected to the geometry of independent
+coordinates in classical Banach space theory.  An independent sequence of
+centered $L^2$-normalized random variables behaves like a random coordinate
+system whose linear span carries both Euclidean and probabilistic structure.
+The size of the $L^1$ norm of each coordinate is a first quantitative measure
+of how much sign information survives after passing to absolute values.
+Variables with very small $L^1$ norm are too concentrated near zero, while
+variables with $L^1$ norm too close to one are nearly flat in modulus and
+hence almost insensitive to sign changes.  The theorem proved in this paper
+says, in essence, that outside of those two obstructions there is enough
+randomness in the coordinate system to force uniform phase retrieval.
+
+It is worth stressing that the problem is not coordinatewise.  Stable phase
+retrieval asks for control of \emph{all} vectors in the closed span, not merely
+for the generators.  Thus one must understand how arbitrary linear
+combinations behave under the nonlinear map $f\mapsto |f|$.  The difficult
+regime is when two orthogonal combinations have almost identical moduli.  In
+that situation the coefficients may spread over infinitely many coordinates,
+and no finite-dimensional argument can be applied directly.  The
+head--tail decomposition used below is precisely the mechanism that overcomes
+this: the few large coordinates form the head, which is rigid enough to be
+identified by bounded probes, while the many small coordinates form the tail,
+which is diffuse enough to admit probabilistic structure theorems.
+
+We adopt the function-space viewpoint introduced in
+\cite{FOTP,AG-continuous-frames}.  Let $X$ be a real function space and let
+$E\subset X$ be a subspace.  We say that $E$ does \emph{stable phase
+retrieval} if there exists $C<\infty$ such that
+\[
+\min_{\sigma\in\{\pm1\}}\norm{f-\sigma g}_X
+\le C\,\norm{\abs{f}-\abs{g}}_X
+\qquad\text{for all }f,g\in E.
+\]
+The theorem of Freeman, Oikhberg, Pineau, and Taylor \cite{FOTP} shows that in
+real Hilbert spaces the problem reduces to orthogonal pairs: to prove stable
+phase retrieval on a subspace it suffices to lower-bound the modulus gap for
+pairs of orthogonal unit vectors in that subspace.  This orthogonal reduction
+is the common point of departure of both proofs given here.  For historical
+continuity, we note that \cite{our-paper} is the preprint version of
+\cite{FOTP}.
+
+Our interest is the structure of subspaces generated by independent random
+variables.  Calderbank, Daubechies, Freeman, and Freeman
+\cite{calderbank2022stable} proved stable phase retrieval for a shifted model
+and proposed the following conjectural characterization in the unshifted
+setting: if $(\xi_i)$ is an orthonormal sequence of independent centered
+random variables in $L^2$, then $\overline{\Span}(\xi_i)$ does stable phase
+retrieval if and only if there exist constants $0<A\le B<1$ such that
+$A\le \norm{\xi_i}_{L^1}\le B$ for all but at most one index.  The lower bound
+excludes concentration near zero; the upper bound excludes the Rademacher
+regime in which $\abs{\xi_i}$ is constant and therefore carries no sign
+information.
+
+The phrase ``at most one exceptional coordinate'' is not an accident of the
+proof.  It is the largest defect compatible with the expected geometry of the
+problem.  One exceptional coordinate may coexist with an otherwise
+phase-retrieving family, but two genuinely exceptional coordinates already
+allow a nontrivial loss of sign information at the level of the span.  The
+one-exception theorem should therefore be viewed as the natural endpoint of the
+qualitative theory.
+
+The necessity of these conditions is by now standard.  The equivalence of
+$L^1$ and $L^2$ norms on a phase-retrieving subspace follows from
+\cite{FOTP}; in particular a uniform positive lower $L^1$ bound is forced.
+Likewise, a centered $L^2$-normalized variable satisfies
+$\norm{\xi}_{L^1}=1$ if and only if $\xi^2\equiv 1$, that is, if and only if
+$\xi$ is Rademacher-valued.  But a span containing two Rademacher directions
+cannot even do phase retrieval, since all such coordinates have the same
+absolute value.
+
+Our first theorem gives the desired sufficiency result with one exceptional
+coordinate.
+
+\begin{theorem}[One-exception stable phase retrieval]\label{thm:main}
+Let $\eta,\xi_2,\xi_3,\dots$ be independent real-valued random variables and
+fix $\delta>0$.  Assume
+\[
+\norm{\eta}_{L^2}=1,
+\qquad
+\E[\eta]=0,
+\]
+and, for every $i\ge2$,
+\[
+\norm{\xi_i}_{L^2}=1,
+\qquad
+\E[\xi_i]=0,
+\qquad
+\delta\le \norm{\xi_i}_{L^1}\le 1-\delta.
+\]
+Then there exists $C_{\delta,\eta}\ge1$ such that, for all
+$X,Y\in \overline{\Span}(\eta,\xi_i:i\ge2)$,
+\[
+\min_{\sigma\in\{\pm1\}}\norm{X-\sigma Y}_{L^2}
+\le
+C_{\delta,\eta}\,\norm{\abs{X}-\abs{Y}}_{L^2}.
+\]
+\end{theorem}
+
+\begin{remark}
+After relabeling the coordinates and normalizing in $L^2$,
+Theorem~\ref{thm:main} is exactly the sufficiency direction of the
+Calderbank--Daubechies--Freeman--Freeman conjecture up to one exceptional
+variable.
+\end{remark}
+
+The second proof is quantitative in spirit.  It keeps the one-exception
+framework of Theorem~\ref{thm:main}, but replaces the limit-law endpoint by an
+explicit head--tail dichotomy and by anticoncentration estimates for the
+diffuse part.  In that sense, the compactness and quantitative proofs address
+the same theorem from complementary angles.  The compactness proof shows that a
+bad sequence cannot exist by passing to a limit model; the quantitative proof
+shows directly that every orthogonal pair already contains a definite amount of
+modulus separation.
+
+The two proofs illuminate complementary aspects of the theorem.  The
+compactness proof begins with a normalized counterexample array and extracts a
+head--tail decomposition of the coefficients.  The head consists of the few
+coordinates carrying macroscopic mass, while the tail is diffuse in the sense
+that its maximal coefficient goes to zero.  Bounded probes read off quadratic
+coefficients from the observable $|X_n|^2-|Y_n|^2$, forcing the head limit to
+agree up to sign.  The tail then converges to an infinitely divisible law.
+Since the exact limit identity still has the form
+$|H_X+R_X|=|H_Y+R_Y|$, the support of the tail law is forced onto one of the
+phase-retrieval lines; tail rigidity then contradicts the orthogonal
+normalization.  In the degenerate-head regime, the same contradiction can be
+reached by a different endpoint argument: diffuse tails produce a nontrivial
+Gaussian component in the limit law, and a line-geometry argument for
+convolutions supported on $\{(u,v):\abs{u}=\abs{v}\}$ forces that Gaussian
+component, and hence the full law, onto a single line.
+
+The quantitative proof replaces the limit law by an explicit dichotomy.  The
+coordinates are split into a head and a tail according to a fixed cutoff.
+Either one of the signs $a\pm b$ is essentially supported on the head, in
+which case bounded probes recover the head difference matrix and orthogonality
+forces a positive modulus gap, or both $a+b$ and $a-b$ remain diffuse on the
+tail.  In the latter regime one partitions the tail into many blocks of
+comparable energy and applies symmetrization, Sperner-type combinatorics, and
+small-ball estimates to prove that both combinations stay away from zero with
+positive probability.  This yields an explicit lower bound for
+$\E\abs{X_a^2-X_b^2}$ and hence for $\norm{\abs{X_a}-\abs{X_b}}_{L^2}$.
+
+The paper is organized as follows.  Section~\ref{sec:preliminaries} collects
+the basic definitions and the analytic tools used throughout.  In
+Section~\ref{sec:compactness-proof} we present the compactness proof of
+Theorem~\ref{thm:main}, including the Gaussian alternative to the final
+line-support argument.  Section~\ref{sec:quant-proof} gives a second proof of
+Theorem~\ref{thm:main}, explaining how the limit-law step can be bypassed by an
+explicit decomposition together with anticoncentration.
+Finally, Section~\ref{sec:comments} discusses extensions, related directions,
+and open problems.  Although we now have a quantitative proof in the
+homogeneous setting, we have chosen to retain the compactness proof because of
+its flexibility: it isolates a robust mechanism that is likely to survive in
+more general symmetry classes and in settings where quantitative control is
+secondary.
+
+\section{Preliminaries}\label{sec:preliminaries}
+
+\subsection{Stable phase retrieval and orthogonal reduction}
+
+\begin{definition}
+Let $E$ be a subspace of a real Banach lattice $X$.  We say that $E$ does
+\emph{stable phase retrieval} if there exists $C<\infty$ such that
+\[
+\min_{\sigma\in\{\pm1\}}\norm{f-\sigma g}_X
+\le
+C\,\norm{\abs{f}-\abs{g}}_X
+\qquad(f,g\in E).
+\]
+\end{definition}
+
+We shall use repeatedly the following orthogonal reduction from \cite{FOTP}.
+
+\begin{proposition}[Orthogonal reduction]\label{prop:orth-reduction}
+Let $H$ be a real Hilbert space and let $E\subset H$ be a subspace.  Then $E$
+does stable phase retrieval if and only if there exists $c>0$ such that
+\[
+\norm{\abs{f}-\abs{g}}_H\ge c
+\]
+for every orthogonal pair $f,g\in E$ with $\norm{f}_H=\norm{g}_H=1$.
+\end{proposition}
+
+\subsection{Probe functions and lower $L^1$ bounds}
+
+The first input is the existence of bounded dual probes.  These are the basic
+coefficient-extraction devices in both proofs.
+
+\begin{lemma}[Linear and quadratic probes]\label{lem:probes}
+Let $\xi$ be a real random variable with $\E[\xi]=0$ and $\E[\xi^2]=1$.
+
+\begin{enumerate}[label=\rm(\arabic*)]
+\item If $\E[\abs{\xi}]\ge A>0$, then there exists a bounded measurable
+function $S$ such that
+\[
+\E[S]=0,
+\qquad
+\E[\xi S]=1,
+\qquad
+\norm{S}_{L^\infty}\le \frac{2}{A}.
+\]
+\item If $\E[\abs{\xi}]\le B<1$, then there exists a bounded measurable
+function $T$ such that
+\[
+\E[T]=0,
+\qquad
+\E[(\xi^2-1)T]=1,
+\qquad
+\norm{T}_{L^\infty}\le \frac{2}{1-B}.
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+We first construct the linear probe.  Define
+\[
+S_0:=\sgn(\xi),
+\]
+with the convention $\sgn(0)=0$.  Then $S_0$ is measurable and satisfies
+$|S_0|\le 1$ almost surely.  Moreover,
+\[
+\xi S_0=\abs{\xi}
+\qquad\text{almost surely,}
+\]
+so
+\[
+\E[\xi S_0]=\E[\abs{\xi}]\ge A>0.
+\]
+This positivity allows us to normalize.  Set
+\[
+S:=\frac{S_0-\E[S_0]}{\E[\xi S_0]}.
+\]
+The function $S$ is measurable and bounded.  Its mean is
+\[
+\E[S]=\frac{\E[S_0]-\E[S_0]}{\E[\xi S_0]}=0,
+\]
+and, using that $\E[\xi]=0$,
+\[
+\E[\xi S]
+=\frac{\E[\xi S_0]-\E[S_0]\E[\xi]}{\E[\xi S_0]}
+=\frac{\E[\xi S_0]}{\E[\xi S_0]}
+=1.
+\]
+Finally, since $|S_0|\le1$ and $|\E[S_0]|\le \E|S_0|\le1$,
+\[
+|S_0-\E[S_0]|\le 2
+\qquad\text{almost surely,}
+\]
+and therefore
+\[
+\norm{S}_{L^\infty}
+\le \frac{2}{\E[\xi S_0]}
+=\frac{2}{\E[\abs{\xi}]}
+\le \frac{2}{A}.
+\]
+This proves part~\rm(1).
+
+For the quadratic probe, apply the same idea to the centered variable
+\[
+\eta:=\xi^2-1.
+\]
+Because $\E[\xi^2]=1$, one has $\E[\eta]=0$.  We now show that $\eta$ has
+positive $L^1$ mass bounded away from zero.  Since $\xi^2=\abs{\xi}^2$,
+\[
+\abs{\eta}
+=\abs{\abs{\xi}^2-1}
+=\abs{\abs{\xi}-1}(\abs{\xi}+1)
+\ge \abs{\abs{\xi}-1}.
+\]
+Taking expectations and using the reverse triangle inequality yields
+\[
+\E[\abs{\eta}]
+\ge \E[\abs{\abs{\xi}-1}]
+\ge \bigl|\E[\abs{\xi}]-1\bigr|
+=1-\E[\abs{\xi}]
+\ge 1-B.
+\]
+Now set
+\[
+T_0:=\sgn(\eta)
+\]
+and define
+\[
+T:=\frac{T_0-\E[T_0]}{\E[\eta T_0]}
+=\frac{T_0-\E[T_0]}{\E[\abs{\eta}]}.
+\]
+Exactly as in the linear case, $T$ is measurable, bounded, and satisfies
+\[
+\E[T]=0,
+\qquad
+\E[\eta T]=1.
+\]
+Since $\eta=\xi^2-1$, this reads
+\[
+\E[(\xi^2-1)T]=1.
+\]
+The $L^\infty$ bound is
+\[
+\norm{T}_{L^\infty}
+\le \frac{2}{\E[\abs{\eta}]}
+\le \frac{2}{1-B}.
+\]
+This completes the proof.
+\end{proof}
+
+\begin{remark}\label{rem:probe-extraction}
+If $\xi_1,\dots,\xi_n$ are independent centered random variables and
+$X_c=\sum_i c_i\xi_i$, then the centering of the probes eliminates every
+coordinate except the one being tested.  In particular,
+\[
+\E[X_c\,S_i]=c_i,
+\qquad
+\E[X_c^2\,T_i]=c_i^2,
+\qquad
+\E[X_c^2\,S_iS_j]=2c_ic_j
+\quad(i\ne j),
+\]
+whenever $S_i,S_j,T_i$ are the corresponding probes for $\xi_i,\xi_j$.
+\end{remark}
+
+The second basic estimate is the lower $L^1$ bound for independent sums.
+
+\begin{lemma}[$L^1$ lower bound for independent sums]\label{lem:l1lower}
+Let $\zeta_1,\dots,\zeta_N$ be independent centered real random variables and
+assume that
+\[
+\norm{\zeta_i}_{L^1}\ge \delta \norm{\zeta_i}_{L^2}
+\qquad(1\le i\le N).
+\]
+Then for every scalar family $(c_i)_{i=1}^N$,
+\[
+\norm{\sum_{i=1}^N c_i\zeta_i}_{L^1}
+\ge
+\frac{\delta}{2\sqrt2}
+\Bigl(\sum_{i=1}^N c_i^2\norm{\zeta_i}_{L^2}^2\Bigr)^{1/2}.
+\]
+\end{lemma}
+
+\begin{proof}
+The statement is homogeneous in the coefficient vector, so we may first
+normalize and assume that
+\[
+\sum_{i=1}^N c_i^2\norm{\zeta_i}_{L^2}^2=1.
+\]
+Indeed, once the claim is established under this normalization, the general
+case follows by scaling.
+
+We next reduce to the unit-variance case.  For each $i$ set
+\[
+\widetilde\zeta_i:=\frac{\zeta_i}{\norm{\zeta_i}_{L^2}},
+\qquad
+\widetilde c_i:=c_i\norm{\zeta_i}_{L^2}.
+\]
+Then the variables $\widetilde\zeta_i$ are still independent and centered,
+they satisfy $\norm{\widetilde\zeta_i}_{L^2}=1$, and the lower $L^1$ bound
+becomes
+\[
+\norm{\widetilde\zeta_i}_{L^1}
+=\frac{\norm{\zeta_i}_{L^1}}{\norm{\zeta_i}_{L^2}}
+\ge \delta.
+\]
+Moreover,
+\[
+\sum_{i=1}^N \widetilde c_i \widetilde\zeta_i
+=\sum_{i=1}^N c_i\zeta_i,
+\qquad
+\sum_{i=1}^N \widetilde c_i^2
+=1.
+\]
+Thus it is enough to prove the lemma under the additional assumptions
+\[
+\norm{\zeta_i}_{L^2}=1
+\qquad(1\le i\le N),
+\qquad
+\sum_{i=1}^N c_i^2=1.
+\]
+
+Define
+\[
+S:=\sum_{i=1}^N c_i\zeta_i,
+\]
+and let
+\[
+S':=\sum_{i=1}^N c_i\zeta_i'
+\]
+be an independent copy of $S$, obtained from an independent copy
+$(\zeta_i')_{i=1}^N$ of the family $(\zeta_i)_{i=1}^N$.
+By the triangle inequality,
+\[
+\abs{S-S'}\le \abs{S}+\abs{S'}.
+\]
+Taking expectations and using that $S$ and $S'$ have the same distribution, we
+obtain
+\[
+\norm{S-S'}_{L^1}\le 2\norm{S}_{L^1}.
+\]
+Equivalently,
+\[
+2\norm{S}_{L^1}\ge \norm{S-S'}_{L^1}.
+\]
+
+Now the random variables $\zeta_i-\zeta_i'$ are independent and symmetric.
+Conditioning on their absolute values and applying the Khintchine inequality
+gives
+\[
+\norm{S-S'}_{L^1}
+=
+\Bigl\|\sum_{i=1}^N c_i(\zeta_i-\zeta_i')\Bigr\|_{L^1}
+\ge
+\frac{1}{\sqrt2}\,
+\E\Bigl[\Bigl(\sum_{i=1}^N c_i^2(\zeta_i-\zeta_i')^2\Bigr)^{1/2}\Bigr].
+\]
+
+Because the nonnegative numbers $(c_i^2)_{i=1}^N$ sum to one, Cauchy--Schwarz
+implies the pointwise estimate
+\[
+\sum_{i=1}^N c_i^2\abs{\zeta_i-\zeta_i'}
+\le
+\Bigl(\sum_{i=1}^N c_i^2\Bigr)^{1/2}
+\Bigl(\sum_{i=1}^N c_i^2(\zeta_i-\zeta_i')^2\Bigr)^{1/2}
+=
+\Bigl(\sum_{i=1}^N c_i^2(\zeta_i-\zeta_i')^2\Bigr)^{1/2}.
+\]
+Taking expectations and combining with the previous inequality, we arrive at
+\[
+\norm{S-S'}_{L^1}
+\ge
+\frac{1}{\sqrt2}\sum_{i=1}^N c_i^2\norm{\zeta_i-\zeta_i'}_{L^1}.
+\]
+Hence
+\[
+\norm{S}_{L^1}
+\ge
+\frac{1}{2\sqrt2}\sum_{i=1}^N c_i^2\norm{\zeta_i-\zeta_i'}_{L^1}.
+\]
+
+It remains to bound each $\norm{\zeta_i-\zeta_i'}_{L^1}$ from below.  Since
+$\zeta_i'$ is independent of $\zeta_i$ and centered,
+\[
+\E[\zeta_i-\zeta_i' \mid \zeta_i]
+=\zeta_i.
+\]
+Applying Jensen's inequality to the conditional expectation gives
+\[
+\norm{\zeta_i-\zeta_i'}_{L^1}
+\ge
+\norm{\E[\zeta_i-\zeta_i' \mid \zeta_i]}_{L^1}
+=\norm{\zeta_i}_{L^1}
+\ge \delta.
+\]
+Substituting this into the previous bound yields
+\[
+\norm{S}_{L^1}
+\ge
+\frac{\delta}{2\sqrt2}\sum_{i=1}^N c_i^2
+=\frac{\delta}{2\sqrt2}.
+\]
+Since this is exactly the normalized form of the desired estimate, the proof is
+complete.
+\end{proof}
+
+\subsection{Diffusive arrays and infinitely divisible limits}
+
+We shall use the classical fact that weak limits of infinitesimal triangular
+arrays of independent random variables are infinitely divisible; see, for
+instance, \cite[Chapter~IV]{gnedenko-kolmogorov}.
+
+\begin{lemma}[Diffuse tail rigidity]\label{lem:tail-rigidity}
+Let $(\xi_{n,i})_{n\ge1,\ i\ge2}$ be a triangular array such that for each
+fixed $n$ the family $(\xi_{n,i})_{i\ge2}$ is independent, centered,
+$L^2$-normalized, and satisfies
+\[
+\norm{\xi_{n,i}}_{L^1}\ge \delta
+\qquad(i\ge2).
+\]
+Let $c^{(n)}\in \ell^2(\N)$ satisfy
+\[
+\sup_n \norm{c^{(n)}}_2<\infty,
+\qquad
+c_1^{(n)}=0,
+\qquad
+\max_{i\ge2}\abs{c_i^{(n)}}\to0.
+\]
+Set
+\[
+Z_n:=\sum_{i\ge2} c_i^{(n)}\xi_{n,i}.
+\]
+If $Z_n\to0$ in distribution, then $\norm{c^{(n)}}_2\to0$.
+\end{lemma}
+
+\begin{proof}
+Because the limiting law is the Dirac mass at $0$, the assumption
+$Z_n\to0$ in distribution implies that
+\[
+Z_n\to0
+\qquad\text{in probability.}
+\]
+To pass from convergence in probability to convergence of first moments, we use
+uniform integrability.
+
+For each $n$, the variables $(\xi_{n,i})_{i\ge2}$ are independent, centered,
+and $L^2$-normalized.  Therefore they form an orthonormal family in $L^2$, and
+the random sum $Z_n$ has
+\[
+\norm{Z_n}_{L^2}^2
+=\E\Bigl[\Bigl(\sum_{i\ge2} c_i^{(n)}\xi_{n,i}\Bigr)^2\Bigr]
+=\sum_{i\ge2}(c_i^{(n)})^2\E[\xi_{n,i}^2]
+=\sum_{i\ge2}(c_i^{(n)})^2
+=\norm{c^{(n)}}_2^2.
+\]
+Since $\sup_n \norm{c^{(n)}}_2<\infty$, the sequence $(Z_n)_n$ is bounded in
+$L^2$.  Any $L^2$-bounded family is uniformly integrable in $L^1$, so
+$(|Z_n|)_n$ is uniformly integrable.  Because $Z_n\to0$ in probability, we may
+therefore conclude that
+\[
+\norm{Z_n}_{L^1}\longrightarrow0.
+\]
+
+Now apply Lemma~\ref{lem:l1lower} to each row of the array.  The assumptions of
+that lemma are satisfied because every $\xi_{n,i}$ is centered,
+$L^2$-normalized, and obeys $\norm{\xi_{n,i}}_{L^1}\ge\delta$.  Hence
+\[
+\norm{Z_n}_{L^1}
+=\Bigl\|\sum_{i\ge2} c_i^{(n)}\xi_{n,i}\Bigr\|_{L^1}
+\ge
+\frac{\delta}{2\sqrt2}
+\Bigl(\sum_{i\ge2}(c_i^{(n)})^2\Bigr)^{1/2}
+=\frac{\delta}{2\sqrt2}\norm{c^{(n)}}_2.
+\]
+The left-hand side tends to zero, so the right-hand side must also tend to
+zero.  Therefore
+\[
+\norm{c^{(n)}}_2\longrightarrow0,
+\]
+which is the desired conclusion.
+\end{proof}
+
+\section{First Proof: Compactness}\label{sec:compactness-proof}
+
+This section proves Theorem~\ref{thm:main}.  We follow the compactness route
+from the manuscript `compactness\_formal.tex', but reorganize it so that the
+head--tail structure and the endpoint alternatives are explicit.
+
+\subsection{Contradiction array and profile decomposition}
+
+\begin{proposition}[Normalized counterexample array]\label{prop:counterexample}
+If Theorem~\ref{thm:main} fails, then there exist
+\begin{enumerate}[label=\rm(\roman*)]
+\item a triangular array $(\xi_{n,i})_{n\ge1,\ i\ge2}$ such that for each
+fixed $n$ the family $(\eta,\xi_{n,i})_{i\ge2}$ is independent and every
+$\xi_{n,i}$ satisfies
+\[
+\norm{\xi_{n,i}}_{L^2}=1,
+\qquad
+\E[\xi_{n,i}]=0,
+\qquad
+\delta\le \norm{\xi_{n,i}}_{L^1}\le 1-\delta;
+\]
+\item coefficient vectors $a^{(n)},b^{(n)}\in \ell^2(\N)$ with
+\[
+\norm{a^{(n)}}_2=\norm{b^{(n)}}_2=1,
+\qquad
+\ip{a^{(n)}}{b^{(n)}}=0,
+\]
+such that, writing
+\[
+X_n:=a_1^{(n)}\eta+\sum_{i\ge2} a_i^{(n)}\xi_{n,i},
+\qquad
+Y_n:=b_1^{(n)}\eta+\sum_{i\ge2} b_i^{(n)}\xi_{n,i},
+\]
+one has
+\[
+\norm{\abs{X_n}-\abs{Y_n}}_{L^2}\longrightarrow0.
+\]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Assume that the conclusion of Theorem~\ref{thm:main} is false.  Then there is
+no constant $C$ for which the stable phase retrieval estimate holds uniformly
+on the closed span of the coordinates.  By the orthogonal reduction
+(Proposition~\ref{prop:orth-reduction}), this means that we may find, for each
+$n\in\N$, an orthogonal pair of unit vectors in the span whose modulus gap is
+at most $1/n$.  Concretely, there exist functions $X_n,Y_n$ in
+$\overline{\Span}(\eta,\xi_i:i\ge2)$ such that
+\[
+\norm{X_n}_{L^2}=\norm{Y_n}_{L^2}=1,
+\qquad
+\E[X_nY_n]=0,
+\qquad
+\norm{|X_n|-|Y_n|}_{L^2}\le \frac1n.
+\]
+
+Because the family $(\eta,\xi_i)_{i\ge2}$ is orthonormal in $L^2$, we may write
+\[
+X_n=a_1^{(n)}\eta+\sum_{i\ge2}a_i^{(n)}\xi_i,
+\qquad
+Y_n=b_1^{(n)}\eta+\sum_{i\ge2}b_i^{(n)}\xi_i,
+\]
+with coefficient vectors $a^{(n)},b^{(n)}\in\ell^2(\N)$.  Parseval's identity
+then yields
+\[
+\norm{a^{(n)}}_2=\norm{X_n}_{L^2}=1,
+\qquad
+\norm{b^{(n)}}_2=\norm{Y_n}_{L^2}=1,
+\]
+and, since the two functions are orthogonal in $L^2$,
+\[
+\ip{a^{(n)}}{b^{(n)}}=\E[X_nY_n]=0.
+\]
+
+Finally, to prepare for later rowwise permutations of the good coordinates, we
+rename the good variables used in the $n$-th row by writing them as
+$(\xi_{n,i})_{i\ge2}$.  This does not alter their laws or any of the stated
+hypotheses, but it is convenient for the compactness scheme.  The displayed
+modulus convergence is exactly our chosen violating sequence.  This proves the
+proposition.
+\end{proof}
+
+\begin{lemma}[Reordered profile decomposition]\label{lem:profile}
+After passing to a subsequence and, row by row, applying the same permutation
+to the good coordinates and to their coefficients, one may find vectors
+$a,b\in\ell^2(\N)$ and integers $m_n\to\infty$ such that, with
+\[
+a_{\mathrm{head}}^{(n)}:=a^{(n)}\mathbf 1_{\{1,\dots,m_n\}},
+\qquad
+a_{\mathrm{tail}}^{(n)}:=a^{(n)}\mathbf 1_{\{m_n+1,m_n+2,\dots\}},
+\]
+and likewise for $b^{(n)}$, the following hold:
+\begin{enumerate}[label=\rm(\arabic*)]
+\item $a_{\mathrm{head}}^{(n)}\to a$ and $b_{\mathrm{head}}^{(n)}\to b$
+strongly in $\ell^2$;
+\item
+\[
+\max_{i>m_n}\max(\abs{a_i^{(n)}},\abs{b_i^{(n)}})\to0;
+\]
+\item
+\[
+\norm{a_{\mathrm{tail}}^{(n)}}_2^2\to1-\norm{a}_2^2,
+\qquad
+\norm{b_{\mathrm{tail}}^{(n)}}_2^2\to1-\norm{b}_2^2,
+\]
+and
+\[
+\ip{a_{\mathrm{tail}}^{(n)}}{b_{\mathrm{tail}}^{(n)}}
+\to -\ip{a}{b}.
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For each row $n$ and each good index $i\ge2$, define
+\[
+s_i^{(n)}:=\max\bigl(\abs{a_i^{(n)}},\abs{b_i^{(n)}}\bigr).
+\]
+Permuting the good coordinates within the $n$-th row, we may assume that the
+sequence $(s_i^{(n)})_{i\ge2}$ is nonincreasing in $i$.  The same permutation
+is applied simultaneously to the variables $\xi_{n,i}$ and to both coefficient
+vectors, so no hypothesis is changed.
+
+The monotone rearrangement gives a uniform pointwise bound on the reordered
+coefficients.  Indeed,
+\[
+\sum_{i\ge2}(s_i^{(n)})^2
+\le
+\sum_{i\ge2}\bigl((a_i^{(n)})^2+(b_i^{(n)})^2\bigr)
+\le 2.
+\]
+Since $(s_i^{(n)})_{i\ge2}$ is nonincreasing, for every $i\ge2$ we have
+\[
+(i-1)(s_i^{(n)})^2
+\le \sum_{j=2}^{i}(s_j^{(n)})^2
+\le 2,
+\]
+and therefore
+\[
+s_i^{(n)}\le \sqrt{\frac{2}{i-1}}.
+\]
+In particular, for each fixed coordinate $i$, the sequences
+$\bigl(a_i^{(n)}\bigr)_{n\ge1}$ and $\bigl(b_i^{(n)}\bigr)_{n\ge1}$ are
+bounded.
+
+We now extract coordinatewise limits.  First pass to a subsequence so that
+$a_1^{(n)}$ and $b_1^{(n)}$ converge.  Next pass to a further subsequence so
+that $a_2^{(n)}$ and $b_2^{(n)}$ converge, and continue inductively.  A
+standard diagonal argument yields a single subsequence, not relabeled, for
+which every fixed coordinate converges:
+\[
+a_i^{(n)}\to a_i,
+\qquad
+b_i^{(n)}\to b_i
+\qquad(i\ge1).
+\]
+Set
+\[
+a:=(a_i)_{i\ge1},
+\qquad
+b:=(b_i)_{i\ge1}.
+\]
+
+We claim that $a,b\in\ell^2(\N)$.  Fix $M\in\N$.  Since the first $M$
+coordinates converge,
+\[
+\sum_{i=1}^{M} a_i^2
+=\lim_{n\to\infty}\sum_{i=1}^{M}(a_i^{(n)})^2
+\le \liminf_{n\to\infty}\sum_{i\ge1}(a_i^{(n)})^2
+=1.
+\]
+Letting $M\to\infty$ and using monotone convergence gives
+$\sum_i a_i^2\le1$.  The same argument yields $\sum_i b_i^2\le1$.
+
+Because $a,b\in\ell^2$, we may choose an increasing sequence of integers
+$(m_k)_{k\ge1}$ with $m_k\to\infty$ such that
+\[
+\sum_{i>m_k} a_i^2+\sum_{i>m_k} b_i^2\le 2^{-k}
+\qquad(k\ge1).
+\]
+For each fixed $k$, coordinatewise convergence implies
+\[
+\sum_{i=1}^{m_k}\abs{a_i^{(n)}-a_i}^2
++
+\sum_{i=1}^{m_k}\abs{b_i^{(n)}-b_i}^2
+\longrightarrow0
+\qquad(n\to\infty).
+\]
+Passing to another subsequence if necessary, we may assume that for each $n$,
+\[
+\sum_{i=1}^{m_n}\abs{a_i^{(n)}-a_i}^2
++
+\sum_{i=1}^{m_n}\abs{b_i^{(n)}-b_i}^2
+\le 2^{-n}.
+\]
+
+We now verify the three conclusions.  First,
+\[
+\norm{a_{\mathrm{head}}^{(n)}-a}_2^2
+\le
+\sum_{i=1}^{m_n}\abs{a_i^{(n)}-a_i}^2
++
+\sum_{i>m_n}a_i^2
+\le 2^{-n}+2^{-n},
+\]
+so $a_{\mathrm{head}}^{(n)}\to a$ in $\ell^2$.  The same estimate gives
+$b_{\mathrm{head}}^{(n)}\to b$.
+
+Second, if $i>m_n$, then by monotonicity,
+\[
+\max\bigl(\abs{a_i^{(n)}},\abs{b_i^{(n)}}\bigr)
+=s_i^{(n)}
+\le s_{m_n+1}^{(n)}
+\le \sqrt{\frac{2}{m_n}}.
+\]
+Since $m_n\to\infty$, this proves
+\[
+\max_{i>m_n}\max\bigl(\abs{a_i^{(n)}},\abs{b_i^{(n)}}\bigr)\to0.
+\]
+
+Finally, because each full coefficient vector has $\ell^2$ norm one,
+\[
+\norm{a_{\mathrm{tail}}^{(n)}}_2^2
+=1-\norm{a_{\mathrm{head}}^{(n)}}_2^2
+\longrightarrow 1-\norm{a}_2^2,
+\]
+and similarly
+\[
+\norm{b_{\mathrm{tail}}^{(n)}}_2^2
+\longrightarrow 1-\norm{b}_2^2.
+\]
+For the inner products, use the orthogonality of the full vectors:
+\[
+0
+=\ip{a^{(n)}}{b^{(n)}}
+=\ip{a_{\mathrm{head}}^{(n)}}{b_{\mathrm{head}}^{(n)}}
++\ip{a_{\mathrm{tail}}^{(n)}}{b_{\mathrm{tail}}^{(n)}}.
+\]
+Since the head pieces converge strongly,
+\[
+\ip{a_{\mathrm{head}}^{(n)}}{b_{\mathrm{head}}^{(n)}}
+\to \ip{a}{b},
+\]
+and therefore
+\[
+\ip{a_{\mathrm{tail}}^{(n)}}{b_{\mathrm{tail}}^{(n)}}
+\to -\ip{a}{b}.
+\]
+This proves the lemma.
+\end{proof}
+
+\subsection{Head identification}
+
+\begin{proposition}[Exceptional probes]\label{prop:exceptional-probes}
+There exists a bounded measurable function $S_\eta$ such that
+\[
+\E[S_\eta]=0,
+\qquad
+\E[\eta S_\eta]=1.
+\]
+If $\eta^2\not\equiv1$ almost surely, then there exists a bounded measurable
+function $T_\eta$ such that
+\[
+\E[T_\eta]=0,
+\qquad
+\E[(\eta^2-1)T_\eta]=1.
+\]
+\end{proposition}
+
+\begin{proof}
+Since $\norm{\eta}_{L^2}=1$, the random variable $\eta$ is not almost surely
+zero.  Hence $\E[\abs{\eta}]>0$.  Applying the linear-probe construction from
+Lemma~\ref{lem:probes} with $A=\E[\abs{\eta}]$ produces a bounded measurable
+function $S_\eta$ satisfying
+\[
+\E[S_\eta]=0,
+\qquad
+\E[\eta S_\eta]=1.
+\]
+
+Assume now that $\eta^2\not\equiv1$ almost surely.  Then the centered random
+variable $\eta^2-1$ is not almost surely zero, because
+\[
+\E[\eta^2-1]=\E[\eta^2]-1=0.
+\]
+Therefore its $L^1$ norm is strictly positive:
+\[
+\E[\abs{\eta^2-1}]>0.
+\]
+Applying again the linear-probe construction, now to the random variable
+$\eta^2-1$, we obtain a bounded measurable function $T_\eta$ such that
+\[
+\E[T_\eta]=0,
+\qquad
+\E[(\eta^2-1)T_\eta]=1.
+\]
+This is exactly the desired conclusion.
+\end{proof}
+
+\begin{lemma}[Identification of the head profile]\label{lem:head-sign}
+Either there exists $\tau\in\{\pm1\}$ such that
+\[
+a=\tau b
+\qquad\text{and}\qquad
+\norm{a_{\mathrm{head}}^{(n)}-\tau b_{\mathrm{head}}^{(n)}}_2\to0,
+\]
+or else $\eta$ is a Rademacher variable and
+\[
+a_i=b_i=0
+\qquad(i\ge2).
+\]
+\end{lemma}
+
+\begin{proof}
+We first convert the convergence of moduli into convergence of the quadratic
+observable.  Since
+\[
+\norm{X_n}_{L^2}=\norm{Y_n}_{L^2}=1,
+\]
+we have
+\[
+\norm{|X_n|+|Y_n|}_{L^2}\le 2.
+\]
+Therefore
+\[
+\norm{|X_n|^2-|Y_n|^2}_{L^1}
+=\norm{(|X_n|-|Y_n|)(|X_n|+|Y_n|)}_{L^1}
+\le 2\norm{|X_n|-|Y_n|}_{L^2}
+\longrightarrow0.
+\]
+Because the variables are real-valued, $|X_n|^2=X_n^2$ and $|Y_n|^2=Y_n^2$,
+so we have established
+\[
+\norm{X_n^2-Y_n^2}_{L^1}\longrightarrow0.
+\]
+
+\smallskip
+\noindent\emph{Step 1: diagonal good-coordinate identities.}
+Fix $i\ge2$ and let $T_{n,i}$ be the quadratic probe associated with the
+coordinate $\xi_{n,i}$.  The probes are uniformly bounded in $L^\infty$, so the
+$L^1$ convergence above implies
+\[
+\E[(X_n^2-Y_n^2)T_{n,i}]\longrightarrow0.
+\]
+We compute the left-hand side explicitly.  Expanding $X_n^2$ and integrating
+against $T_{n,i}$, every term involving a coordinate different from
+$\xi_{n,i}$ vanishes because $T_{n,i}$ depends only on $\xi_{n,i}$ and is
+centered.  Mixed terms involving $\xi_{n,i}$ and another coordinate also
+vanish by independence and centering.  The only surviving contribution is the
+term $(a_i^{(n)})^2\xi_{n,i}^2$.  Hence
+\[
+\E[X_n^2T_{n,i}]
+=(a_i^{(n)})^2\E[\xi_{n,i}^2T_{n,i}]
+=(a_i^{(n)})^2,
+\]
+because
+\[
+\E[\xi_{n,i}^2T_{n,i}]
+=\E[(\xi_{n,i}^2-1)T_{n,i}]+\E[T_{n,i}]
+=1+0.
+\]
+Similarly,
+\[
+\E[Y_n^2T_{n,i}]=(b_i^{(n)})^2.
+\]
+Therefore
+\[
+(a_i^{(n)})^2-(b_i^{(n)})^2
+=\E[(X_n^2-Y_n^2)T_{n,i}]
+\longrightarrow0.
+\]
+Passing to the limit in $n$ gives
+\[
+a_i^2=b_i^2
+\qquad(i\ge2).
+\]
+
+\smallskip
+\noindent\emph{Step 2: off-diagonal good-good identities.}
+Fix distinct indices $i,j\ge2$ and let $S_{n,i},S_{n,j}$ be the corresponding
+linear probes.  Again boundedness and $L^1$ convergence imply
+\[
+\E[(X_n^2-Y_n^2)S_{n,i}S_{n,j}]\longrightarrow0.
+\]
+In the expansion of $X_n^2$, all terms vanish after integration against
+$S_{n,i}S_{n,j}$ except the mixed term
+$2a_i^{(n)}a_j^{(n)}\xi_{n,i}\xi_{n,j}$.  Indeed, any term missing one of the
+coordinates $\xi_{n,i}$ or $\xi_{n,j}$ is killed by the zero mean of the
+corresponding probe, and terms involving other coordinates factor through zero
+means by independence.  Hence
+\[
+\E[X_n^2S_{n,i}S_{n,j}]
+=2a_i^{(n)}a_j^{(n)}
+\E[\xi_{n,i}S_{n,i}]\,\E[\xi_{n,j}S_{n,j}]
+=2a_i^{(n)}a_j^{(n)}.
+\]
+Similarly,
+\[
+\E[Y_n^2S_{n,i}S_{n,j}]
+=2b_i^{(n)}b_j^{(n)}.
+\]
+Thus
+\[
+2(a_i^{(n)}a_j^{(n)}-b_i^{(n)}b_j^{(n)})\longrightarrow0,
+\]
+and passing to the limit gives
+\[
+a_ia_j=b_ib_j
+\qquad(i\ne j,\ i,j\ge2).
+\]
+
+\smallskip
+\noindent\emph{Step 3: exceptional-good identities.}
+Fix $j\ge2$.  Let $S_\eta$ be the bounded probe from
+Proposition~\ref{prop:exceptional-probes}.  By the same reasoning,
+\[
+\E[(X_n^2-Y_n^2)S_\eta S_{n,j}]\longrightarrow0.
+\]
+Once more only one mixed term survives, namely
+$2a_1^{(n)}a_j^{(n)}\eta\xi_{n,j}$ for $X_n^2$ and the corresponding term for
+$Y_n^2$.  Therefore
+\[
+\E[X_n^2S_\eta S_{n,j}]
+=2a_1^{(n)}a_j^{(n)}\E[\eta S_\eta]\E[\xi_{n,j}S_{n,j}]
+=2a_1^{(n)}a_j^{(n)},
+\]
+and analogously
+\[
+\E[Y_n^2S_\eta S_{n,j}]
+=2b_1^{(n)}b_j^{(n)}.
+\]
+Hence
+\[
+a_1a_j=b_1b_j
+\qquad(j\ge2).
+\]
+
+\smallskip
+\noindent\emph{Step 4: deduction of the sign.}
+Assume first that there exists some index $i_0\ge2$ such that $a_{i_0}\ne0$.
+From the diagonal identity we know that
+$a_{i_0}^2=b_{i_0}^2$, so $b_{i_0}=\tau a_{i_0}$ for some
+$\tau\in\{\pm1\}$.  Then for every $j\ge2$, the off-diagonal identity gives
+\[
+a_{i_0}a_j=b_{i_0}b_j=\tau a_{i_0}b_j.
+\]
+Since $a_{i_0}\ne0$, we conclude that $a_j=\tau b_j$ for every $j\ge2$.
+Applying the exceptional-good identity with $j=i_0$, we obtain
+\[
+a_1a_{i_0}=b_1b_{i_0}=\tau a_{i_0}b_1,
+\]
+and again $a_{i_0}\ne0$ implies $a_1=\tau b_1$.  Hence $a=\tau b$.
+
+Assume next that
+\[
+a_i=0
+\qquad\text{for every }i\ge2.
+\]
+Then the diagonal identities show that also $b_i=0$ for every $i\ge2$.
+If $\eta^2\not\equiv1$ almost surely, let $T_\eta$ be the quadratic probe from
+Proposition~\ref{prop:exceptional-probes}.  Repeating the diagonal argument for
+the exceptional coordinate gives
+\[
+(a_1^{(n)})^2-(b_1^{(n)})^2
+=\E[(X_n^2-Y_n^2)T_\eta]
+\longrightarrow0,
+\]
+whence $a_1^2=b_1^2$ and therefore $a=\tau b$ for some sign $\tau$.
+
+The only remaining possibility is that $\eta^2\equiv1$ almost surely.  Since
+$\E[\eta]=0$ and $\norm{\eta}_{L^2}=1$, this means exactly that $\eta$ is a
+Rademacher variable.  In that case we are in the second alternative stated in
+the lemma.
+
+Finally, if the first alternative holds, then the convergence of the head
+profiles follows from Lemma~\ref{lem:profile}:
+\[
+\norm{a_{\mathrm{head}}^{(n)}-\tau b_{\mathrm{head}}^{(n)}}_2
+\le
+\norm{a_{\mathrm{head}}^{(n)}-a}_2
++
+\norm{b_{\mathrm{head}}^{(n)}-b}_2
+\longrightarrow0.
+\]
+\end{proof}
+
+\subsection{Limit law and exact modulus identity}
+
+\begin{lemma}[Limit law]\label{lem:limit-law}
+After passing to a subsequence, the quadruple
+\[
+\bigl(X_n^{\mathrm{head}},Y_n^{\mathrm{head}},
+X_n^{\mathrm{tail}},Y_n^{\mathrm{tail}}\bigr)
+\]
+converges in distribution to a random vector
+\[
+(H_X,H_Y,R_X,R_Y)\in\R^4
+\]
+such that:
+\begin{enumerate}[label=\rm(\arabic*)]
+\item $(H_X,H_Y)$ is independent of $(R_X,R_Y)$;
+\item the law of $(R_X,R_Y)$ is infinitely divisible;
+\item either $H_X=\tau H_Y$ almost surely for some $\tau\in\{\pm1\}$, or
+else $\eta$ is Rademacher and
+$H_X=a_1\eta$, $H_Y=b_1\eta$ almost surely;
+\item
+\[
+\abs{H_X+R_X}=\abs{H_Y+R_Y}
+\qquad\text{almost surely.}
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+The head variables converge in $L^2$ by the strong convergence of the head
+coefficients and the orthonormality of each row.  The tail coefficient arrays
+are infinitesimal by Lemma~\ref{lem:profile}, so every weak limit of the
+tail pair is infinitely divisible.  Independence of head and tail persists
+because they are built from disjoint independent coordinates.  Finally,
+$\norm{\abs{X_n}-\abs{Y_n}}_{L^2}\to0$ implies
+$\abs{X_n}-\abs{Y_n}\to0$ in probability; passing to the joint weak limit
+gives the exact identity in the limit.  The description of the head follows
+from Lemma~\ref{lem:head-sign}.
+\end{proof}
+
+\begin{lemma}[Infinitely divisible laws on the phase-retrieval cone are
+line-supported]\label{lem:id-line}
+Let $\mu$ be an infinitely divisible probability measure on $\R^2$ with
+\[
+\supp\mu\subset\Gamma:=\{(u,v)\in\R^2:\abs{u}=\abs{v}\}.
+\]
+Then there exists $\tau\in\{\pm1\}$ such that
+\[
+\supp\mu\subset L_\tau:=\{(u,\tau u):u\in\R\}.
+\]
+\end{lemma}
+
+\begin{proof}
+The set $\Gamma$ is exactly the union $L_+\cup L_-$.  Since $\mu$ is
+infinitely divisible, it is in particular $2$-divisible: there exists a
+probability measure $\nu$ such that $\mu=\nu*\nu$.  Let $A=\supp\nu$.  Then
+\[
+\supp\mu=\overline{A+A}\subset L_+\cup L_-.
+\]
+If $x,y\in A$ are distinct, then $2x,x+y,2y\in A+A$.  If $2x$ and $2y$ belong
+to the same line $L_\tau$, then so does $x+y$, forcing $x,y\in L_\tau$.  If
+they belong to different lines, then the midpoint $x+y$ is the origin, so
+$y=-x$ and again $x,y$ lie in one of the lines.  Thus every two points of $A$
+lie on a common phase-retrieval line.  Since $L_+\cap L_-=\{0\}$, this implies
+that $A$ is contained in one of the two lines, and so is $\supp\mu$.
+\end{proof}
+
+\subsection{End of the compactness proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Assume that Theorem~\ref{thm:main} fails and let the counterexample array be as
+in Proposition~\ref{prop:counterexample}.  Apply
+Lemmas~\ref{lem:profile}, \ref{lem:head-sign}, and \ref{lem:limit-law}.
+
+If the first alternative of Lemma~\ref{lem:head-sign} holds, fix
+$\tau\in\{\pm1\}$ such that $H_Y=\tau H_X$ almost surely.  The exact modulus
+identity becomes
+\[
+\abs{H_X+R_X}=\abs{\tau H_X+R_Y}
+\qquad\text{almost surely.}
+\]
+If $H_X$ is not almost surely zero, then conditioning on the tail and varying
+the head over two support points of $H_X$ shows that
+$R_Y-\tau R_X=0$ almost surely.  If $H_X\equiv0$, then
+$(R_X,R_Y)$ itself satisfies $\abs{R_X}=\abs{R_Y}$ almost surely, so
+Lemma~\ref{lem:id-line} yields
+$R_Y=\tau_0 R_X$ almost surely for some $\tau_0\in\{\pm1\}$.
+
+In either case, for a suitable sign $\sigma\in\{\pm1\}$ the random variables
+\[
+Z_n:=\sum_{i>m_n}(b_i^{(n)}-\sigma a_i^{(n)})\xi_{n,i}
+\]
+converge in distribution to $0$.  Since the coefficients are diffuse,
+Lemma~\ref{lem:tail-rigidity} gives
+\[
+\norm{b_{\mathrm{tail}}^{(n)}-\sigma a_{\mathrm{tail}}^{(n)}}_2\to0.
+\]
+Together with Lemma~\ref{lem:head-sign} this implies
+$\norm{b^{(n)}-\sigma a^{(n)}}_2\to0$, contradicting
+\[
+\norm{b^{(n)}-\sigma a^{(n)}}_2^2
+=\norm{a^{(n)}}_2^2+\norm{b^{(n)}}_2^2
+-2\sigma\ip{a^{(n)}}{b^{(n)}}=2.
+\]
+
+If the second alternative of Lemma~\ref{lem:head-sign} holds, then
+$\eta$ is Rademacher and the head limits are multiples of $\eta$ alone.  The
+same argument applies, since in that case the good coordinates disappear from
+the head and the tail limit still lies on $\Gamma$.
+\end{proof}
+
+\subsection{A Gaussian alternative in the degenerate-head regime}
+
+The previous endpoint used only the support structure of infinitely divisible
+limits.  The next result records a second route, adapted from the complex
+one-exception manuscript, showing that in the degenerate-head regime the
+diffuse tail automatically generates a nontrivial Gaussian component.
+
+\begin{proposition}[Diffuse tails force a nontrivial Gaussian part]
+\label{prop:gaussian-part}
+Let
+\[
+V_{n,i}:=(a_i^{(n)}\xi_{n,i},\,b_i^{(n)}\xi_{n,i})\in\R^2
+\qquad(i>m_n),
+\]
+where the coordinates are independent, centered, $L^2$-normalized, and satisfy
+$\norm{\xi_{n,i}}_{L^1}\ge \delta$.  Set
+\[
+\alpha_{n,i}:=\bigl((a_i^{(n)})^2+(b_i^{(n)})^2\bigr)^{1/2}.
+\]
+Assume
+\[
+\max_{i>m_n}\alpha_{n,i}\to0,
+\qquad
+\sum_{i>m_n}\alpha_{n,i}^2\to \sigma^2>0,
+\]
+and that the row sums $\sum_{i>m_n}V_{n,i}$ converge in distribution to an
+infinitely divisible law $\mu$ on $\R^2$.  Then the Gaussian part of $\mu$ is
+nontrivial.
+\end{proposition}
+
+\begin{proof}
+Set $\beta_n=\max_{i>m_n}\alpha_{n,i}$ and $r_n=\beta_n^{1/2}$.  For each
+$i>m_n$ with $\alpha_{n,i}\ne0$, let $K_{n,i}=r_n/\alpha_{n,i}\to\infty$
+uniformly and define the centered truncation
+\[
+\widetilde\xi_{n,i}
+:=
+\xi_{n,i}\mathbf 1_{\{\abs{\xi_{n,i}}\le K_{n,i}\}}
+-\E[\xi_{n,i}\mathbf 1_{\{\abs{\xi_{n,i}}\le K_{n,i}\}}].
+\]
+Since $\E[\abs{\xi_{n,i}}]\ge\delta$ and $\E[\xi_{n,i}^2]=1$, the same estimate
+as in the complex proof shows that there exists $c_0=c_0(\delta)>0$ such that
+\[
+\E[\widetilde\xi_{n,i}^2]\ge c_0
+\]
+for all large $n$ and all $i>m_n$.  Define
+$\widetilde V_{n,i}=(a_i^{(n)}\widetilde\xi_{n,i},\,b_i^{(n)}\widetilde\xi_{n,i})$.
+Then $\abs{\widetilde V_{n,i}}\le 2r_n$, so the truncated array is bounded and
+infinitesimal, and
+\[
+\sum_{i>m_n}\E[\abs{\widetilde V_{n,i}}^2]
+\ge c_0\sum_{i>m_n}\alpha_{n,i}^2
+\longrightarrow c_0\sigma^2>0.
+\]
+For infinitesimal triangular arrays, the covariance matrices of shrinking
+centered truncations converge to the Gaussian covariance of the limit law; see
+\cite[Chapter~IV]{gnedenko-kolmogorov}.  Since the traces of the truncation
+covariances stay bounded away from zero, the Gaussian covariance of $\mu$ is
+nonzero.
+\end{proof}
+
+\begin{remark}[Alternative Gaussian endpoint]\label{rem:gaussian-endpoint}
+Assume we are in the degenerate-head regime $H_X\equiv H_Y\equiv0$, so the
+tail law $\mu$ of $(R_X,R_Y)$ is supported on $\Gamma=\{(u,v):\abs{u}=\abs{v}\}$.
+Write $\mu=\gamma*\nu$, where $\gamma$ is the Gaussian part and $\nu$ the
+independent remainder.  By Proposition~\ref{prop:gaussian-part}, $\gamma$ is
+nontrivial.  Its support is a nonzero linear subspace $E\subset\R^2$.
+
+Because $\supp\mu=\supp\gamma+\supp\nu\subset\Gamma=L_+\cup L_-$, the
+connected set $E$ must itself lie in one of the lines $L_\tau$.  Fix such a
+$\tau$.  For any $z\in\supp\nu$, the translated line $E+z$ is contained in
+$\Gamma$.  Since a translate of $L_\tau$ not equal to $L_\tau$ intersects
+$L_+\cup L_-$ in at most two points, one must have $z\in L_\tau$.  Hence
+$\supp\nu\subset L_\tau$ and therefore $\supp\mu\subset L_\tau$.  Thus
+$R_Y=\tau R_X$ almost surely.  This recovers the final contradiction without
+appealing to Lemma~\ref{lem:id-line}.
+\end{remark}
+
+\section{Second Proof: Anticoncentration}\label{sec:quant-proof}
+
+This section gives a second proof of Theorem~\ref{thm:main}.  The argument is
+quantitative in spirit.  Instead of passing to a limit law, we split the
+coefficients into a head and a tail and show directly that one of two explicit
+mechanisms forces a positive modulus gap.
+
+By Proposition~\ref{prop:orth-reduction}, it is enough to prove an orthogonal
+lower bound for arbitrary unit vectors in the one-exception span.  Thus let
+$a=(a_i)_{i\ge1}, b=(b_i)_{i\ge1}\in \ell^2(\N)$ satisfy
+\[
+\norm{a}_2=\norm{b}_2=1,
+\qquad
+\ip{a}{b}=0,
+\]
+and set
+\[
+X:=a_1\eta+\sum_{i\ge2} a_i\xi_i,
+\qquad
+Y:=b_1\eta+\sum_{i\ge2} b_i\xi_i.
+\]
+Because the family $(\eta,\xi_i)_{i\ge2}$ is orthonormal in $L^2$, these sums
+converge in $L^2$.  We shall prove that
+\[
+\norm{|X|-|Y|}_{L^2}\ge c_{\delta,\eta}>0,
+\]
+where the constant depends only on $\delta$ and on the law of $\eta$.
+
+\subsection{Setup and the dichotomy}
+
+Define
+\[
+\eps:=\E[\abs{X^2-Y^2}],
+\qquad
+\Delta:=\norm{|X|-|Y|}_{L^2}.
+\]
+As before,
+\[
+\eps\le 2\Delta.
+\]
+
+Fix
+\[
+\theta:=\frac{\delta^2}{8},
+\qquad
+\lambda:=\frac{\delta^3}{2^{20}},
+\qquad
+s_0:=\frac{\delta^4}{2^{20}}.
+\]
+Let $S_\eta$ be the bounded linear probe from
+Proposition~\ref{prop:exceptional-probes}.  If $\eta^2\not\equiv1$, let
+$T_\eta$ be the bounded quadratic probe from the same proposition.  Choose a
+constant $K_{\delta,\eta}\ge1$ so large that
+\[
+K_{\delta,\eta}\ge \frac{4}{\delta^2},
+\qquad
+K_{\delta,\eta}\ge \frac{2}{\delta},
+\qquad
+K_{\delta,\eta}\ge \norm{S_\eta}_{L^\infty},
+\]
+and, if $\eta^2\not\equiv1$,
+\[
+K_{\delta,\eta}\ge \norm{T_\eta}_{L^\infty}.
+\]
+
+Define the head set by
+\[
+H=H(a,b):=\{1\}\cup\{i\ge2:\max(|a_i|,|b_i|)>\lambda\}.
+\]
+Then
+\[
+\#H\le d^*(\delta):=3+2^{41}\delta^{-6},
+\]
+and every tail coordinate $i\notin H$ satisfies
+\[
+\max(|a_i|,|b_i|)\le \lambda.
+\]
+
+The first step is to separate the proof into two mutually exclusive regimes.
+Either one of the two signs makes the tail nearly one-dimensional, in which
+case the argument is driven by head rigidity, or both signs retain substantial
+tail mass, in which case anticoncentration becomes effective.
+
+\begin{lemma}[Tail sign dichotomy]\label{lem:dichotomy}
+Exactly one of the following alternatives holds:
+\begin{enumerate}[label=\rm(\roman*)]
+\item \textbf{Diffuse:}
+\[
+\norm{(a-b)\mathbf 1_{H^c}}_2^2\ge16s_0
+\quad\text{and}\quad
+\norm{(a+b)\mathbf 1_{H^c}}_2^2\ge16s_0.
+\]
+\item \textbf{Concentrated:} there exists $\tau\in\{\pm1\}$ such that
+\[
+\norm{(a-\tau b)\mathbf 1_{H^c}}_2<\theta/32.
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+We first note that
+\[
+16s_0=\Bigl(\frac{\theta}{32}\Bigr)^2.
+\]
+Thus the concentrated alternative may be rewritten as saying that there exists
+$\tau\in\{\pm1\}$ such that
+\[
+\norm{(a-\tau b)\mathbf 1_{H^c}}_2^2<16s_0.
+\]
+
+If this happens for $\tau=1$ or $\tau=-1$, then we are in the concentrated
+case and there is nothing more to prove.  Suppose, on the contrary, that the
+concentrated alternative fails.  Then for both choices of sign we have
+\[
+\norm{(a-b)\mathbf 1_{H^c}}_2^2\ge16s_0
+\qquad\text{and}\qquad
+\norm{(a+b)\mathbf 1_{H^c}}_2^2\ge16s_0.
+\]
+But this is exactly the diffuse alternative.
+
+Finally, the two alternatives are mutually exclusive, because if the
+concentrated alternative held for some sign $\tau$, then one of the two vectors
+$a-b$ or $a+b$ would have tail norm squared strictly smaller than $16s_0$,
+which contradicts the diffuse inequalities.  Hence exactly one of the two
+alternatives holds.
+\end{proof}
+
+\subsection{The concentrated branch}
+
+We now turn to the first regime.  In the concentrated case, the tail of
+$a-\tau b$ is small for a suitable sign $\tau$, so any substantial discrepancy
+between the two vectors must be visible on the head.  The next proposition
+shows that the quadratic observable $X^2-Y^2$ controls precisely those
+head coefficients.
+
+\begin{proposition}[Head entry bounds with one exceptional coordinate]
+\label{prop:head-entry}
+The following estimates hold:
+\begin{enumerate}[label=\rm(\arabic*)]
+\item if $i,j\in H\cap\{2,3,\dots\}$, then
+\[
+|a_i a_j-b_i b_j|\le K_{\delta,\eta}\,\eps;
+\]
+\item if $j\in H\cap\{2,3,\dots\}$, then
+\[
+|a_1a_j-b_1b_j|\le K_{\delta,\eta}\,\eps;
+\]
+\item if $\eta^2\not\equiv1$, then
+\[
+|a_1^2-b_1^2|\le K_{\delta,\eta}\,\eps.
+\]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+For $i=j\ge2$, use the quadratic probe $T_i$ for $\xi_i$:
+\[
+|a_i^2-b_i^2|
+=\bigl|\E[(X^2-Y^2)T_i]\bigr|
+\le \norm{T_i}_{L^\infty}\eps
+\le K_{\delta,\eta}\eps.
+\]
+For distinct $i,j\ge2$, use the linear probes $S_i,S_j$:
+\[
+2|a_i a_j-b_i b_j|
+=\bigl|\E[(X^2-Y^2)S_iS_j]\bigr|
+\le \norm{S_i}_{L^\infty}\norm{S_j}_{L^\infty}\eps
+\le K_{\delta,\eta}\eps.
+\]
+This proves \rm(1).
+
+For \rm(2), use the product $S_\eta S_j$.  Exactly as in the proof of
+Lemma~\ref{lem:head-sign}, all terms vanish except the mixed
+exceptional-good term, so
+\[
+2|a_1a_j-b_1b_j|
+=\bigl|\E[(X^2-Y^2)S_\eta S_j]\bigr|
+\le \norm{S_\eta}_{L^\infty}\norm{S_j}_{L^\infty}\eps
+\le K_{\delta,\eta}\eps.
+\]
+
+Finally, if $\eta^2\not\equiv1$, use $T_\eta$:
+\[
+|a_1^2-b_1^2|
+=\bigl|\E[(X^2-Y^2)T_\eta]\bigr|
+\le \norm{T_\eta}_{L^\infty}\eps
+\le K_{\delta,\eta}\eps.
+\]
+\end{proof}
+
+To convert these entrywise bounds into a global contradiction, we use the same
+rank-one algebra that appeared in the homogeneous proof.  This isolates the
+geometric fact that two orthogonal unit vectors cannot agree too well on the
+head unless the corresponding head difference matrix is small.
+
+\begin{lemma}[Rank-one algebra]\label{lem:rank-one}
+For $x,y\in\R^m$, let $D(x,y)_{ij}=x_ix_j-y_iy_j$.  Then
+\[
+\norm{x-y}_2^2\,\norm{x+y}_2^2\le 2\norm{D(x,y)}_F^2.
+\]
+\end{lemma}
+
+\begin{proof}
+Writing $s=\norm{x}_2^2$, $t=\norm{y}_2^2$, and $c=\ip{x}{y}$, the left-hand
+side equals $(s+t)^2-4c^2$, while the right-hand side is
+$2(s^2+t^2-2c^2)$.  Their difference is $(s-t)^2$, which is nonnegative.
+\end{proof}
+
+Combining the head-entry bounds with the rank-one inequality yields the
+concentrated branch.  The proof splits off the genuinely degenerate
+Rademacher-only head, since only there can the exceptional coordinate fail to
+provide a quadratic probe.
+
+\begin{proposition}[Concentrated branch]\label{prop:concentrated}
+If there exists $\tau\in\{\pm1\}$ such that
+\[
+\norm{(a-\tau b)\mathbf 1_{H^c}}_2\le \theta/32,
+\]
+then
+\[
+\eps\ge c_{\mathrm{line}}(\delta,\eta)>0.
+\]
+\end{proposition}
+
+\begin{proof}
+We distinguish two cases.
+
+\smallskip
+\noindent\emph{Case 1: $\eta$ is not Rademacher, or $H\cap\{2,3,\dots\}$ is
+nonempty.}
+In this case the head coefficients are rigidly linked by
+Proposition~\ref{prop:head-entry}: either directly through the diagonal
+estimate for the exceptional coordinate or, in the Rademacher case, through a
+good head coordinate exactly as in the proof of Lemma~\ref{lem:head-sign}.  In
+particular there exists a sign, which must be the same $\tau$, such that the
+full head difference matrix of $a\mathbf 1_H$ and $\tau b\mathbf 1_H$ has all
+entries bounded by $K_{\delta,\eta}\eps$.
+
+Let
+\[
+x:=a\mathbf 1_H,
+\qquad
+y:=\tau b\mathbf 1_H.
+\]
+Applying Lemma~\ref{lem:rank-one},
+\[
+\norm{x-y}_2^2\,\norm{x+y}_2^2
+\le 2\#H^2 K_{\delta,\eta}^2\eps^2.
+\]
+Since the tail of $a-\tau b$ has norm at most $\theta/32$ and
+$\norm{a-\tau b}_2^2=2$ by orthogonality, the head part satisfies
+\[
+\norm{x-y}_2^2
+=2-\norm{(a-\tau b)\mathbf 1_{H^c}}_2^2
+\ge 1.
+\]
+Hence
+\[
+\norm{x+y}_2\le 2\#H K_{\delta,\eta}\eps
+\le 2d^*(\delta)K_{\delta,\eta}\eps.
+\]
+If $\eps$ were smaller than a sufficiently small constant
+$c_{\mathrm{line}}(\delta,\eta)$, then the head of $a+\tau b$ would be tiny
+while the tail of $a-\tau b$ is already tiny.  The same gluing argument as in
+the homogeneous proof then yields a contradiction.  Therefore
+$\eps\ge c_{\mathrm{line}}(\delta,\eta)$.
+
+\smallskip
+\noindent\emph{Case 2: $\eta$ is Rademacher and $H=\{1\}$.}
+Then all good coordinates lie in the tail and satisfy
+$|a_i|,|b_i|\le \lambda$ for $i\ge2$.  The concentrated assumption gives a sign
+$\tau$ such that $(a-\tau b)\mathbf 1_{H^c}$ is small.  If $\tau=1$, then the
+good parts of $a$ and $b$ are almost equal, so
+\[
+\ip{a}{b}
+=a_1b_1+\ip{a\mathbf 1_{H^c}}{b\mathbf 1_{H^c}}
+\]
+has the same sign as $a_1b_1$ up to a small error, contradicting
+$\ip{a}{b}=0$ once the constants are fixed.  The case $\tau=-1$ is analogous.
+Thus this degenerate Rademacher subcase cannot occur.
+\end{proof}
+
+\subsection{The diffuse branch}
+
+We now move to the complementary regime.  Here both $a-b$ and $a+b$ retain a
+definite amount of $\ell^2$ mass on the tail, and every tail coordinate is
+individually small.  This is exactly the setting in which block
+anticoncentration can be used.
+
+Set
+\[
+c:=\frac{(a-b)\mathbf 1_{H^c}}{\sqrt2},
+\qquad
+d:=\frac{(a+b)\mathbf 1_{H^c}}{\sqrt2}.
+\]
+Because $1\in H$, the vectors $c$ and $d$ are supported only on good
+coordinates.  In the diffuse case both have $\ell^2$ norm at least
+$\sqrt{8s_0}$, while each coordinate is bounded by $\sqrt2\,\lambda$.
+
+The next lemma packages the quantitative probabilistic input.  It says that
+after arbitrary deterministic shifts, the two tail combinations cannot both
+remain close to zero with high probability.
+
+\begin{lemma}[Quantitative cross anticoncentration]\label{lem:cross}
+There exists $r_*=r_*(\delta)>0$ such that, in the diffuse case,
+\[
+\Prob\bigl(r_*<\min(\abs{X_c+u},\abs{X_d+v})\bigr)\ge \frac14
+\qquad(u,v\in\R).
+\]
+\end{lemma}
+
+\begin{proof}
+We prove first a one-variable small-ball estimate.  Let $e\in \ell^2(\N)$ be
+supported on $H^c$ and satisfy
+\[
+\norm{e}_2^2\ge 8s_0,
+\qquad
+\sup_{i\ge2}\abs{e_i}\le \sqrt2\,\lambda.
+\]
+We claim that there exists $r_0=r_0(\delta)>0$ such that
+\begin{equation}\label{eq:onevar-smallball}
+\Prob\bigl(\abs{X_e-t}\le r_0\bigr)\le \frac38
+\qquad(t\in\R).
+\end{equation}
+Once this is proved, the lemma follows immediately by applying
+\eqref{eq:onevar-smallball} to $e=c$ with $t=-u$ and to $e=d$ with $t=-v$.
+Indeed, in the diffuse case both $c$ and $d$ satisfy the displayed
+hypotheses, so
+\[
+\Prob\bigl(\abs{X_c+u}\le r_0\bigr)\le \frac38,
+\qquad
+\Prob\bigl(\abs{X_d+v}\le r_0\bigr)\le \frac38.
+\]
+By the union bound,
+\[
+\Prob\bigl(\abs{X_c+u}\le r_0\ \text{or}\ \abs{X_d+v}\le r_0\bigr)
+\le \frac34,
+\]
+and therefore
+\[
+\Prob\bigl(r_0<\min(\abs{X_c+u},\abs{X_d+v})\bigr)\ge \frac14.
+\]
+Thus it remains only to establish \eqref{eq:onevar-smallball}.
+
+\smallskip
+\noindent\emph{Step 1: a block partition.}
+Set
+\[
+M:=\Bigl\lceil 2^{16}\delta^{-2}\Bigr\rceil,
+\qquad
+\eta:=\frac{s_0}{2M},
+\qquad
+r_0:=\frac{\delta\sqrt{\eta}}{16}.
+\]
+Because
+\[
+2\lambda^2=\frac{\delta^6}{2^{39}}
+\le \frac{\delta^6}{2^{38}}
+\le \eta,
+\]
+every coordinate satisfies $e_i^2\le \eta$.  Since
+\[
+\norm{e}_2^2\ge 8s_0>2M\eta=s_0,
+\]
+we may choose pairwise disjoint finite sets $G_1,\dots,G_M\subset H^c$ such
+that
+\begin{equation}\label{eq:block-energy}
+\eta\le \sum_{i\in G_j} e_i^2\le 2\eta
+\qquad(1\le j\le M).
+\end{equation}
+Indeed, construct the blocks greedily.  Suppose $G_1,\dots,G_{j-1}$ have
+already been chosen.  Their total energy is at most $2(j-1)\eta$, so the
+unused part of $e$ still has energy at least
+\[
+8s_0-2(j-1)\eta\ge 8s_0-2M\eta=7s_0> \eta.
+\]
+Hence one can choose a finite subset of the remaining support whose energy is
+at least $\eta$, and by minimality its energy is at most $\eta+\sup_i e_i^2
+\le 2\eta$.  This produces the next block.
+
+\smallskip
+\noindent\emph{Step 2: symmetrized block sums have uniform two-sided mass.}
+Let $X_e'$ be an independent copy of $X_e$, realized on a second copy of the
+probability space.  For each $i\ge2$ define
+\[
+D_i:=\xi_i(\omega_1)-\xi_i(\omega_2).
+\]
+Then the variables $(D_i)_{i\ge2}$ are independent, centered, and symmetric,
+with
+\[
+\norm{D_i}_{L^2}^2
+=\E[(\xi_i-\xi_i')^2]
+=2.
+\]
+Moreover, by Jensen's inequality applied conditionally on $\xi_i$,
+\[
+\E[\abs{D_i}]
+=\E\bigl[\E[\abs{\xi_i-\xi_i'}\mid \xi_i]\bigr]
+\ge \E\bigl[\abs{\xi_i-\E[\xi_i']} \bigr]
+=\E[\abs{\xi_i}]
+\ge \delta.
+\]
+Hence
+\[
+\E[\abs{D_i}]
+\ge \frac{\delta}{\sqrt2}\norm{D_i}_{L^2}.
+\]
+For each block define
+\[
+Y_j:=\sum_{i\in G_j} e_iD_i,
+\qquad
+\sigma_j^2:=\sum_{i\in G_j} e_i^2.
+\]
+By \eqref{eq:block-energy},
+\[
+\eta\le \sigma_j^2\le 2\eta.
+\]
+Applying Lemma~\ref{lem:l1lower} to the independent centered family
+$(D_i)_{i\in G_j}$, with lower $L^1$ ratio $\delta/\sqrt2$, gives
+\[
+\E[\abs{Y_j}]
+\ge
+\frac{(\delta/\sqrt2)}{2\sqrt2}
+\Bigl(\sum_{i\in G_j} e_i^2\norm{D_i}_{L^2}^2\Bigr)^{1/2}
+=\frac{\delta}{4}\bigl(2\sigma_j^2\bigr)^{1/2}
+=\frac{\delta}{2}\sigma_j
+\ge \frac{\delta\sqrt{\eta}}{2}.
+\]
+Set
+\[
+a_0:=\frac{\delta\sqrt{\eta}}{4}=4r_0.
+\]
+Then $a_0\le \E[\abs{Y_j}]/2$.  Let
+\[
+A_j:=\{\abs{Y_j}\ge a_0\}.
+\]
+Since
+\[
+\E[Y_j^2]=2\sigma_j^2\le 4\eta,
+\]
+we obtain
+\[
+\E[\abs{Y_j}]
+\le a_0+\E[\abs{Y_j}\mathbf 1_{A_j}]
+\le a_0+\Prob(A_j)^{1/2}\E[Y_j^2]^{1/2}.
+\]
+Because $\E[\abs{Y_j}]\ge 2a_0$, the second term on the right is at least
+$a_0$, so
+\[
+\Prob(A_j)^{1/2}\,(4\eta)^{1/2}\ge a_0.
+\]
+Therefore
+\begin{equation}\label{eq:block-active}
+\Prob(A_j)\ge \frac{a_0^2}{4\eta}=\frac{\delta^2}{64}.
+\end{equation}
+
+\smallskip
+\noindent\emph{Step 3: many active blocks with high probability.}
+Let
+\[
+N:=\sum_{j=1}^M \mathbf 1_{A_j}.
+\]
+The variables $\mathbf 1_{A_j}$ are independent because the blocks are
+disjoint.  By \eqref{eq:block-active},
+\[
+\E[N]
+=\sum_{j=1}^M \Prob(A_j)
+\ge M\frac{\delta^2}{64}
+\ge 1024.
+\]
+Since $\operatorname{Var}(\mathbf 1_{A_j})\le \E[\mathbf 1_{A_j}]$, we also have
+\[
+\operatorname{Var}(N)\le \E[N].
+\]
+Chebyshev's inequality gives
+\[
+\Prob(N<256)
+\le
+\Prob\bigl(\abs{N-\E[N]}\ge \E[N]-256\bigr)
+\le
+\frac{\operatorname{Var}(N)}{(\E[N]-256)^2}
+\le
+\frac{\E[N]}{(\E[N]-256)^2}
+\le \frac{1024}{768^2}
+<\frac1{16}.
+\]
+
+\smallskip
+\noindent\emph{Step 4: a Sperner bound for the symmetrized sum.}
+Let
+\[
+U:=\sum_{j=1}^M Y_j.
+\]
+We claim that for every $s\in\R$,
+\begin{equation}\label{eq:symm-smallball}
+\Prob(\abs{U-s}\le 2r_0)\le \frac18.
+\end{equation}
+Indeed,
+\[
+\Prob(\abs{U-s}\le 2r_0)
+\le
+\Prob(\abs{U-s}\le 2r_0,\ N\ge256)+\Prob(N<256).
+\]
+We have already bounded the second term by $1/16$, so it remains to estimate
+the first one.
+
+Condition on the absolute values $(\abs{Y_j})_{j=1}^M$.  Since each $Y_j$ is
+symmetric, conditional on $(\abs{Y_j})_j$ the signs of the nonzero $Y_j$ are
+independent Rademacher variables.  On the event $\{N\ge256\}$ let
+\[
+J:=\{j:\abs{Y_j}\ge a_0\},
+\qquad
+m:=\#J\ge256.
+\]
+After freezing the inactive coordinates and the magnitudes $\abs{Y_j}$, the
+condition $\abs{U-s}\le 2r_0$ becomes
+\[
+\sum_{j\in J}\varepsilon_j w_j \in I,
+\]
+where $w_j:=\abs{Y_j}\ge a_0$ and $I$ is an interval of diameter
+$4r_0=a_0$.  Since $a_0<2w_j$ for every $j\in J$, the family of sign patterns
+for which the weighted sum falls in $I$ is an antichain in $\{\pm1\}^J$.
+Indeed, if two such sign patterns were comparable in the natural subset order,
+their sums would differ by at least $2w_j\ge2a_0>a_0$, which is impossible
+inside an interval of diameter $a_0$.  By Sperner's theorem, the conditional
+probability of this event is therefore at most
+\[
+\frac{\binom{m}{\lfloor m/2\rfloor}}{2^m}
+\le \frac1{\sqrt m}
+\le \frac1{16},
+\]
+because $m\ge256$.  Averaging over the conditioning yields
+\[
+\Prob(\abs{U-s}\le 2r_0,\ N\ge256)\le \frac1{16}.
+\]
+Together with the bound for $\Prob(N<256)$, this proves
+\eqref{eq:symm-smallball}.
+
+\smallskip
+\noindent\emph{Step 5: unsymmetrization.}
+Let
+\[
+R:=\sum_{i\notin G_1\cup\cdots\cup G_M} e_iD_i.
+\]
+Then $R$ is independent of $U$, since it is built from coordinates disjoint
+from those entering the block sums.  Also,
+\[
+X_e(\omega_1)-X_e(\omega_2)=U+R.
+\]
+Fix $t\in\R$.  If both $\abs{X_e(\omega_1)-t}\le r_0$ and
+$\abs{X_e(\omega_2)-t}\le r_0$, then
+\[
+\abs{X_e(\omega_1)-X_e(\omega_2)}\le 2r_0.
+\]
+Hence
+\[
+\Prob(\abs{X_e-t}\le r_0)^2
+\le
+\Prob(\abs{X_e(\omega_1)-X_e(\omega_2)}\le 2r_0)
+=
+\Prob(\abs{U+R}\le 2r_0).
+\]
+Conditioning on $R$ and using \eqref{eq:symm-smallball},
+\[
+\Prob(\abs{U+R}\le 2r_0)
+\le
+\sup_{s\in\R}\Prob(\abs{U-s}\le 2r_0)
+\le \frac18.
+\]
+Therefore
+\[
+\Prob(\abs{X_e-t}\le r_0)\le \frac1{\sqrt8}<\frac38.
+\]
+This proves \eqref{eq:onevar-smallball}, and with it the lemma.
+\end{proof}
+
+Once this shifted anticoncentration estimate is available, the lower bound for
+$\eps$ follows from the same factorization of $X^2-Y^2$ that was
+already used in the compactness proof.
+
+\begin{proposition}[Diffuse branch]\label{prop:diffuse}
+If the diffuse alternative of Lemma~\ref{lem:dichotomy} holds, then
+\[
+\eps\ge c_{\mathrm{cross}}(\delta)>0.
+\]
+\end{proposition}
+
+\begin{proof}
+Let
+\[
+h_\pm:=X_{(a\pm b)\mathbf 1_H}.
+\]
+Then
+\[
+X^2-Y^2
+=2\bigl(X_d+h_+/\sqrt2\bigr)\bigl(X_c+h_-/\sqrt2\bigr),
+\]
+and therefore
+\[
+\abs{X^2-Y^2}
+\ge
+2\min\Bigl(\abs{X_d+h_+/\sqrt2},\abs{X_c+h_-/\sqrt2}\Bigr)^2.
+\]
+Condition on the head variables $h_\pm$ and apply Lemma~\ref{lem:cross} with
+the shifts $u=h_-/\sqrt2$ and $v=h_+/\sqrt2$.  This yields a uniform positive
+lower bound for the conditional expectation of the squared minimum, hence for
+$\eps$.  The resulting constant depends only on $\delta$.
+\end{proof}
+
+\subsection{Conclusion of the second proof}
+
+At this point the proof is immediate: the dichotomy shows that every
+orthogonal pair falls into exactly one of the two branches, and each branch
+gives a quantitative lower bound for the same quantity $\eps$.
+
+\begin{proof}[Second proof of Theorem~\ref{thm:main}]
+By Proposition~\ref{prop:orth-reduction}, it is enough to prove a uniform
+orthogonal lower bound.  Let $a,b$ be orthogonal unit vectors and form $X$
+and $Y$ as above.  Apply the dichotomy of Lemma~\ref{lem:dichotomy}.
+
+If the concentrated alternative holds, then
+Proposition~\ref{prop:concentrated} yields
+\[
+\eps\ge c_{\mathrm{line}}(\delta,\eta).
+\]
+If the diffuse alternative holds, then Proposition~\ref{prop:diffuse} yields
+\[
+\eps\ge c_{\mathrm{cross}}(\delta).
+\]
+Since $\eps\le 2\Delta$, we conclude that
+\[
+\Delta
+=\norm{|X|-|Y|}_{L^2}
+\ge
+\frac12\min\bigl(c_{\mathrm{line}}(\delta,\eta),c_{\mathrm{cross}}(\delta)\bigr)
+=:c_{\delta,\eta}>0.
+\]
+The orthogonal reduction then gives
+\[
+\min_{\sigma\in\{\pm1\}}\norm{X-\sigma Y}_{L^2}
+\le \frac{\sqrt2}{c_{\delta,\eta}}\norm{|X|-|Y|}_{L^2}
+\]
+for all $X,Y\in \overline{\Span}(\eta,\xi_i:i\ge2)$, completing the proof of
+Theorem~\ref{thm:main}.
+\end{proof}
+
+\begin{corollary}[Finite-dimensional one-exception stable phase retrieval]
+\label{cor:finite-one-exception}
+Let $n\ge2$.  Then there exists $C_{\delta,\eta}\ge1$ such that, for all
+\[
+X,Y\in \Span(\eta,\xi_2,\dots,\xi_n),
+\]
+one has
+\[
+\min_{\sigma\in\{\pm1\}}\norm{X-\sigma Y}_{L^2}
+\le
+C_{\delta,\eta}\norm{|X|-|Y|}_{L^2}.
+\]
+\end{corollary}
+
+\begin{proof}
+This is an immediate consequence of Theorem~\ref{thm:main}, since
+\[
+\Span(\eta,\xi_2,\dots,\xi_n)\subset \overline{\Span}(\eta,\xi_i:i\ge2).
+\]
+\end{proof}
+
+\section{Comments and Open Problems}\label{sec:comments}
+
+The compactness and quantitative proofs suggest several natural directions for
+further work.  Although the theorem proved here settles the qualitative
+one-exception problem in the real Hilbertian setting, the mechanisms that enter
+the proof are flexible enough that one is led almost immediately to adjacent
+questions.  Some of these concern extensions of the model, while others concern
+the sharp quantitative form of the present result.  We briefly record several
+of them here.
+
+\begin{remark}[Complex-valued models]
+The complex one-exception theorem already exhibits the same head--tail
+architecture, but the endpoint geometry is richer because the analogue of the
+phase-retrieval cone is foliated by complex lines and conjugate planes rather
+than by two real lines.  The role of the upper $L^1$ bound is then supplemented
+by a generalized-circle gap.  The real argument presented here should be viewed
+as the cleanest model case for that geometry.  This makes the complex setting
+an especially interesting next test case: it is close enough to the present
+problem that one expects the same structural ideas to survive, but different
+enough that the endpoint classification becomes genuinely more delicate.
+\end{remark}
+
+\begin{remark}[More general symmetries]
+Classical phase retrieval is recovery modulo the group $\{\pm1\}$.  It is
+natural to ask for analogous theorems modulo larger compact symmetry groups or
+for quotient metrics arising from finite reflection groups.  The compactness
+proof is particularly well suited to that direction because it separates the
+problem into an exact limit identity and a geometric classification of the
+corresponding support set.  For that reason, this is not merely a formal
+generalization: it points toward a broader geometric framework in which the
+support theorem, rather than the specific real-sign symmetry, is the central
+object.
+\end{remark}
+
+The next questions concern the extent to which the present theorem can be
+sharpened.  The first asks for a genuinely effective version of the one-exception
+theorem itself.
+
+\begin{question}
+Can one obtain a fully quantitative version of Theorem~\ref{thm:main} with one
+exceptional coordinate, with constants depending explicitly on
+$\delta$ and quantitative parameters of the exceptional variable $\eta$?
+\end{question}
+
+This question is particularly interesting because the two proofs in the paper
+point in different directions: the compactness proof is robust but soft, while
+the second proof isolates several places where explicit constants might, at
+least in principle, be tracked.
+
+Closely related to that issue is the problem of identifying the correct endpoint
+assumption on the good coordinates.
+
+\begin{question}
+What is the optimal endpoint replacement for the upper bound
+$\norm{\xi_i}_{L^1}\le1-\delta$?  In the real case this bound excludes the
+Rademacher obstruction, but it is not obvious whether a weaker quantitative
+non-flatness parameter could suffice.
+\end{question}
+
+This is again an interesting structural question rather than a matter of
+constant optimization.  The present upper bound is easy to interpret and
+natural for the proof, but it would be valuable to know whether the real
+obstruction is exactly Rademacher degeneracy or some larger non-flatness
+phenomenon.
+
+Finally, one may ask how much of the theorem belongs specifically to Hilbert
+space geometry, and how much should persist in a wider Banach-function-space
+setting.
+
+\begin{question}
+Which Banach-function-space analogues of the present theorem remain true once
+the ambient space is no longer Hilbertian?  The orthogonal reduction is
+special to Hilbert spaces, so a different mechanism would be needed.
+\end{question}
+
+This problem seems especially compelling because the function-space formulation
+of stable phase retrieval is not inherently Hilbertian, even though the present
+proof is.  Any satisfactory extension would likely require replacing
+orthogonality by a more flexible geometric notion while retaining enough
+structure to control the modulus map.
+
+\begin{remark}
+The quantitative proof is stronger whenever one seeks effective constants, but
+the compactness proof is likely the more durable template for extensions.  It
+uses only bounded probes, a profile decomposition, and a structural
+description of diffuse limits.  Those ingredients are robust enough to adapt
+to complex models, to settings with exceptional coordinates, and plausibly to
+retrieval modulo more complicated symmetries.  Taken together, these questions
+suggest that the present theorem is less an endpoint than a model case: it
+captures a setting in which the geometry can still be classified cleanly, while
+already displaying most of the phenomena that one would expect to confront in
+more general phase-retrieval problems.
+\end{remark}
+
+\nocite{calderbank2022stable}
+\nocite{bandeira2014saving}
+\nocite{eldar2014stability}
+\nocite{cahill2016infinite}
+\nocite{alaifari2017continuous}
+\nocite{alaifari2021gabor}
+\nocite{grohs2020survey}
+\nocite{FOTP}
+\nocite{christ2022examples}
+\nocite{localphase}
+\nocite{chen2019phase}
+\nocite{MR3746047}
+\nocite{KS}
+\nocite{DB}
+\nocite{MR3260258}
+\nocite{MR3069958}
+\nocite{MR4298599}
+\nocite{sanz1984phase}
+\nocite{balan2013}
+\nocite{bartusel2021phase}
+\nocite{casazza2017weak}
+\nocite{casazza2017norm}
+\nocite{casazza2013}
+\nocite{AG-continuous-frames}
+\nocite{fg22}
+\nocite{MR3901674}
+\nocite{grohs2021stable}
+\nocite{grohs20212}
+\nocite{luef2021gaussian}
+\nocite{kashin2021sampling}
+\nocite{LT21}
+\nocite{DPSTT}
+\nocite{NOU}
+\nocite{akrami2021note}
+\nocite{MR3367650}
+\nocite{MR3275625}
+\nocite{CCS-JMAA}
+\nocite{CDOS}
+\nocite{CHL}
+\nocite{FG-atomic}
+\nocite{MR2011364}
+\nocite{MR0423039}
+\nocite{our-paper}
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}

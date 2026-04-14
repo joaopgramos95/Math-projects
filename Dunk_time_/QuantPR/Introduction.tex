@@ -1,0 +1,241 @@
+\section{Introduction}\label{sec:intro}
+
+The phase retrieval problem asks whether a vector or function can be recovered
+from phaseless measurements. In the real setting this means recovery up to
+global sign. The finite-dimensional theory is by now extensive; see
+\cite{bandeira2014saving, eldar2014stability} and the survey
+\cite{grohs2020survey}. In infinite dimensions the situation is more
+delicate: phase retrieval can hold in infinite-dimensional Hilbert spaces
+\cite{cahill2016infinite}, but uniform stability may fail for continuous
+frames \cite{alaifari2017continuous}, and natural measurement models such as
+Gabor frames may be severely ill-posed \cite{alaifari2021gabor}.
+
+We adopt the function-space point of view from \cite{FOTP}. Given a closed
+subspace $E$ of a real function space $X$, we say that $E$ does \emph{stable
+phase retrieval} with constant $C$ if
+\[
+\min_{\sigma \in \{\pm 1\}} \norm{f - \sigma g}_X
+\le C \, \bigl\| \abs{f} - \abs{g} \bigr\|_X
+\qquad
+\text{for all } f, g \in E.
+\]
+The map $f \mapsto \abs{f}$ loses sign information, so the left-hand side
+optimizes over a global sign flip; the inequality says that this is the only
+obstruction to recovery. The main results of \cite{FOTP} show that many
+order-continuous Banach lattices admit no infinite-dimensional subspace with
+this property, while \cite{christ2022examples, FOTP} provide positive
+examples in $L^2$-spaces. The orthogonal reduction of \cite{FOTP} is the
+starting point of our argument: to verify stable phase retrieval on a
+subspace, it suffices to check it for orthogonal pairs in the same
+two-dimensional span.
+
+In \cite{calderbank2022stable}, Calderbank, Daubechies, Freeman, and Freeman
+proved stable phase retrieval for a model involving shifts and proposed the
+following conjecture: if $(\xi_i)_{i \ge 1}$ is an orthonormal sequence of
+independent mean-zero random variables in $L^2$, then
+$\overline{\Span}(\xi_i)$ does stable phase retrieval if and only if there
+exist $0 < A \le B < 1$ with
+\[
+A \le \norm{\xi_i}_{L^1} \le B
+\]
+for all but at most one $i$. The lower bound prevents $\xi_i$ from
+concentrating near zero; the upper bound prevents it from being
+Rademacher-valued (in which case $\abs{\xi_i}$ is constant and carries no
+phase information). Together they ensure that each coordinate contributes
+usable information about the signs of the coefficients.
+
+Our main result proves the sufficiency direction of this conjecture with
+a fully explicit stability constant.
+
+\subsection{The main theorem}
+
+Let $\xi_1, \dots, \xi_n$ be independent real-valued random variables on a
+probability space $(\Omega, \mu)$, each satisfying
+\[
+\E[\xi_i] = 0,
+\qquad
+\E[\xi_i^2] = 1,
+\qquad
+A \le \E[\abs{\xi_i}] \le B
+\]
+for fixed $0 < A \le B < 1$. Given unit vectors $a, b \in \R^n$ with
+$\ip{a}{b} = 0$, form the random linear combinations
+$X_a = \sum_i a_i \xi_i$ and $X_b = \sum_i b_i \xi_i$. The \emph{modulus gap}
+\[
+\delta(a,b) = \sqrt{\E\bigl[(\abs{X_a} - \abs{X_b})^2\bigr]}
+\]
+measures how distinguishable $X_a$ and $X_b$ are from their absolute values
+alone. After the orthogonal reduction, stable phase retrieval with constant $C$
+is equivalent to $\delta(a,b) \ge \sqrt{2}/C$ for all orthogonal unit pairs.
+
+\begin{theorem}[Quantitative orthogonal lower bound]\label{thm:main}
+\leanname{Showcase\.quantitative\_orthogonal\_lower\_bound}
+There exists a constant $c_\perp(A,B) > 0$, which can be chosen to be
+\[
+c_\perp(A,B)
+= \tfrac{1}{2}
+  \min\bigl(c_{\mathrm{cross}}(A),\;
+  c_{\mathrm{line}}(A,B)\bigr),
+\]
+such that $c_\perp(A,B) \le \delta(a,b)$
+for every pair of orthogonal unit vectors $a, b \in \R^n$.
+The constant depends only on $A$ and $B$, not on the dimension $n$ or the
+laws of $\xi_i$. The quantities $c_{\mathrm{cross}}$ and
+$c_{\mathrm{line}}$ are defined in Section~\ref{sec:constants}.
+\end{theorem}
+
+\begin{remark}
+The companion paper \cite{compactness} proves the same conclusion (without
+explicit constants) by a compactness argument that also allows one
+exceptional variable with no $L^1$ bound. The present proof makes each step
+of that argument quantitative.
+\end{remark}
+
+\subsection{Proof strategy}\label{sec:strategy}
+
+Rather than lower-bounding $\delta$ directly, we work with the auxiliary
+quantity
+\[
+\eps(a,b) = \E\bigl[\abs{X_a^2 - X_b^2}\bigr],
+\]
+which is more amenable to algebraic manipulation. A Cauchy--Schwarz argument
+(Theorem~\ref{thm:eps-le-modulus-app}) gives $\eps \le 2\delta$, so any lower
+bound on $\eps$ transfers to $\delta$ at the cost of a factor of two.
+
+The proof splits the coordinates into a \emph{head} (the few coordinates
+where $a$ or $b$ has a large coefficient) and a \emph{tail} (the remaining
+coordinates, each individually small). A sign dichotomy on the tail
+(Lemma~\ref{lem:tail-dichotomy}) then determines which of two branches
+applies:
+
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Concentrated branch} (Section~\ref{sec:head}).
+For some sign $\tau = \pm 1$, the tail of $a - \tau b$ is small, so $a$ and
+$\tau b$ nearly agree outside the head. Bounded probe functions extract
+entries of the head difference matrix from the observable
+$X_a^2 - X_b^2$, each entry being controlled by $K(A,B) \cdot \eps$.
+The orthogonality $\ip{a}{b} = 0$ forces this matrix to have large Frobenius
+norm, giving $\eps \ge c_{\mathrm{line}}(A,B)$.
+
+\item \textbf{Diffuse branch} (Section~\ref{sec:blocks}).
+Both $a + b$ and $a - b$ have substantial tail energy, spread across many
+small coefficients. A greedy block partition, symmetrization via the product
+space, Sperner's antichain bound, and a Chebyshev counting argument
+together show that $X_a$ and $X_b$ are both unlikely to be near zero,
+giving $\eps \ge c_{\mathrm{cross}}(A)$.
+\end{enumerate}
+
+\noindent
+In both cases $\eps \ge \min(c_{\mathrm{cross}}, c_{\mathrm{line}})$, and
+Theorem~\ref{thm:main} follows.
+
+
+\section{Setup: the head--tail decomposition}\label{sec:setup}
+
+Throughout, $a, b \in \R^n$ are unit vectors with $\ip{a}{b} = 0$, and
+$\xi_1, \dots, \xi_n$ are independent random variables satisfying the moment
+conditions of Section~\ref{sec:intro}. We write $X_c = \sum_i c_i \xi_i$ for
+any coefficient vector $c \in \R^n$.
+
+The first step is to separate the coordinates where $a$ and $b$ have large
+coefficients from those where they are small. This is the quantitative
+counterpart of the profile decomposition in \cite{compactness}: the large
+coordinates form a finite set on which we can extract detailed information
+via probes, while the small coordinates contribute a ``diffuse'' component
+that is controlled by anticoncentration.
+
+\begin{definition}[Head set, restriction, and tail]\label{def:head-set}
+\leanname{Core\.FiniteModel\.headSetFin}
+The \emph{head set} is
+$H = H(A,a,b)
+= \bigl\{i : \max(\abs{a_i}, \abs{b_i}) > \lambda(A)\bigr\}$.
+For $S \subseteq \{1, \dots, n\}$ and $c \in \R^n$, write $\restr_S c$ for
+the vector that agrees with $c$ on $S$ and vanishes elsewhere
+(\leanref{restrictCoeff}), and
+$\tail_S c = c - \restr_S c$ for its complement
+(\leanref{tailCoeff}).
+\end{definition}
+
+Since each $i \in H$ contributes at least $\lambda(A)^2$ to
+$a_i^2 + b_i^2 \le 2$, the head set is finite with
+$\card{H} \le 2/\lambda(A)^2 \le d^*(A)$
+(\leanref{headSetFin\_card\_le\_dStar}).
+Conversely, every tail coordinate satisfies
+$\max(\abs{(\tail_H a)_i}, \abs{(\tail_H b)_i}) \le \lambda(A)$
+by construction
+(\leanref{headSetFin\_tail\_max\_le\_lambda}).
+
+\label{thm:head-card}%
+\label{thm:tail-bound}%
+
+\subsection{The head difference matrix}
+
+The head difference matrix captures the discrepancy between $a$ and $b$ on
+the large coordinates. It is a rank-two symmetric matrix whose Frobenius norm
+is forced to be large by the orthogonality constraint whenever the tails
+are small.
+
+\begin{definition}[Difference matrix]\label{def:diff-matrix}
+\leanname{Core\.FiniteModel\.finDH}
+The head difference matrix $D_H(a,b)$ is the symmetric matrix with entries
+\[
+D_H(a,b)_{ij}
+= (\restr_H a)_i (\restr_H a)_j
+- (\restr_H b)_i (\restr_H b)_j
+\]
+and Frobenius norm
+$\norm{D_H}_F = \sqrt{\sum_{i,j} D_H(a,b)_{ij}^2}$.
+\end{definition}
+
+\subsection{The epsilon--modulus bridge}
+
+The two key quantities measuring phase-retrieval distinguishability are
+\[
+\eps(a,b) = \E\bigl[\abs{X_a^2 - X_b^2}\bigr],
+\qquad
+\delta(a,b)
+= \sqrt{\E\bigl[(\abs{X_a} - \abs{X_b})^2\bigr]}.
+\]
+Since
+$\abs{X_a^2 - X_b^2}
+= \abs{X_a + X_b} \cdot \abs{X_a - X_b}$,
+Cauchy--Schwarz and the variance identity
+$\E[X_c^2] = \sum c_i^2$
+(\leanref{Imported\.L2Theory\.randL2Sq\_finLinComb\_eq})
+yield $\eps \le 2\delta$
+(Theorem~\ref{thm:eps-le-modulus-app}). The rest of the
+proof is devoted to showing $\eps$ is bounded below.
+
+
+\subsection{Table of constants}\label{sec:constants}
+
+All constants depend only on $A$ and $B$ and are explicitly computable.
+The probe bound, gluing threshold, and head/tail cutoff are
+\[
+K = \max\!\bigl(\tfrac{4}{A^2},\,\tfrac{2}{1-B}\bigr),
+\qquad
+\theta = \tfrac{A^2}{8},
+\qquad
+\lambda = \tfrac{A^3}{2^{20}}.
+\]
+The head set has at most $d^* = 2 + 2^{41}/A^6$ elements, and the
+diffuse threshold is $s_0 = A^4/2^{20}$. The two branch constants and
+the stability constant are
+\[
+c_{\mathrm{cross}} = \tfrac{A^8}{2^{57}},
+\qquad
+c_{\mathrm{line}} = \tfrac{A^2}{2^8\, d^*\! K},
+\qquad
+c_\perp = \tfrac{1}{2}
+\min(c_{\mathrm{cross}}, c_{\mathrm{line}}).
+\]
+The block partition in Section~\ref{sec:blocks} also uses
+\[
+M = \lceil 2^{18}/A^2 \rceil,
+\quad
+\eta(s) = \tfrac{s}{4M},
+\quad
+\lambda_0(s) = \tfrac{A\sqrt{s}}{2048},
+\quad
+r_0(s) = \tfrac{A^2\sqrt{s}}{65536}.
+\]\label{sec:constants-end}

@@ -1,0 +1,46 @@
+{
+  "rigorous_finite_mode_certificate": true,
+  "finite_mode_range": [
+    2,
+    2
+  ],
+  "target_ratio": "0.12",
+  "meaning": "If every listed ratio is <= 0.12, then the checked finite modes satisfy |5 I_n - Lambda0| >= 0.4 Lambda0 and |I_n - Lambda0| >= 0.4 Lambda0.",
+  "not_yet_certified": "Large n > nmax still require a separate mode-tail estimate. The r-tail bound also depends on the stated Bessel majorant.",
+  "parameters": {
+    "precision_bits": 128,
+    "R": "200",
+    "h": "0.0025",
+    "tail_bound_used": true,
+    "finite_interval_method": "midpoint-derivative",
+    "finite_interval_method_hypotheses": "|J_m(r)| <= 1 and |J'_m(r)| <= 1 for integer m and real r",
+    "tail_hypothesis": "|J_m(r)| <= sqrt(2/(pi r)) for r >= R and m in {0,n}"
+  },
+  "J0_lower_positive": true,
+  "J0": {
+    "ball": "[0.34 +/- 8.15e-3]",
+    "lower": "0.331858880957034425834404108406",
+    "upper": "0.342282515347497547069774744392",
+    "radius": "0.00521181719523156061768531799316"
+  },
+  "Lambda0": {
+    "ball": "[5e+2 +/- 33.5]",
+    "lower": "517.217151070466040613734533927",
+    "upper": "533.462859208216666224086096427",
+    "radius": "8.12285406887531280517578125000"
+  },
+  "rows": [
+    {
+      "n": 2,
+      "J_n": {
+        "ball": "[0.04 +/- 4.58e-3]",
+        "lower": "0.0354224555217342794222823229192",
+        "upper": "0.0389481707302593503428689089178",
+        "radius": "0.00176285760426253546029329299927"
+      },
+      "J_n_over_J0_upper": "[0.117363653544356846980311110488 +/- 4.49e-31]",
+      "certifies_ratio_below_target": true
+    }
+  ],
+  "elapsed_seconds": 107.95548987388611
+}

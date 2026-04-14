@@ -1,0 +1,81 @@
+\contentsline {section}{\numberline {1}Overview and Strategy}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}The main strategy}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Status summary}{4}{subsection.1.2}%
+\contentsline {part}{I\hspace {1em}General Theory}{4}{part.1}%
+\contentsline {section}{\numberline {2}Setup and Notation}{4}{section.2}%
+\contentsline {section}{\numberline {3}The Two Convolution Equations}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}The equation $u^k=c\,(u\ast f)$: spectral expansion kills solutions}{5}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}The equation $u=c\,(u^k\ast f)$: compact fixed-point structure}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Fredholm structure and local manifold theorem}{6}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Comparison of the two equations}{6}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Spectral Support Forcing}{6}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Reduction to a density equation on the sphere}{7}{subsection.4.1}%
+\contentsline {section}{\numberline {5}The One-Dimensional Case: Complete Solution}{7}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Algebraic reduction}{7}{subsection.5.1}%
+\contentsline {part}{II\hspace {1em}The $S^1$ Restriction Problem}{8}{part.2}%
+\contentsline {section}{\numberline {6}The Sharp Restriction Constant and Its Euler--Lagrange Equation}{8}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Setup}{8}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}The Euler--Lagrange equation}{8}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}The symmetry group}{9}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}What ``finding all critical values'' means}{9}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Positive representatives for extremisers}{9}{subsection.6.5}%
+\contentsline {section}{\numberline {7}Fredholm Structure of the Linearisation}{10}{section.7}%
+\contentsline {subsection}{\numberline {7.1}The extension operator $E$ is not compact}{10}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}The linearised operator $K_{u_0}$ is compact}{11}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Nondegeneracy at the Constant Solution}{12}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Setup}{12}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Fourier decomposition of the linearised operator}{12}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Identification of the symmetry kernel}{13}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}The nondegeneracy criterion}{14}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Asymptotic analysis of $\mathcal J_n$}{14}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}Nondegeneracy at non-constant solutions}{15}{subsection.8.6}%
+\contentsline {paragraph}{Direct spectral analysis.}{15}{section*.2}%
+\contentsline {paragraph}{Generic transversality (Sard--Smale).}{16}{section*.3}%
+\contentsline {section}{\numberline {9}Compactness Modulo Symmetry}{16}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Regularity bootstrap}{16}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Profile decomposition for the circle extension}{17}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Profiles of critical sequences inherit the equation}{18}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Existence of a maximiser}{19}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}The splitting obstruction for general critical sequences}{20}{subsection.9.5}%
+\contentsline {subsection}{\numberline {9.6}Approaches to rule out splitting}{21}{subsection.9.6}%
+\contentsline {paragraph}{(A) Descending induction on critical values.}{21}{section*.4}%
+\contentsline {paragraph}{(B) Pohozaev--Morawetz monotonicity.}{21}{section*.5}%
+\contentsline {paragraph}{(C) Unique continuation for the integrated equation.}{21}{section*.6}%
+\contentsline {paragraph}{(D) Positive gauge for the extremiser search.}{21}{section*.7}%
+\contentsline {section}{\numberline {10}From the Three Inputs to the Sharp Constant}{23}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Finiteness after the positivity reduction}{23}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}A spectral gap around the constant value}{24}{subsection.10.2}%
+\contentsline {paragraph}{Local isolation at the constant.}{25}{section*.8}%
+\contentsline {paragraph}{Current certified finite-mode check.}{25}{section*.9}%
+\contentsline {paragraph}{Global separation from the rest of the positive window.}{26}{section*.10}%
+\contentsline {subsection}{\numberline {10.3}What a rigorous brute-force search would mean}{26}{subsection.10.3}%
+\contentsline {paragraph}{Eigenvalue exclusion.}{26}{section*.11}%
+\contentsline {paragraph}{Direct upper-bound search.}{26}{section*.12}%
+\contentsline {paragraph}{Fourier truncation and tails.}{27}{section*.13}%
+\contentsline {paragraph}{Why sixfold Bessel products appear.}{27}{section*.14}%
+\contentsline {paragraph}{Interval branch-and-bound.}{28}{section*.15}%
+\contentsline {paragraph}{How this could prove the sharp constant.}{28}{section*.16}%
+\contentsline {paragraph}{Relevant numerical and analytic references.}{29}{section*.17}%
+\contentsline {subsection}{\numberline {10.4}What remains for the sharp constant on $S^1$}{30}{subsection.10.4}%
+\contentsline {paragraph}{Path 1: Identify $\mathcal R$ (the sharp constant).}{30}{section*.18}%
+\contentsline {paragraph}{Path 2: Finiteness of all critical values above $\varepsilon $ (the full structural result).}{30}{section*.19}%
+\contentsline {part}{III\hspace {1em}Extensions and Supplementary Material}{31}{part.3}%
+\contentsline {section}{\numberline {11}The Higher-Dimensional Transversality Route}{31}{section.11}%
+\contentsline {subsection}{\numberline {11.1}The five-step programme}{31}{subsection.11.1}%
+\contentsline {paragraph}{Step 1: Smoothing / Fredholm estimate.}{31}{section*.20}%
+\contentsline {paragraph}{Step 2: Regularity bootstrap.}{31}{section*.21}%
+\contentsline {paragraph}{Step 3: Local slices for the symmetry action.}{32}{section*.22}%
+\contentsline {paragraph}{Step 4: Nondegeneracy modulo symmetry.}{32}{section*.23}%
+\contentsline {paragraph}{Step 5: Compactness modulo~$G$.}{32}{section*.24}%
+\contentsline {subsection}{\numberline {11.2}Degenerate fibres}{32}{subsection.11.2}%
+\contentsline {subsection}{\numberline {11.3}Orbit dimension and radial rigidity}{32}{subsection.11.3}%
+\contentsline {section}{\numberline {12}Supplementary: Gegenbauer Expansion and Galerkin Models}{33}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Gegenbauer expansion}{33}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Galerkin approximation}{33}{subsection.12.2}%
+\contentsline {section}{\numberline {13}Supplementary: Validated Search Strategy}{34}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Constants needed}{34}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Separation and packing}{34}{subsection.13.2}%
+\contentsline {subsection}{\numberline {13.3}The search pipeline}{34}{subsection.13.3}%
+\contentsline {subsection}{\numberline {13.4}Main difficulties}{35}{subsection.13.4}%
+\contentsline {subsection}{\numberline {13.5}Specialisation to $S^1$}{35}{subsection.13.5}%
+\contentsline {section}{\numberline {14}Summary: The Logical Dependency Graph}{36}{section.14}%

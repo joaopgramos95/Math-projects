@@ -1,0 +1,328 @@
+\documentclass{inprogress}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\sign}{\operatorname{sign}}
+\newcommand{\law}{\operatorname{Law}}
+\newcommand{\Span}{\operatorname{Span}}
+\newcommand{\erfc}{\operatorname{erfc}}
+
+
+\newlist{hypotheses}{enumerate}{2}
+\setlist[hypotheses]{leftmargin = 5em}
+\newcommand{\Hyp}[1]{\item[\textsc{#1}]\label{hyp:#1}\!\!\!\textsc{:}}
+\newcommand{\hyp}[1]{\textsc{#1}}
+
+
+\title{A duality approach to $L^2$ stable phase retrieval for independent random variables}
+
+\begin{document}
+\maketitle
+
+Let us recall the definition of stable phase retrieval.
+\begin{theorem}
+    Let $E$ be a subspace of $L^p(\mu)$ and fix $C\geq 1$. We say that $E$ does $C$-SPR if for all $f,g\in E$ we have
+    \begin{equation}\label{C-SPR}
+        \inf_{|\lambda|=1}\|f-\lambda g\|\leq C \| |f|-|g|\|.
+    \end{equation}
+\end{theorem}
+
+
+In \cite{calderbank2022stable},  Calderbank-Daubechies-Freeman-Freeman were able to prove the following theorem.
+
+\begin{theorem}
+ Let $(X_n)_{n=1}^\infty$ be an orthonormal sequence of independent mean-zero random variables in $L^2([0,1])$. The following statements are equivalent.
+ \begin{enumerate}
+\item The closed span of $(X_n+1_{(n,n+1]})_{n=1}^\infty$ does SPR in $L^2(\mathbb{R}).$
+\item The $L^1$ and $L^2$ norms of $(X_n)$ are uniformly comparable, i.e., there exists $A>0$ such that $$A\|X_n\|_{L^2([0,1])}\leq \|X_n\|_{L^1([0,1])}\leq \|X_n\|_{L^2([0,1])}\hspace{3mm} \text{for all}\ n\in \mathbb{N}.$$
+\end{enumerate}
+\end{theorem}
+After writing the paper \cite{calderbank2022stable}, the authors communicated to us the following conjecture.
+\begin{conjecture}\label{conjecture CDFF}
+    If $(X_n)$ is an orthonormal sequence of mean-zero independent random variables in $L^2$ then span$(X_n)$ does SPR in $L^2$ if and only if there exist constants $0<A\leq B<1$ such that $A\leq \|X_n\|_{L^1} \leq B$ for all but at most one $n\in \mathbb{N}$.
+\end{conjecture}
+Note that one of the implications of \Cref{conjecture CDFF} is straightforward: If there were no such $A$ then SPR would fail, as it was shown in \cite{FOTP} that if a subspace $E$ of $L^p(\mu)$ ($1\leq p<\infty)$ does SPR then $\|\cdot\|_1\sim \|\cdot\|_p$ on $E$. On the other hand, if such a $B <1$ did not exist then because a mean-zero random variable $f$ has Radamacher distribution if and only if $\|f\|_{L^2}=\|f\|_{L^1}$ we can conclude that $\text{span} (X_n)$
+does not perform stable phase retrieval for the same reason that $\text{span} (R_n)$, the span of Rademacher functions, does not.
+
+
+
+The purpose of this document is to prove the following theorem.
+
+\begin{theorem}
+    \label{thm:goal}
+    Let $X_1, \dots, X_n, \dots$ be independent random variables and let $\delta>0$ be such that for all $i\in \mathbb{N}$, we have
+    \begin{hypotheses}
+        \Hyp{Norm} $\|X_i\|_2 = 1$,
+        \Hyp{Mean} $\mathbb E[X_i] =  0$,
+        \Hyp{Equiv} $\delta \|X_i\|_2 \le \|X_i\|_1 \le (1-\delta) \|X_i\|_2$.
+    \end{hypotheses}
+    Then the family of $X_i$ performs SPR in $L^2$ with constant $C=C_\delta$. More specifically, for any $X, Y \in \Span(X_1, \dots, X_n \dots)$ one has \[
+    \inf_{|\lambda|=1}\mathbb E[|X-\lambda Y|^2]\le C_\delta \mathbb E[||X|-|Y||^2].
+    \]
+\end{theorem}
+
+
+The hypotheses of \Cref{thm:goal} are applied as follows.
+\begin{lemma}\label{lem:trunc}
+    Let $X$ be a random variable that satisfies the hypotheses \hyp{Norm}, \hyp{Mean} and \hyp{Equiv} in \Cref{thm:goal}. Then there exist $X$-measurable random variables $S,T$ such that
+
+    \begin{minipage}{.49\textwidth}
+    \begin{hypotheses}
+        \Hyp{ReprS} $\mathbb E[X\cdot S] = 1$,
+        \Hyp{MeanS} $\mathbb E[S] = 0$,
+        \Hyp{BoundS} $\|S\|_\infty \le C(\delta)$,
+        \Hyp{SuppS} $\|X\cdot S\|_\infty \le C(\delta)$,
+    \end{hypotheses}
+    \end{minipage}
+    \begin{minipage}{.49\textwidth}
+    \begin{hypotheses}
+        \Hyp{ReprT} $\mathbb E[(X^2-1)T] = 1$,
+        \Hyp{MeanT} $\mathbb E[T] = 0$,
+        \Hyp{BoundT} $\|T\|_\infty \le C(\delta)$,
+        \color{red}
+        \Hyp{SuppT} $\|X\cdot T\|_\infty \le C(\delta)$.
+        \color{black}
+    \end{hypotheses}
+    \end{minipage}
+MOREOVER S and T can be chosen to be independent.
+\end{lemma}
+\begin{proof}
+
+By \hyp{Norm}, \hyp{Mean} and \hyp{Equiv} there exists a set $S_+$ of size $\delta$ where $X \in [\delta, \delta^{-1}]$ (and by symmetry, a set $S_{-}$ where $X \in [ -\delta^{-1},-\delta]$). Letting $S:= \frac{\1_{S_+}-\1_{S_-}}{\mathbb E[X\cdot (\1_{S_+}-\1_{S_-})]}$ does the trick. For $T$ just use a balanced variation of $\sign(X^2-1)$ (so that it has mean zero).
+\end{proof}
+We must also recall the orthogonal reduction from \cite{FOTP}.
+\begin{theorem}\label{ortho red}
+    Let $f,g\in L^2(\mu)$. Then there exists $f',g'\in \text{span}\{f,g\}$ such that $f'$ is orthogonal to $g'$ and the following two properties hold.
+    \begin{enumerate}
+        \item The left-hand side of \eqref{C-SPR} is unchanged: $$\inf_{|\lambda|=1}\|f-\lambda g\|=\inf_{|\lambda|=1}\|f'-\lambda g'\|= (\|f'\|^2+\|g'\|^2)^\frac{1}{2}.$$
+        \item The right-hand side of \eqref{C-SPR} decreases pointwise:
+        $$\left| |f'|-|g'|\right|\leq \left| |f|-|g|\right|.$$
+    \end{enumerate}
+\end{theorem}
+By scaling and invoking \Cref{ortho red}, we see that to prove that a subspace $E$ of $L^2(\mu)$ does SPR it is sufficient to verify that        the inequality \eqref{C-SPR} holds for vectors $f,g\in E$ satisfying $\|f\|=1$, $\|g\|\leq 1$ and $f\perp g$. Note that in this case we have $\inf_{|\lambda|=1}\|f-\lambda g\|\in [1,\sqrt{2}]$. This shows that SPR is worst at functions where the quotient norm and the original Hilbert norm agree, and, in particular, we can always assume uniform separation of $f$ and $g$ when proving that a subspace does SPR.
+
+
+
+
+
+The key estimate is the following representation result:
+
+\begin{lemma} \label{lem:duality_terms}
+    Given $\vec a = \{a_k\}_{k=1}^\infty$ with $|\vec a|_2 = 1$, let $X_{\vec a}:= \sum_{j=0}^\infty a_j X_j$ and let $f_{\vec a}:=  \sum_{i<j} S_i S_j a_i a_j + \sum_{j} T_j a_j^2$, where $S_j, T_j$ are defined from $X_j$ as in \Cref{lem:trunc}. Then 
+    $$
+    |\mathbb E[X_{\vec a}\cdot X_{\vec c}]|^2 = \mathbb E [|X_{\vec a}|^2 \cdot f_{\vec c}].
+    $$
+\end{lemma}
+\begin{proof}
+    The independence of the random variables $X_i$ implies that 
+    $$|\mathbb E[X_{\vec a}\cdot X_{\vec c}]|^2 = \left|\sum_{i,j} a_i c_j \mathbb E[X_i\cdot X_j]\right|^2  = \left|\sum_{i} a_i c_i\right|^2 =|\vec a \cdot \vec c|^2.$$
+    Now combining the independence of the $X_i$ and the mean zero property, we may compute that
+    $$
+    \begin{aligned}
+        \mathbb E [|X_{\vec a}|^2\cdot f_{\vec c}] 
+        = &
+        \mathbb E [(|X_{\vec a}|^2 -1)\cdot f_{\vec c}] 
+        \\= &
+        \sum_{i\neq j} \mathbb E[X_{i}X_j S_{ij}] a_i a_j c_i c_j+
+        \sum_{j} \mathbb E[(X_j^2-1) T_j] a_j^2 c_j^2
+        \\= &
+        \sum_{i\neq j} a_i a_j c_i c_j+
+        \sum_{j}  a_j^2 c_j^2
+        \\= &
+        |\vec a \cdot \vec c|^2.
+    \end{aligned}
+    $$
+\end{proof}
+
+If the random variables $X_i$ were uniformly in $L^{2+2\epsilon}$ and $X, Y\in \{\Span X_i\}_{i\in \NN}$ are $L^2$-normalized such that $\|X-Y\|_{2}\gtrsim 1$, one could finish directly by using that 
+$$
+\begin{aligned}
+    2 = \|X-Y\|_2^2 \approx \max_{\|\vec c\|_{l^2 = 1}} |\mathbb E[X X_{\vec c}]|^2- |\mathbb E[Y X_{\vec c}]|^2
+    = 
+    \max_{\|\vec c\|_{l^2 = 1}} |\mathbb E[(|X|^2-|Y|^2) f_{\vec c}]|.
+\end{aligned}
+$$
+Indeed, applying Holder's inequality
+where $\frac 1  M + \frac{1}{1+\epsilon} = 1$ and $ |\mathbb E[(|X|^2-|Y|^2) ]| \le \||X|-|Y|\|_{2} \||X|+|Y|\|_{2}\le 2  \||X|-|Y|\|_{2}$ one obtains that
+$$
+    1\lesssim |\mathbb E[(|X|-|Y|) ]| \|f_{\vec c}\|_M,
+$$
+where $\|f_{\vec c}\|_M$ is bounded by sub-Gaussian bounds on sums of $L^\infty$ independent mean-zero random variables. The main difficulty remaining in the $L^2$ case is solved by a summation by parts argument. 
+
+\todo[inline]{Here starts the new argument}
+
+\newcommand{\twonorm}[1]{|\vec #1|_2}
+\newcommand{\EE}[1]{\mathbb E \!\left[#1\right]}
+
+Lipschitz stable phase retrieval follows from a qualitative version of stable phase retrieval: For any $\epsilon>0$ there exists a $\delta>0$ such that if $\twonorm a \approx \twonorm b \approx 1$ we have 
+
+$$
+\EE{|X_a^2-X_b^2|} <\delta \implies \min_\pm \EE{|X_a\pm X_b|^2} <\epsilon.
+$$
+Indeed, from \Cref{ortho red} it follows that uniform continuity of the phase recovery process on the ball implies Lipschitz recovery on the whole space.
+We will be using that
+$$\min_\pm\EE{|X_a\pm X_b|^2}  \lesssim  \max_{\twonorm c = 1} |\EE{X_aX_c}^2 -  \EE{X_aX_c}^2 | = \max_{\twonorm c = 1} \EE{(X_a^2-X_b^2) f_c},$$ % maybe I'm missing a square?
+where the function $f_{c}$ is defined as in \Cref{lem:duality_terms}. We divide the function $f_c$ into two pieces by writing $f_c:= D_c + R_c := \sum_{i} c_i^2 T_i + \sum_{i\neq j} c_i c_j S_iS_j$. We then let $h(x)$ be a smooth, symmetric, positive cut-off function, satisfying $h([-1,1]) \equiv 0$ and $h([-2,2]^c) \equiv 1$. We view $h$ as a high frequency selection function and decompose
+
+\begin{subequations}\label{eq:big}
+\begin{align}
+   \EE{(X_a^2-X_b^2) f_c} \label{eq:big:1}
+    = & 
+    \EE{\sum_{i\neq j} (a_ia_j-b_ib_j) X_iX_j f_c (1-h(M^{-1}\cdot f_c))} +
+    \\  & 
+    \EE{\sum_{i\neq j} (a_ia_j-b_ib_j) X_iX_j f_c h(M^{-1}\cdot f_c)} +\label{eq:big:2}
+    \\  & 
+    \EE{\sum_{i} (a_ia_j-b_ib_j) X_i^2 D_c } +\label{eq:big:3}
+    \\  & 
+    \EE{\sum_{i} (a_i^2-b_i^2) X_i^2 R_c (1-h(M^{-1}R_c)) } +\label{eq:big:4}
+    \\  & 
+    \EE{\sum_{i} (a_i^2-b_i^2) X_i^2 R_c h(M^{-1}R_c) },\label{eq:big:5}
+\end{align}
+\end{subequations}
+where $M$ is a large constant which we will specify more precisely later in the proof. The above decomposition divides the main term we want to estimate into the five terms \eqref{eq:big:1}-\eqref{eq:big:5}, where we view \eqref{eq:big:1} and \eqref{eq:big:2} as the low and high frequency off-diagonal terms, respectively, with a similar interpretation of the diagonal terms \eqref{eq:big:4} and \eqref{eq:big:5}.
+\medskip
+
+\textbf{Bounding of the terms  \eqref{eq:big:1}-\eqref{eq:big:5}.} Our objective now is to control each of the above five terms.
+
+\begin{enumerate}
+    \item \textbf{Bound for \eqref{eq:big:1}.} The function $f_c(1-h(M^{-1})f_c)$ is bounded in $L^\infty$ by $M$, and thus
+    $$
+    \EE{\big|\sum_{i,j} (a_{i}a_j-b_ib_j) X_iX_j\big|f_c(1-h(M^{-1})f_c} \le M
+    \EE{\big|\sum_{i,j} (a_{i}a_j-b_ib_j) X_iX_j\big|} =  M \EE{|X_a^2-X_b^2|}.
+    $$
+    Therefore, it suffices to bound
+    $$
+    \EE{\sum_{i} (a_{i}^2-b_i^2) (X_i^2-1) f_{c,\le M}}
+    \le \sum_i |a_i|
+    $$
+\end{enumerate}
+\todo[inline]{above is what's sort of nice}
+Then option 2 is define $f_c = D_c +R_c$ (diagonal and off-diagonal), and we say
+
+$$
+\sum_{i,j} (a_ia_j -b_ib_j) X_iX_jR_c =
+\sum_{i,j} (a_ia_j -b_ib_j) X_iX_jR_c (1-H(R_c)+H(R_c)) 
+$$
+which should work as before, and
+
+$$
+\sum_{i,j} (a_ia_j -b_ib_j) X_iX_jD_c =
+\sum_i (a_i^2-b_i^2) X_i^2 D_c +
+\sum_{i\neq j} (a_ia_j -b_ib_j) X_iX_jD_c (1-H(D_c)+H(D_c)) 
+$$
+and now by independence we have that the sum $\sum_i (a_i^2-b_i^2) X_i^2 D_c$ is a diagonal sum where we win.
+
+
+\todo[inline]{Here ends the new argument}
+
+\begin{proof}[Proof of \Cref{thm:goal}]
+
+
+
+
+Let $\phi$ be a smooth cut-off function such that $\phi([-1/2,1/2]) = 0$ and $\phi([-1,1]^c) = 1$. Then
+$$
+\begin{aligned}
+        ||\mathbb E[X_{\vec a} X_{\vec c}]|^2- |\mathbb E[X_{\vec b} X_{\vec c}]|^2| 
+        =& 
+        |\mathbb E[(|X_{\vec a}|^2-|X_{\vec b}|^2) f_{\vec c}]|
+        \\=&
+        |\mathbb E[(|X_{\vec a}|^2-|Y_{\vec b}|^2) f_{\vec c}(\phi(M^{-1}f\vec c) + 1 - \phi(M^{-1}f_{\vec c}))]|
+        \\\le&
+        M \mathbb E[||X_{\vec a}|^2-|X_{\vec b}|^2|] 
+        + |\mathbb E[(|X_{\vec a}|^2-1) f_{\vec c}\phi(M^{-1} f_c)]|
+        + |\mathbb E[(|X_{\vec b}|^2-1) f_{\vec c}\phi(M^{-1} f_c)]|.
+\end{aligned}
+$$
+The remaining goal is to bound the second and third terms by an arbitrarily small constant when $M$ is large enough, so that they can be absorbed into the left-hand side. Since both terms are equivalent, we focus on bounding the second one. Let $S_{ij}:= S_i S_j$ when $i\neq j$ and $S_{ii} = T_i$. Similarly, let $X_{ij}= X_i X_j$ when $i\neq j$, and $X_{ii} = X_{i}^2 - 1$. Then, if $|\vec a|^2=1$, we have
+
+$$
+X_{\vec a}^2 -1 = \sum_{i,j} a_i a_j X_{ij} \quad \text{and} \quad f_{\vec c} = \sum_{k,l} c_i c_j S_{kl}.
+$$
+
+We will split the sum into several terms.
+
+\begin{enumerate}
+\item\textbf{Sums when $k\neq l$.}
+\begin{enumerate}
+    \item In this first case, assume that neither $i$ nor $j$ are equal to any of $k,l$. Define $X_{\hat k,\hat l}:= \sum_{\substack{i\neq k,l\\j\neq k,l}} a_{i} a_jX_{ij}$. The variable $X_{\hat k,\hat l}$ has mean zero, is independent of $X_{k,l}$, and satisfies $\|X_{\hat k,\hat l}\|_{L^1}\lesssim 1$. From here, by summation by parts one deduces
+    $$| \mathbb E[X_{\hat k\hat l}S_{kl}\phi(M^{-1}f_{\vec c})]| \lesssim M^{-2}|c_k c_l|.$$
+    This is because one has a uniform bound $\mathbb E_{k,l}[S_{kl}\phi(M^{-1}f_{\vec c})]\lesssim \|\partial_{c_i}\partial_{c_j} \phi(M^{-1}f_{\vec c})\|_\infty \lesssim M^{-1} c_i c_j$. A more careful estimate should give us an extra exponential gain in $M$ (which should give us better dependency on $\delta$) but for a qualitative result this works. This, in particular, shows that 
+    $$
+    \left|\sum_{k}\sum_{l\neq k} \sum_{i\neq k,l}\sum_{j\neq k,l} a_i a_j c_k c_l \mathbb E[X_{ij}S_{kl}\phi(M^{-1}f_{\vec c})] \right| \lesssim M^{-2}.
+    $$
+    \item We now focus on the case when $i=k, j=l$ (or flipped, by adding a factor of two). In this case, we have
+    $$
+    |\mathbb E[S_i X_i S_j X_j\phi(M^{-1}f_{\vec c})]|
+    \lesssim 
+    \|S_i X_i\|_\infty \|S_j X_j\|_\infty e^{-M^2/2},
+    $$ 
+    and then we can sum.
+    \item Finally, we are left with the intermediate case where $i=k$ and $j\neq l$. We look at the generic case $i=k\neq l \neq j$. We have a sum
+    $$
+    a_i a_j c_j c_k \mathbb E[X_i X_j S_j S_k]
+    $$
+    and we take the expected value over $i,k$ to witness a $M^{-2}c_ic_k$ gain. 
+\end{enumerate}
+\item \textbf{Sums when $k=l$.}
+\begin{enumerate}
+    \item Now, if instead neither $i,j$ are equal to $k=l$, one uses summation by parts to obtain the pointwise bound 
+    $$
+     | \mathbb E_k [X_{\hat k\hat k}S_{kk}\phi(M^{-1}f_{\vec c})]| \lesssim M^{-1}|c_k \cdot X_{\hat k\hat k}| \|S_{kk}\|_2,
+    $$
+    and therefore by Jensen
+    $$| \mathbb E[X_{\hat k\hat k}S_{kk}\phi(M^{-1}f_{\vec c})]| \lesssim M^{-1}|c_k|.$$
+ This gives us the bound 
+    $$
+    \left|\sum_{k}\ \sum_{i\neq k}\sum_{j\neq k} a_i a_j c_k^2 \mathbb E[X_{ij}S_{kk}\phi(M^{-1}f_{\vec c})] \right|
+    =
+    \left|\sum_{k} c_k^2 \mathbb E[X_{\hat k \hat k}S_{kk}\phi(M^{-1}f_{\vec c})] \right|
+    \lesssim M^{-1}.
+    $$
+    \item  In the case $i \neq j = k = l$,  we have
+    $$
+    a_i a_j c_j^2 \mathbb E[X_{i} X_j S_{jj}\phi(M^{-1}f_{\vec c})],
+    $$
+    and taking the expected value over $i$ we gain a $M^{-1}c_i$:
+    $$
+    |\mathbb E_i[X_{i} X_j S_{jj}\phi(M^{-1}f_{\vec c})]| \lesssim |c_i M_i^{-1} X_j|  \|X_i\|_2
+    $$
+    
+    and we can sum.
+    \item There is the last extreme case $i=j=k=l$. In this case we have
+    $$
+    \sum_j a_j^2 c_j^2 \mathbb E[|X_j^2 -1| \phi(M^{-1}f_{\vec c}) ]
+    $$
+    this term we actually treat as a difference instead
+    $$
+    \sum_j (a_j^2-b_j^2) c_j^2 \mathbb E[|X_j^2 -1| \phi(M^{-1}f_{\vec c}) ]
+    \lesssim\max_j |a_j^2-b_j^2| = \max_j \mathbb E[T_{jj}||X_{\vec a}|^2-|X_{\vec b}|^2|]
+    $$
+
+    
+\end{enumerate}
+\end{enumerate}
+
+
+
+\begin{lemma}[Almost-independent random variables]
+    Let $X$ be a mean-zero random variable and $g$ be a differentiable function. Then 
+    $$
+    \mathbb E[X g(X)] \le \|g'\|_{\infty}\|X\|_2.
+    $$
+\end{lemma}
+\begin{proof}
+    WLOG $g(0)=0$. The proof is then concluded by saying indeed.
+\end{proof}
+
+
+
+\end{proof}
+
+\begin{conjecture}
+Let $X$ be a CLT-limit of the sequence of random variables $(X_{n,k})_{1\le k \le n <\infty}$. Then $X$ is a CLT-limit of (normalized) Gaussians and Poissons. 
+\end{conjecture}
+
+
+\bibliographystyle{plain}
+\bibliography{refs.bib}
+
+\end{document}

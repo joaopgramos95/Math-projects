@@ -1,0 +1,57 @@
+{
+  "rigorous_finite_mode_certificate": false,
+  "finite_mode_range": [
+    2,
+    3
+  ],
+  "target_ratio": "0.12",
+  "meaning": "If every listed ratio is <= 0.12, then the checked finite modes satisfy |5 I_n - Lambda0| >= 0.4 Lambda0 and |I_n - Lambda0| >= 0.4 Lambda0.",
+  "not_yet_certified": "Large n > nmax still require a separate mode-tail estimate. The r-tail bound also depends on the stated Bessel majorant.",
+  "parameters": {
+    "precision_bits": 128,
+    "R": "200",
+    "h": "0.005",
+    "tail_bound_used": true,
+    "finite_interval_method": "midpoint-derivative",
+    "finite_interval_method_hypotheses": "|J_m(r)| <= 1 and |J'_m(r)| <= 1 for integer m and real r",
+    "tail_hypothesis": "|J_m(r)| <= sqrt(2/(pi r)) for r >= R and m in {0,n}"
+  },
+  "J0_lower_positive": true,
+  "J0": {
+    "ball": "[0.3 +/- 0.0470]",
+    "lower": "0.327158565305426512313346490558",
+    "upper": "0.346984761148478631329993829426",
+    "radius": "0.00991309792152605950832366943359"
+  },
+  "Lambda0": {
+    "ball": "[5e+2 +/- 40.8]",
+    "lower": "509.891495450653858967390574935",
+    "upper": "540.791523053564854450789012435",
+    "radius": "15.4500138014554977416992187500"
+  },
+  "rows": [
+    {
+      "n": 2,
+      "J_n": {
+        "ball": "[0.04 +/- 5.77e-3]",
+        "lower": "0.0342304650045835398946441222525",
+        "upper": "0.0401405765666996114764846373893",
+        "radius": "0.00295505578105803579092025756836"
+      },
+      "J_n_over_J0_upper": "[0.122694561058566324291555035773 +/- 2.84e-31]",
+      "certifies_ratio_below_target": false
+    },
+    {
+      "n": 3,
+      "J_n": {
+        "ball": "[0.03 +/- 6.48e-3]",
+        "lower": "0.0235283638333016033241810182327",
+        "upper": "0.0275814769204402300486626008743",
+        "radius": "0.00202655654356931336224079132080"
+      },
+      "J_n_over_J0_upper": "[0.0843061433977462846008634691911 +/- 3.52e-32]",
+      "certifies_ratio_below_target": true
+    }
+  ],
+  "elapsed_seconds": 84.06164622306824
+}

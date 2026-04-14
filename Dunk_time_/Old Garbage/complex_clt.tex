@@ -1,0 +1,70 @@
+\documentclass{inprogress}
+\newcommand{\tr}{\operatorname{tr}}
+\title{A Complex valued CLT type argument}
+\begin{document}
+\maketitle
+
+We start with the following bilinear CLT estimate:
+
+\begin{lemma}
+    Let $\mu$ be a  $d_0$-dimensional random variable in $L^2$, with covariance $\mathbb X^{i,j}$.
+    Let $N_t \to \infty $ be a sequence natural numbers as $t\in \mathbb N \to \infty$, and $X_0, \dots, X_{N_t}$ be a sequence of IID random variables $\sim \mu_0 \in L^2$, with covariance $\mathbb X^{i,j}$.
+    Let $\alpha_{1}, \dots, \alpha_{N_t}$ be a sequence of vectors in $\mathbb R^{d_1}$ satisfying:
+    \[\lim_{t\to \infty}\max_{j \in 1, \dots N_t} \|\alpha_t\| \to 0, \quad\text{and} \quad \sum_{s=1}^{N_t} a_s^{(k)}a_s^{(l)} \to \mathbb A^{k,l}\].
+
+    Let $B_{s,t}^u:\mathbb R^{d_0}\times \mathbb R^{d_1} \to \mathbb R^{d}$ be a bilinear form. 
+
+    Let $S_t^u:= \sum_{s=0}^{N_t} a^{(i)}_{s}X^{(j)}_{s} B_{i,j}^u $ (with Einstein notation convention). Then $S_t^{u}$ converges as $t\to \infty$ uniformly to a Normal with mean zero and covariance matrix
+    \[
+    \Sigma^{u,v} :=   \mathbb X^{i,j} A^{k,l} B_{i,k}^u B_{j,l}^v 
+    \]
+\end{lemma}
+
+\begin{proof}
+    By polarization, it suffices to consider the case $d_0 = d_1 = d = 1$, after wihch it follows from the standard CLT. In fact, polarization gives access to the covariance matrix at finite $t$: Let $\mathbb A_t := \sum_{k=s}^{N_t} a_s^{(k)}a_s^{(l)}$, then 
+    \[
+    (\operatorname{Cov}\mathbb S_t)^{u,v} :=  \mathbb X^{i,j} A^{k,l}_t B_{i,k}^u B_{j,l}^v \]
+\end{proof}
+
+In our application, $d_0 = d_1 = d = 2$, and $B$ is the complex product in $\mathbb C \sim \mathbb R^2$. In this case, we can lower-bound the covariance matrix $\Sigma$.
+
+
+\begin{lemma} If $d_0=d_1=d = 2$, and $B$ is the complex product in $\mathbb C$,
+\[
+\det \Sigma \gtrsim \tr(\mathbb A)^2 \cdot \det \mathbb X
+\]
+\end{lemma}
+
+\begin{proof}
+    Note that the determinant is super-additive in the space of Symmetric matrices of dimension 2 (By Minkowski's determinant inequality), and in particular it suffices to check the case when $\mathbb A$ is rank one. By complex rotation symmetry, it suffices to check the case 
+    \[
+    A = \begin{pmatrix}
+        1 & 0 \\ 0 & 0
+    \end{pmatrix}.
+    \]
+
+    In this case $\tr \mathbb A = 1$ and $\Sigma = \mathbb X$, and the result follows. 
+\end{proof}
+
+\begin{lemma}[Minkowski's determinant inequality.] Let $A,B$ be symmetric nonnegative definite $n\times n$ matrices, then
+$$
+\det A + \det B
+\le
+\left((\det A)^{1/n}
++
+(\det B)^{1/n}\right)^{n}
+\le 
+\det(A+B)
+$$
+\end{lemma}
+
+In the concentration-compactness type argument, this shows that if we start with a random variable $\mathbb X$ that is not (a rotation of) a real random variable, then the linear combinations converge to a Gaussian that is quantitatively far from being one-dimensional. 
+
+\section{Trying to understand the SPR question}
+
+We will prove that if $X$ is a $L^2$ random variable that does not take only two real variables and $G$ is a standard Gaussian random variable, then the span of infinitely many copies of $X$ and two copies of $G$ does SPY.
+
+The first realization is that having two copies of $G$ or infinitely many is free. (The only thing that matters is the covariance between the two Gaussian elements we are testing, and that can be simulated with two elements).
+
+The second realization is that CLT tells us that the space of pairs of linear combinations is (in law) closed, and in particular stable spr follows from spr.
+\end{document}

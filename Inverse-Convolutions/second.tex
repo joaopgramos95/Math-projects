@@ -1,0 +1,935 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}               
+\geometry{letterpaper}                    
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{amssymb}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\usepackage{verbatim} % this enables the {comment} environment
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\newcommand{\pvector}[1]{
+  \begin{pmatrix}
+    #1
+  \end{pmatrix}} 
+\newcommand{\ddirac}[1]{
+  \,\boldsymbol{\delta}\!\pvector{#1}\!} 
+\renewcommand{\d}{\,{\rm d}} 
+
+\def\R{\mathbb{R}}
+\def\T{\mathbb{T}}
+\def\N{\mathbb{N}}
+\def\Z{\mathbb{Z}}
+\def\Co{\mathbb{C}}
+
+\def\C{\mathcal{C}}
+\def\Q{\mathcal{Q}}
+\def\D{\mathcal{D}}
+\def\E{\mathcal{E}}
+\def\G{\mathcal{G}}
+\def\P{\mathbb{P}}
+\def\H{\mathcal{H}}
+\def\F{\mathcal{F}}
+\def\V{\mathcal{V}}
+\def\X{\mathcal{X}}
+\def\f{\widehat{f}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{estimate}[theorem]{Estimate}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem*{notation}{Notation}
+
+
+\title{An inverse problem for convolution 
+measures with applications}
+
+
+
+
+\author{Diogo Oliveira e Silva}
+\address{
+ Departamento de Matemática \\
+Instituto Superior Técnico \\
+Av. Rovisco Pais \\
+1049-001 Lisboa, Portugal}
+\email{diogo.oliveira.e.silva@tecnico.ulisboa.pt}
+
+\author{João Pedro Ramos}
+\address{
+ EPFL Lausanne -- Institute of Mathematics MA C3 535 \\
+Route Cantonale \\ 
+1015 Lausanne, Switzerland}
+\email{joao.ramos@epfl.ch}
+
+
+\date{\today}      
+\subjclass[2020]{42B10}
+\keywords{Sharp restriction theory, Monge--Ampère equation, stability, inverse problem, convolution measure.} 
+
+\begin{document}
+\begin{abstract}
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+A classical theorem of Jörgens ($d=2$), Calabi ($d\leq 5$) and Pogorelov
+($d\geq 2$) states that any classical convex solution of
+$\det D^2u=1$ in $\R^d$ must be a quadratic polynomial.  As stated in the
+second paragraph of \cite{CL03}, Caffarelli extended the result from
+classical solutions to {\it viscosity solutions}.  We recall the definitions.
+\begin{definition}[\cite{Gu16}]
+    Let $u\in C^0(\Omega)$ be a convex function and let
+    $0\leq f\in C^0(\Omega)$.  The function $u$ is a viscosity subsolution
+    (resp.\@ supersolution) of the equation $\det D^2 u=f$ in $\Omega$ if
+    whenever convex $\phi\in C^2(\Omega)$ and $x_0\in\Omega$ are such that
+    $(u-\phi)(x)\leq (u-\phi)(x_0)$ (resp.\@ $\geq$) for all $x$ in a
+    neighborhood of $x_0$, then necessarily
+    \[
+        \det D^2\phi(x_0)\geq f(x_0)
+        \qquad(\text{resp. } \leq).
+    \]
+\end{definition}
+\noindent As in \cite[Remark 1.3.3]{Gu16}, no generality is lost in assuming
+that $\phi(x_0)=u(x_0)$, and one may further restrict the test functions to
+strictly convex quadratic polynomials.
+
+Let $\psi:\R^d\to\R$ be convex, and let $\sigma$ denote projection
+measure on the graph
+\[
+    \{(x,\psi(x)):x\in\R^d\}\subset\R^{d+1}.
+\]
+Thus
+\[
+    \langle \sigma,\varphi\rangle
+    =\int_{\R^d}\varphi(x,\psi(x))\,\d x.
+\]
+The centered convolution quantity under scrutiny is
+\[
+    F_\sigma(\xi,\tau)
+    :=(\sigma\ast\sigma)(\xi,2\psi(\xi/2)+\tau),\qquad \tau>0.
+\]
+Via the usual change of variables from \cite[Prop. 2.1(c)]{OSQ18} and
+\cite[Prop. 2.1(c)]{OSQ20}, this can be written as
+\begin{equation}\label{eq:centered-conv}
+    F_\sigma(\xi,\tau)
+    =\int_{\R^d}
+        \ddirac{\tau-\Psi(\xi,y)}
+      \,\d y,
+    \qquad
+    \Psi(\xi,y):=\psi(\xi/2+y)+\psi(\xi/2-y)-2\psi(\xi/2).
+\end{equation}
+Convexity gives $\Psi\geq 0$.  If $\psi$ is strictly convex, then
+$\Psi(\xi,y)>0$ whenever $y\neq 0$.
+
+For a quadratic polynomial
+\[
+    \psi(x)=a+b\cdot x+\frac12 x^T Hx,\qquad H=H^T>0,
+\]
+one has
+\[
+    \Psi(\xi,y)=y^THy
+\]
+for every $\xi,y$.  Consequently
+\[
+    F_\sigma(\xi,\tau)
+    =\frac1{\sqrt{\det H}}\int_{\R^d}\ddirac{\tau-|w|^2}\,\d w
+    =\frac{d\,\omega_d}{2\sqrt{\det H}}\tau^{d/2-1},
+\]
+where $\omega_d=|\{x\in\R^d:|x|<1\}|$.  Thus the constant profile from the
+two-dimensional paraboloid is a special feature of dimension two; in higher
+dimensions a quadratic graph has the power-law profile $\tau^{d/2-1}$.
+
+The point of the argument below is that the integrated form of the convolution
+identity is stronger than the almost everywhere Hessian information discussed
+in the transcript.  It tests $\psi$ against upper and lower quadratic supports
+and therefore gives a viscosity Monge--Ampère equation directly, once the
+centered sections are known to shrink to their center.  This last point is
+automatic under strict convexity, but we isolate it below because it is the only
+place where strict convexity is used.
+
+\section{An inverse result}
+
+\begin{definition}\label{def:constant-normalized}
+Let $c_0>0$.  We say that the centered convolution is constant on its
+normalized support with constant $c_0$ if, for every $\xi\in\R^d$ and every
+$t>0$,
+\begin{equation}\label{eq:section-law}
+    |\{y\in\R^d:\Psi(\xi,y)<t\}|
+    =c_0t.
+\end{equation}
+Equivalently, after differentiating in $t$ in the sense of distributions for
+each fixed $\xi$,
+\begin{equation}\label{eq:profile}
+    F_\sigma(\xi,\tau)=c_0,\qquad \tau>0.
+\end{equation}
+\end{definition}
+
+\begin{definition}\label{def:shrinking}
+We say that $\psi$ has shrinking centered sections if, for every $x\in\R^d$
+and every $r>0$,
+\[
+    \min_{|y|=r}\bigl(\psi(x+y)+\psi(x-y)-2\psi(x)\bigr)>0.
+\]
+This is automatic if $\psi$ is strictly convex.
+\end{definition}
+
+\begin{theorem}[Constant normalized support]\label{thm:main}
+Let $d\geq 1$, let $\psi:\R^d\to\R$ be convex, and let $\sigma$ be projection
+measure on its graph.  Assume that the centered convolution is constant on its
+normalized support with constant $c_0>0$.  Assume moreover that:
+\begin{enumerate}
+    \item $\psi$ has a nondegenerate Alexandrov second-order expansion at
+    least one point;
+    \item $\psi$ has shrinking centered sections.
+\end{enumerate}
+Then $d=2$, and
+\[
+    \psi(x)=a+b\cdot x+\frac12 x^T Hx
+\]
+for some $a\in\R$, $b\in\R^d$, and some positive definite symmetric matrix
+$H$, with
+\begin{equation}\label{eq:det-constant}
+    \det H=\left(\frac{\pi}{c_0}\right)^2.
+\end{equation}
+After subtracting the affine part and making the linear change of variables
+which sends $H$ to $2I$, this is exactly the model $\psi(x)=|x|^2$.
+
+Conversely, every such positive definite quadratic polynomial in dimension two
+satisfies \eqref{eq:profile} with $c_0=\pi/\sqrt{\det H}$.  In particular,
+$\psi(x)=|x|^2$ gives $c_0=\pi/2$.
+\end{theorem}
+
+\begin{remark}
+The exact conclusion $\psi(x)=|x|^2$ cannot follow from constancy alone unless
+one fixes the affine and linear normalizations.  Indeed every positive
+definite quadratic polynomial in dimension two has constant centered
+convolution; the constant only sees $\det H$, not the eccentricity of $H$.
+\end{remark}
+
+\begin{lemma}[Local section asymptotics]\label{lem:local-section}
+Let $\phi\in C^2$ be convex in a neighborhood of $x_0\in\R^d$, and set
+\[
+    Q(y):=\phi(x_0+y)+\phi(x_0-y)-2\phi(x_0),\qquad
+    A:=D^2\phi(x_0).
+\]
+If $A$ is positive definite, then, for every $r>0$,
+\begin{equation}\label{eq:local-asymp-pd}
+    \lim_{t\to0^+}
+    t^{-d/2}|\{y\in B(0,r):Q(y)<t\}|
+    =\frac{\omega_d}{\sqrt{\det A}}.
+\end{equation}
+If $A$ is singular, then, for every $r>0$,
+\begin{equation}\label{eq:local-asymp-sing}
+    \lim_{t\to0^+}
+    t^{-d/2}|\{y\in B(0,r):Q(y)<t\}|=+\infty
+\end{equation}.
+\end{lemma}
+
+\begin{proof}
+The positive definite case follows from
+\[
+    Q(y)=y^TAy+o(|y|^2)
+\]
+and the linear change of variables $w=A^{1/2}y$; for $t>0$ sufficiently small,
+the relevant section is contained in $B(0,r)$.
+
+If $A$ is singular, fix $r>0$ and split $\R^d=E\oplus K$, where
+$K=\ker A$ has dimension $k\geq 1$ and $E=K^\perp$.  Since
+$Q(y)=y^TAy+o(|y|^2)$, for every $\varepsilon>0$ there is a radius
+$0<\rho<r$ such that, for $y=e+z\in E\oplus K$ with $|y|<\rho$,
+\[
+    Q(y)\leq 2\,e^TAe+\varepsilon |z|^2.
+\]
+For $t>0$ sufficiently small, the set
+\[
+    \{e\in E:2e^TAe<t/2\}\times
+    \{z\in K:\varepsilon |z|^2<t/2\}
+\]
+is contained in $\{Q<t\}\cap B(0,r)$ and has measure
+$C_A\varepsilon^{-k/2}t^{d/2}$.  Since $\varepsilon$ is arbitrary, the
+normalized local section volume tends to $+\infty$.
+\end{proof}
+
+\section{Proof of the characterization}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+We first pin down the dimension.  Let $u_0$ be a point at which $\psi$ has a
+nondegenerate Alexandrov second-order expansion,
+\[
+    \psi(u_0+y)=\psi(u_0)+p\cdot y+\frac12 y^TH_0y+o(|y|^2),
+    \qquad H_0=H_0^T>0.
+\]
+Then
+\[
+    \Psi(2u_0,y)=y^TH_0y+o(|y|^2),
+\]
+and therefore
+\[
+    |\{y\in\R^d:\Psi(2u_0,y)<t\}|
+    \sim \frac{\omega_d}{\sqrt{\det H_0}}t^{d/2}
+    \qquad (t\to0^+).
+\]
+Comparison with \eqref{eq:section-law} forces $d=2$ and
+\[
+    \det H_0=\left(\frac{\pi}{c_0}\right)^2.
+\]
+
+It remains to prove that $\psi$ is quadratic.  Set
+\[
+    \lambda:=\left(\frac{\pi}{c_0}\right)^2.
+\]
+We prove that $\psi$ is a viscosity solution of
+\begin{equation}\label{eq:MA}
+    \det D^2\psi=\lambda
+    \qquad\text{on }\R^2.
+\end{equation}
+
+Let $\phi\in C^2$ be convex near $x_0$, with
+\[
+    \phi(x_0)=\psi(x_0),\qquad \phi\geq\psi
+\]
+near $x_0$.  Choose $r>0$ so small that the comparison holds whenever
+$|y|<r$.  For such $y$,
+\[
+    \Psi(2x_0,y)
+    \leq
+    \phi(x_0+y)+\phi(x_0-y)-2\phi(x_0)=:Q(y).
+\]
+Hence, for every $t>0$,
+\[
+    \{y\in B(0,r):Q(y)<t\}
+    \subset \{y\in\R^2:\Psi(2x_0,y)<t\}.
+\]
+Thus
+\[
+    |\{y\in B(0,r):Q(y)<t\}|\leq c_0t.
+\]
+In view of Lemma~\ref{lem:local-section}, the matrix $A=D^2\phi(x_0)$ cannot
+be singular.  Therefore \eqref{eq:local-asymp-pd} gives
+\[
+    \frac{\pi}{\sqrt{\det A}}\leq c_0,
+\]
+or equivalently
+\[
+    \det D^2\phi(x_0)\geq \lambda.
+\]
+This is the viscosity subsolution inequality.
+
+Now let $\phi\in C^2$ be convex near $x_0$, with
+\[
+    \phi(x_0)=\psi(x_0),\qquad \phi\leq\psi
+\]
+near $x_0$.  Choose $r>0$ so small that the comparison holds whenever
+$|y|<r$.  By the shrinking-section assumption,
+\[
+    m_r:=\min_{|y|=r}\Psi(2x_0,y)>0,
+\]
+and $\{\Psi(2x_0,\cdot)<t\}\subset B(0,r)$ whenever $0<t<m_r$.  Indeed,
+any $y$ with $|y|>r$ and $\Psi(2x_0,y)<m_r$ would give, by convexity along
+the ray from $0$ to $y$,
+\[
+    \Psi(2x_0,r y/|y|)
+    \leq \frac{r}{|y|}\Psi(2x_0,y)<m_r,
+\]
+which is impossible.  Hence
+\[
+    \{y\in\R^2:\Psi(2x_0,y)<t\}
+    \subset \{y\in B(0,r):Q(y)<t\}
+\]
+whenever $0<t<m_r$.
+If $A=D^2\phi(x_0)$ is singular, then $\det A=0\leq \lambda$.  If $A$ is
+positive definite, then
+\[
+    c_0t\leq |\{y\in B(0,r):Q(y)<t\}|
+\]
+for $0<t<m_r$, and \eqref{eq:local-asymp-pd} implies
+\[
+    c_0\leq \frac{\pi}{\sqrt{\det A}},
+\]
+or equivalently
+\[
+    \det D^2\phi(x_0)\leq \lambda.
+\]
+This is the viscosity supersolution inequality.
+
+Thus $\psi$ is a convex viscosity solution of \eqref{eq:MA}.  By the
+Jörgens theorem in the viscosity form of Caffarelli--Li
+\cite[Theorem 1.1]{CL03}, after the harmless normalization of the right-hand
+side of \eqref{eq:MA} to $1$, $\psi$ is a quadratic polynomial.  This proves
+the direct implication and the determinant identity \eqref{eq:det-constant}.
+
+For the converse, let
+\[
+    \psi(x)=a+b\cdot x+\frac12 x^THx,\qquad H=H^T>0.
+\]
+Then $\Psi(\xi,y)=y^THy$, independently of $\xi$.  Consequently
+\[
+    F_\sigma(\xi,\tau)
+    =\int_{\R^2}\ddirac{\tau-y^THy}\,\d y
+    =\frac{\pi}{\sqrt{\det H}},
+\]
+which is \eqref{eq:profile} with
+$c_0=\pi/\sqrt{\det H}$.
+\end{proof}
+
+\section{The degenerate alternative}
+
+We now spell out what should replace the nondegeneracy hypothesis in higher
+dimensions.  The dimension reduction in the proof of Theorem~\ref{thm:main}
+used only one positive definite Alexandrov second-order expansion.  In
+dimension $d\geq 3$ such a point is impossible under the linear section law
+\eqref{eq:section-law}: if
+\[
+    \psi(x_0+y)=\psi(x_0)+p\cdot y+\frac12 y^TH_0y+o(|y|^2),
+    \qquad H_0=H_0^T>0,
+\]
+then
+\[
+    |\{y\in\R^d:\Psi(2x_0,y)<t\}|
+    \sim \frac{\omega_d}{\sqrt{\det H_0}}t^{d/2},
+    \qquad t\to0^+,
+\]
+which is incompatible with $c_0t$ when $d\neq 2$.
+
+In the rest of this section we also impose the lower normalization
+\[
+    \psi\geq0.
+\]
+This is the normalization relevant to the final geometric obstruction.
+
+Thus, in dimensions $d\geq 3$, the only possible convex case is the completely
+degenerate Alexandrov alternative:
+\[
+    \det D^2\psi(x)=0
+    \quad\text{at every Alexandrov point }x.
+\]
+What is needed here is a developability statement for convex graphs.  In the
+smooth complete case, the classical mechanism is the Hartman--Nirenberg
+theorem: a complete $C^2$ hypersurface of constant zero Gauss--Kronecker
+curvature in Euclidean space is cylindrical, i.e. it is ruled by affine
+$(d-1)$-planes \cite{HN59}.  For nonsmooth convex hypersurfaces, the natural
+language is Aleksandrov--Pogorelov bounded extrinsic curvature and the
+associated spherical-image curvature measure; see Pogorelov's monograph
+\cite{Po73}.  Ushakov gives a modern smooth account of developable surfaces in
+arbitrary dimension and codimension \cite{Us99}.  The expected form needed
+here is:
+\begin{quote}
+If a finite convex function $\psi:\R^d\to\R$ has vanishing extrinsic curvature
+measure, and its graph is not an affine hyperplane, then through every point
+$(x,\psi(x))$ of the graph there is a nontrivial affine segment; under the
+global hypotheses relevant here, this segment should promote to a complete
+affine line in the graph.
+\end{quote}
+The curvature-measure formulation is important.  The a.e. Alexandrov
+degeneracy condition alone does not exclude singular curvature mass; it is
+therefore too weak to force rulings through every point.
+Equivalently, for every $x\in\R^d$ one should find a nonzero direction
+$v_x\in\R^d$ such that the one-dimensional slice
+\[
+    s\mapsto \psi(x+sv_x)
+\]
+is affine on all of $\R$.  In that case
+\[
+    \Psi(2x,sv_x)=0\qquad\text{for every }s\in\R.
+\]
+This by itself is not yet a contradiction, since a line has zero
+$d$-dimensional measure.  The required final step is a quantitative
+``thickening of rulings'' argument: the presence of a complete flat direction
+through each point of the graph should force the centered sections
+\[
+    \{y:\Psi(2x,y)<t\}
+\]
+to contain enough transverse thickness around that line to have either
+infinite volume or a small-$t$ power law different from $t$.  In the ideal
+cylindrical case, for example, the section would contain a product of the flat
+line with a transverse $(d-1)$-dimensional section, so the volume would be
+infinite.  In less rigid ruled situations, one should still aim to prove a
+lower bound contradicting the exact linear identity \eqref{eq:section-law}.
+
+This would finish the desired higher-dimensional contradiction.  More
+precisely, the remaining task is to supply or cite the appropriate
+developability theorem in the low regularity class at hand.  In the $C^2$
+case this is the familiar flat-direction argument: $\det D^2\psi\equiv0$ and
+convexity force a ruling by affine directions.  For merely convex functions,
+one has to rule out singular Monge--Ampère mass, justify that Alexandrov
+degeneracy gives actual affine rulings of the graph rather than only a.e. flat
+directions, and then prove the quantitative thickening estimate for the
+centered sections.
+
+\subsection{The convolution identity forces the zero-curvature hypothesis}
+There is a slightly better way to phrase the remaining low-regularity
+assumption.  We should not assume that the curvature measure vanishes.  We
+should assume only that $\psi$ belongs to a class in which the appropriate
+curvature measure is defined, and then derive its vanishing from
+\eqref{eq:section-law}.
+
+Here is the argument.  Let $d\geq3$, fix $x_0\in\R^d$, and let
+$\phi\in C^2$ be convex near $x_0$, with
+\[
+    \phi(x_0)=\psi(x_0),\qquad \phi\leq\psi
+\]
+near $x_0$.  As in the viscosity supersolution part of the proof of
+Theorem~\ref{thm:main}, assume that the centered sections shrink to their
+center, so that for $t>0$ sufficiently small the set
+$\{\Psi(2x_0,\cdot)<t\}$ is contained in the neighborhood where the comparison
+with $\phi$ holds.  Then
+\[
+    \{\Psi(2x_0,\cdot)<t\}
+    \subset
+    \{y:Q(y)<t\},
+    \qquad
+    Q(y):=\phi(x_0+y)+\phi(x_0-y)-2\phi(x_0).
+\]
+If $A=D^2\phi(x_0)$ were positive definite, Lemma~\ref{lem:local-section}
+would give
+\[
+    |\{y:Q(y)<t\}|=O(t^{d/2}),
+    \qquad t\to0^+.
+\]
+This contradicts \eqref{eq:section-law}, because $d/2>1$ and
+$c_0t\not=O(t^{d/2})$.  Hence every lower quadratic test has singular Hessian:
+\[
+    \det D^2\phi(x_0)=0.
+\]
+In other words, $\psi$ is a convex viscosity supersolution of
+\[
+    \det D^2\psi=0.
+\]
+Since the Monge--Ampère measure of a convex function is nonnegative, this is
+equivalent, in the Aleksandrov/viscosity correspondence, to vanishing
+Monge--Ampère measure:
+\[
+    M_\psi=0.
+\]
+Thus, if we work in a class where the graph curvature measure is the
+Aleksandrov--Pogorelov spherical-image measure, or in a class where
+${\rm Det}\,D^2\psi$ is defined weakly, the vanishing condition is not an extra
+hypothesis.  It is forced by the convolution identity, together with the
+shrinking-section localization.  For graphs of convex functions, vanishing of
+$M_\psi$ is the same zero-curvature condition after applying the Gauss-map
+parametrization of the spherical image; the weight relating the two measures is
+positive on bounded subgradient ranges.
+
+\subsection{Possible hypotheses below \texorpdfstring{$C^1$}{C1}}
+The preceding paragraph suggests the following hierarchy of assumptions.  In
+the first two cases, the condition imposed at the outset is only membership in
+the relevant weak class; the zero-curvature equation is then a consequence of
+the convolution identity.  The last option is not below $C^1$ in its Hölder
+version, and is best kept as a separate remark about a regime where one might
+also be able to proceed.
+
+\begin{enumerate}
+    \item {\it Convex surface of bounded extrinsic curvature.}  Work in the
+    Aleksandrov--Pogorelov category of convex hypersurfaces with bounded
+    extrinsic curvature.  In graph language, this means that the relevant
+    Gauss--Kronecker curvature measure of the graph is defined.  The preceding
+    viscosity argument then forces this measure to vanish.  This is the closest
+    low-regularity version of the Hartman--Nirenberg/Pogorelov mechanism; it
+    allows corners a priori and is therefore genuinely below $C^1$.
+
+    In this class, Pogorelov's developability theorem applies directly: a
+    convex hypersurface of bounded extrinsic curvature whose curvature measure
+    vanishes is developable.  In the graph setting this means the following.
+    For every point $(x,\psi(x))$ of the graph there is a nontrivial affine
+    segment contained in the graph and passing through $(x,\psi(x))$.  If the
+    graph is complete and one uses the global form of the theorem, the local
+    segments are the generators of a ruled hypersurface; away from the affine
+    pieces these generators can be continued until they either meet the boundary
+    or become complete affine lines.  Since our graph is entire, there is no
+    finite boundary in the base, so this is the natural route to the desired
+    complete rulings.
+
+    \item {\it Monge--Ampère function with generalized determinant.}  Require
+    that $\psi$ belongs to a class of Monge--Ampère functions in which the
+    Hessian determinant is defined weakly and continuously.  The argument above
+    should then give
+    \[
+        {\rm Det}\,D^2\psi=0
+    \]
+    as a measure/current, rather than requiring this as an assumption.  In
+    dimension two, Jerrard's rigidity theorem for Monge--Ampère functions gives
+    developability under such a weak formulation \cite{Je10}.  The point for us
+    would be to use the analogous higher-dimensional determinant or
+    Monge--Ampère system, if available, as a substitute for pointwise
+    differentiability.
+
+    Even without quoting the full Pogorelov language, one gets the local
+    ruled conclusion from the Aleksandrov maximum principle.  Indeed, after
+    subtracting a supporting affine function at $x_0$, suppose that the contact
+    set of $\psi$ with that support were reduced to $x_0$ inside a small ball.
+    Then a small section
+    \[
+        S_h:=\{x:\psi(x)<h\}
+    \]
+    would be a bounded convex set with $x_0\in S_h$ and $\psi=h$ on
+    $\partial S_h$.  Aleksandrov's maximum principle bounds the height of such
+    a section from above by a dimensional constant times the Monge--Ampère mass
+    of $S_h$.  Since ${\rm Det}\,D^2\psi=0$, this mass is zero, forcing
+    $h=0$, a contradiction.  Thus every contact set contains a second point,
+    and the convexity of the contact set gives an affine segment in the graph
+    through $(x_0,\psi(x_0))$.
+
+    This proves the local ruling statement in the weak Monge--Ampère class.  To
+    promote these local contact segments to complete affine lines in the full
+    $d\geq3$ problem, one still needs the corresponding global developability
+    theorem in that weak class.  Jerrard supplies this mechanism in dimension
+    two; a higher-dimensional analogue would give the required replacement for
+    Pogorelov in option (1).
+\end{enumerate}
+
+\begin{proposition}[Local rulings from zero Monge--Ampère measure]
+\label{prop:local-rulings-ma}
+Let $\Omega\subset\R^d$ be open and convex, and let $u:\Omega\to\R$ be convex
+with Aleksandrov Monge--Ampère measure $M_u=0$ in $\Omega$.  Let
+$x_0\in\Omega$ and let $p\in\partial u(x_0)$.  Then the contact set
+\[
+    C(x_0,p):=
+    \{x\in\Omega:\ u(x)=u(x_0)+p\cdot(x-x_0)\}
+\]
+is not reduced to $\{x_0\}$ in any compactly contained convex neighborhood of
+$x_0$.  Consequently the graph of $u$ contains a nontrivial affine segment
+through $(x_0,u(x_0))$.
+\end{proposition}
+
+\begin{proof}
+Subtract the supporting affine function and assume
+\[
+    u(x_0)=0,\qquad u\geq0,\qquad p=0.
+\]
+Suppose, toward a contradiction, that for some bounded convex
+$U\Subset\Omega$ containing $x_0$ the contact set $\{u=0\}\cap U$ is exactly
+$\{x_0\}$.  Then $u>0$ on $\partial U$.  Choose
+\[
+    0<h<\min_{\partial U}u.
+\]
+The section
+\[
+    S_h:=\{x\in U:\ u(x)<h\}
+\]
+is a nonempty bounded convex set with compact closure in $U$, and the convex
+function
+\[
+    w:=u-h
+\]
+satisfies $w<0$ in $S_h$ and $w=0$ on $\partial S_h$.  Aleksandrov's maximum
+principle gives, for every $x\in S_h$,
+\[
+    |w(x)|^d
+    \leq C_d\,{\rm diam}(S_h)^{d-1}\,
+        {\rm dist}(x,\partial S_h)\,M_u(S_h).
+\]
+But $M_u(S_h)=0$, hence $w\equiv0$ in $S_h$, contradicting
+$w(x_0)=-h<0$.  Therefore every such neighborhood contains a second contact
+point $x_1\neq x_0$.  Since $C(x_0,p)$ is convex, the segment
+$[x_0,x_1]$ lies in $C(x_0,p)$, and the corresponding segment of the graph is
+affine.
+\end{proof}
+
+\begin{remark}[Other rigidity thresholds]
+There may also be a Sobolev or fractional $C^1$ route.  The role of this
+option is different from the two alternatives above: it does not give a
+canonical curvature measure below $C^1$, but it places the weak homogeneous
+Monge--Ampère equation in a known rigidity regime.  In the two-dimensional weak
+Monge--Ampère literature, developability for the degenerate equation is rigid
+above certain thresholds, while convex-integration flexibility appears below
+them.
+
+For example, Jerrard's theorem is a rough rigidity result.  Lewicka--Pakzad's
+convex-integration work exhibits the opposite, flexible side of the theory
+\cite{LP17}.  The later De Lellis--Pakzad theorem proves developability for
+very weak homogeneous Monge--Ampère solutions in the little Hölder class
+$c^{1,2/3}$, hence for $C^{1,\alpha}$ with $\alpha>2/3$ \cite{DLP24}.  In the
+Sobolev direction, a natural hypothesis to test is
+\[
+    \psi\in W^{2,2}_{\rm loc}.
+\]
+Then the equation $\det D^2\psi=0$ can be interpreted weakly, and the same
+section-law argument above should force that weak equation.  If one then has a
+developability theorem in this Sobolev class, the conclusion is again that the
+graph is locally ruled by affine segments.  A higher-dimensional version would
+need enough Sobolev control to make the nullity distribution of $D^2\psi$
+integrable; this is precisely the step that fails in the flexible
+convex-integration regime.  Thus this third route is plausible, but it should
+be treated as a rigidity-threshold alternative rather than as the primary
+low-regularity convex hypothesis.
+\end{remark}
+
+\subsection{Horizontal rulings and the final volume contradiction}
+The nonnegativity normalization gives the last geometric restriction on a
+complete ruling.  Suppose that the graph contains a complete affine line
+\[
+    \ell(s)=(x_0+s v,\psi(x_0)+s\alpha),\qquad s\in\R,
+\]
+with $v\in\R^d$ and $\alpha\in\R$.  Since $\ell$ lies in the graph, one has
+\[
+    \psi(x_0+s v)=\psi(x_0)+s\alpha
+    \qquad\text{for every }s\in\R.
+\]
+If $\alpha\neq0$, then the right-hand side is negative for one of the two
+limits $s\to+\infty$ or $s\to-\infty$, contradicting $\psi\geq0$.  Hence
+\[
+    \alpha=0.
+\]
+Thus every complete ruling is horizontal, i.e. parallel to the base
+$\R^d\times\{0\}$, and $\psi$ is constant along the corresponding complete
+line in the base.
+
+This observation closes the argument as soon as the developability theorem
+gives a cylindrical conclusion, namely a nontrivial linear subspace
+$L\subset\R^d$ such that
+\[
+    \psi(x+z)=\psi(x)
+    \qquad\text{for every }x\in\R^d,\ z\in L.
+\]
+Indeed, write $\R^d=L\oplus L^\perp$.  For $z\in L$ and $\eta\in L^\perp$,
+the invariance gives
+\[
+    \Psi(2x,z+\eta)
+    =\psi(x+\eta)+\psi(x-\eta)-2\psi(x).
+\]
+Consequently, for each $t>0$,
+\[
+    \{z+\eta:\ z\in L,\ \eta\in L^\perp,\
+      \psi(x+\eta)+\psi(x-\eta)-2\psi(x)<t\}
+    \subset \{y:\Psi(2x,y)<t\}.
+\]
+The transverse set in $L^\perp$ contains a neighborhood of $0$ by continuity
+of $\psi$, while $L$ has infinite Lebesgue measure.  Hence
+\[
+    |\{y:\Psi(2x,y)<t\}|=+\infty
+    \qquad\text{for every }t>0,
+\]
+contradicting the exact section law \eqref{eq:section-law}.
+
+Thus the final higher-dimensional contradiction is reduced to the following
+purely geometric point: the complete horizontal rulings obtained from zero
+curvature should be parallel, or more generally should contain a common
+nontrivial translation subspace $L$ along which $\psi$ is invariant.  This is
+exactly what the Hartman--Nirenberg cylindrical conclusion gives in the smooth
+complete case.  In the low-regularity alternatives above, this is the global
+developability/cylinder statement that must be supplied.  Mere existence of one
+complete horizontal line through each graph point gives only a zero-measure
+line inside each centered section; parallelism is what upgrades this to an
+infinite-volume product.
+
+\begin{proposition}[Cylindrical obstruction]\label{prop:cylindrical-obstruction}
+Let $d\geq3$, let $\psi:\R^d\to[0,\infty)$ be finite and convex, and assume
+\eqref{eq:section-law}.  Suppose that there is a nontrivial linear subspace
+$L\subset\R^d$ such that
+\begin{equation}\label{eq:common-invariance}
+    \psi(x+z)=\psi(x)
+    \qquad\text{for every }x\in\R^d,\ z\in L.
+\end{equation}
+Then \eqref{eq:section-law} is impossible.
+\end{proposition}
+
+\begin{proof}
+Fix $x\in\R^d$ and $t>0$.  Choose an orthogonal splitting
+$\R^d=L\oplus L^\perp$.  For $z\in L$ and $\eta\in L^\perp$,
+\eqref{eq:common-invariance} gives
+\[
+    \Psi(2x,z+\eta)
+    =
+    \psi(x+z+\eta)+\psi(x-z-\eta)-2\psi(x)
+    =
+    \psi(x+\eta)+\psi(x-\eta)-2\psi(x).
+\]
+The function
+\[
+    \eta\mapsto \psi(x+\eta)+\psi(x-\eta)-2\psi(x)
+\]
+is continuous on $L^\perp$ and equals $0$ at $\eta=0$.  Hence there is
+$\rho>0$ such that it is $<t$ whenever $\eta\in L^\perp$ and $|\eta|<\rho$.
+Thus, for every $R>0$,
+\[
+    \{z+\eta:\ z\in L,\ |z|<R,\ \eta\in L^\perp,\ |\eta|<\rho\}
+    \subset \{y:\Psi(2x,y)<t\}.
+\]
+By the product decomposition of Lebesgue measure along
+$L\oplus L^\perp$, the left-hand side has measure
+\[
+    \omega_{\dim L}R^{\dim L}\,\omega_{d-\dim L}\rho^{d-\dim L}.
+\]
+Letting $R\to\infty$ shows that
+\[
+    |\{y:\Psi(2x,y)<t\}|=+\infty,
+\]
+contradicting \eqref{eq:section-law}.
+\end{proof}
+
+\begin{corollary}[Conclusion under the Pogorelov alternative]
+\label{cor:pogorelov-alternative}
+Let $d\geq3$, let $\psi:\R^d\to[0,\infty)$ be finite and convex, and assume
+\eqref{eq:section-law} and shrinking centered sections.  Assume moreover that
+the graph of $\psi$ belongs to the Aleksandrov--Pogorelov bounded extrinsic
+curvature class and that the corresponding global developability theorem gives
+the cylindrical conclusion \eqref{eq:common-invariance} whenever the curvature
+measure vanishes.  Then no such $\psi$ exists.
+\end{corollary}
+
+\begin{proof}
+By the viscosity argument in the preceding subsection, the convolution identity
+forces the Aleksandrov Monge--Ampère measure to vanish.  In the
+Aleksandrov--Pogorelov class this is equivalent, through the spherical-image
+parametrization of the graph, to vanishing extrinsic curvature measure on the
+graph.  The assumed global Pogorelov developability theorem then gives a
+nontrivial common translation subspace $L$ satisfying
+\eqref{eq:common-invariance}.  Proposition~\ref{prop:cylindrical-obstruction}
+contradicts \eqref{eq:section-law}.
+\end{proof}
+
+\begin{corollary}[Conclusion under the weak Monge--Ampère alternative]
+\label{cor:ma-alternative}
+Let $d\geq3$, let $\psi:\R^d\to[0,\infty)$ be finite and convex, and assume
+\eqref{eq:section-law} and shrinking centered sections.  Assume moreover that
+$\psi$ belongs to a weak Monge--Ampère class in which:
+\begin{enumerate}
+    \item the generalized determinant agrees with the Aleksandrov
+    Monge--Ampère measure for convex functions;
+    \item zero generalized determinant implies the global cylindrical
+    conclusion \eqref{eq:common-invariance}.
+\end{enumerate}
+Then no such $\psi$ exists.
+\end{corollary}
+
+\begin{proof}
+The argument above gives
+\[
+    {\rm Det}\,D^2\psi=0
+\]
+as a measure/current.  Proposition~\ref{prop:local-rulings-ma} gives the local
+ruled conclusion at every point.  The second assumption in the present
+corollary is the global rigidity input that promotes these local contact
+segments to a common cylindrical translation subspace $L\neq\{0\}$.
+Proposition~\ref{prop:cylindrical-obstruction} then gives the contradiction.
+\end{proof}
+
+For the present convolution problem, the first option seems best aligned with
+convexity.  The regularity condition should be stated as membership in a
+curvature-measure class for the graph, rather than as
+$\det D^2\psi=0$ a.e.; the latter misses singular Monge--Ampère mass, exactly
+as in the example $|x_1|+\frac12|x|^2$ discussed earlier.  If the forced
+vanishing of this measure implies a global cylindrical ruling, the horizontal
+ruling argument above rules out \eqref{eq:section-law} for $d\geq3$.  The
+minimum regularity condition I would try first is therefore:
+\[
+\begin{gathered}
+    \psi \text{ finite convex on }\R^d,\\
+    \text{the graph of }\psi\text{ lies in the Aleksandrov--Pogorelov}\\
+    \text{bounded extrinsic curvature class}.
+\end{gathered}
+\]
+The convolution identity should then force the corresponding curvature measure
+to be zero.  This is milder than $C^1$, keeps the singular curvature mass
+visible, and is precisely tailored to the mechanism that should produce
+rulings.
+
+\begin{remark}
+This is the point at which the two earlier drafts fit together.  The transcript
+correctly identified that the implication
+\[
+    \det D^2\psi=\text{constant a.e.}
+\]
+does not exclude singular Alexandrov--Monge--Ampère mass.  The viscosity
+comparison above is stronger: upper supports see the missing lower bound for
+the determinant, and lower supports see the upper bound.  Thus no separate
+uniqueness theorem for quadratic blowups is needed once the exact model
+section law is available.
+\end{remark}
+
+\begin{remark}
+For comparison, a positive definite quadratic graph in dimension $d$ has
+centered convolution proportional to $\tau^{d/2-1}$.  Thus literal constancy
+on the normalized support is compatible with a nondegenerate quadratic model
+only when $d=2$.
+\end{remark}
+
+\section*{Acknowledgements}
+DOS  is partially partially funded by Fundação para a Ciência e Tecnologia (FCT), Portugal, through  grant No.\@ UID/4459/2025 and  by the Deutsche Forschungsgemeinschaft 
+ (DFG, German Research Foundation) under Germany's Excellence Strategy -- EXC-2047/1 -- 390685813.
+JPR ...
+
+\begin{thebibliography}{03}
+
+\bibitem{CL03} L. Caffarelli, Y. Li,
+\newblock {\it An extension to a theorem of Jörgens, Calabi, and Pogorelov.}
+\newblock Comm. Pure Appl. Math. {\bf 56} (2003), no.~5, 549--583.
+
+\bibitem{Caf90} L. Caffarelli,
+\newblock {\it A localization property of viscosity solutions to the Monge--Ampère equation and their strict convexity.}
+\newblock Ann. of Math. (2) {\bf 131} (1990), no.~1, 129--134.
+
+\bibitem{Dud77} R. M. Dudley, 
+\newblock {\it On second derivatives of convex functions.}
+\newblock Math. Scand. {\bf 41} (1977), no.~1, 159--174.
+
+\bibitem{DLP24} C. De Lellis, M. R. Pakzad,
+\newblock {\it The geometry of $C^{1,\alpha}$ flat isometric immersions.}
+\newblock Proc. Roy. Soc. Edinburgh Sect. A (2024), 1--39.
+
+\bibitem{Fo99} G. B. Folland, 
+\newblock Real Analysis.
+Modern Techniques and Their Applications. Second edition
+\newblock Pure Appl. Math. (N. Y.)
+Wiley-Intersci. Publ.
+John Wiley \& Sons, Inc., New York, 1999.
+
+
+\bibitem{Gu16} C. Gutiérrez,
+\newblock The Monge-Ampère equation.
+Second edition. 
+\newblock Progr. Nonlinear Differential Equations Appl., {\bf 89}
+Birkhäuser/Springer, [Cham], 2016. 
+
+\bibitem{HN59} P. Hartman, L. Nirenberg,
+\newblock {\it On spherical image maps whose Jacobians do not change sign.}
+\newblock Amer. J. Math. {\bf 81} (1959), 901--920.
+
+\bibitem{Je10} R. L. Jerrard,
+\newblock {\it Some rigidity results related to Monge--Ampère functions.}
+\newblock Canad. J. Math. {\bf 62} (2010), no.~2, 320--354.
+
+\bibitem{LP17} M. Lewicka, M. R. Pakzad,
+\newblock {\it Convex integration for the Monge--Ampère equation in two dimensions.}
+\newblock Anal. PDE {\bf 10} (2017), no.~3, 695--727.
+
+\bibitem{OSQ18} D. Oliveira e Silva, R. Quilodrán, 
+\newblock {\it On extremizers for Strichartz estimates for higher order Schrödinger equations.}
+\newblock Trans. Amer. Math. Soc. {\bf 370} (2018), no.~10, 6871--6907.
+
+\bibitem{OSQ20} D. Oliveira e Silva, R. Quilodrán, 
+\newblock {\it A comparison principle for convolution measures with applications..}
+\newblock Math. Proc. Cambridge Philos. Soc.   {\bf 169} (2020), no.~2, 307--322.
+
+\bibitem{Po73} A. V. Pogorelov,
+\newblock {\it Extrinsic Geometry of Convex Surfaces.}
+\newblock Translations of Mathematical Monographs, vol.~35,
+American Mathematical Society, Providence, RI, 1973.
+
+
+
+
+\bibitem{St93} E. M. Stein,
+\newblock Harmonic Analysis: Real-Variable Methods, Orthogonality, and Oscillatory Integrals.
+\newblock Princeton Univ. Press, Princeton, NJ, 1993.
+
+\bibitem{Us99} V. Ushakov,
+\newblock {\it Developable surfaces in Euclidean space.}
+\newblock J. Aust. Math. Soc. {\bf 66} (1999), no.~3, 388--402.
+\end{thebibliography}
+
+
+\end{document}  

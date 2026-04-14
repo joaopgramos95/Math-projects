@@ -1,0 +1,145 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[shortlabels]{enumitem}
+\usepackage{hyperref}
+\usepackage{setspace}
+
+\newtheorem{lemma}{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[lemma]{Remark}
+
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\R}{\mathbb R}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+
+\begin{document}
+\setstretch{1.2}
+
+\title{A Diffuse-Limit Lemma}
+\author{}
+\date{}
+\maketitle
+
+\begin{lemma}[Diffuse limits are infinitely divisible]\label{lem:diffuse-id-limit}
+Let $d\ge1$, and let $(Z_{n,i})_{n\ge1,\ i\ge1}$ be a triangular array of
+$\R^d$-valued random variables.  Assume that, for each fixed $n$, the variables
+$(Z_{n,i})_{i\ge1}$ are independent and that the row sum
+\[
+S_n:=\sum_{i\ge1} Z_{n,i}
+\]
+is well defined as a limit in probability of its finite partial sums.  Assume
+also that the array is infinitesimal, in the sense that for every
+$\eps>0$,
+\[
+\sup_{i\ge1}\Prob\{\norm{Z_{n,i}}>\eps\}\longrightarrow0.
+\]
+If $S_n$ converges in distribution to an $\R^d$-valued random variable $S$,
+then the law of $S$ is infinitely divisible.
+\end{lemma}
+
+\begin{proof}
+The finite-row version is classical: if
+$U_{n,1},\dots,U_{n,k_n}$ are independent $\R^d$-valued random variables,
+\[
+\max_{1\le j\le k_n}\Prob\{\norm{U_{n,j}}>\eps\}\longrightarrow0
+\qquad(\eps>0),
+\]
+and
+\[
+\sum_{j=1}^{k_n}U_{n,j}\Rightarrow U,
+\]
+then the law of $U$ is infinitely divisible.  This is the classical
+Kolmogorov--Khintchine theorem for null arrays; see
+\cite[Theorem~9.3]{sato-levy}.  In the one-dimensional case it is also the
+classical theorem of Gnedenko--Kolmogorov
+\cite[Chapter~IV, Section~24]{gnedenko-kolmogorov}.
+
+It remains only to reduce the present countable-row formulation to that
+finite-row theorem.  Since $S_n$ is the limit in probability of its finite
+partial sums, for each $n$ we may choose an integer $k_n$ such that
+\[
+\Prob\left\{
+\norm{S_n-\sum_{i=1}^{k_n}Z_{n,i}}>\frac1n
+\right\}\le \frac1n.
+\]
+Set
+\[
+S_n^{(k)}:=\sum_{i=1}^{k_n}Z_{n,i}.
+\]
+Then $S_n^{(k)}-S_n\to0$ in probability.  Hence, by Slutsky's theorem,
+\[
+S_n^{(k)}\Rightarrow S.
+\]
+For each fixed $n$, the summands $Z_{n,1},\dots,Z_{n,k_n}$ are independent,
+and the finite array remains infinitesimal because
+\[
+\max_{1\le i\le k_n}\Prob\{\norm{Z_{n,i}}>\eps\}
+\le
+\sup_{i\ge1}\Prob\{\norm{Z_{n,i}}>\eps\}
+\longrightarrow0.
+\]
+Applying the finite-row theorem gives that the law of $S$ is infinitely
+divisible.
+\end{proof}
+
+\begin{remark}[Use in the limit-law lemma]
+In the compactness proof one applies Lemma~\ref{lem:diffuse-id-limit} with
+$d=2$, $Z_{n,1}:=0$, and, for $i\ge2$,
+\[
+Z_{n,i}
+:=
+\bigl(a_i^{(n)}\xi_{n,i},\,b_i^{(n)}\xi_{n,i}\bigr)
+\mathbf 1_{\{i>m_n\}}.
+\]
+The row sums are
+\[
+\sum_{i\ge1}Z_{n,i}
+=
+\bigl(X_n^{\mathrm{tail}},Y_n^{\mathrm{tail}}\bigr).
+\]
+They are well defined in $L^2$, hence in probability, because the coefficients
+belong to $\ell^2$ and the row variables are centered and $L^2$-normalized.
+The array is infinitesimal: for every $\eps>0$,
+\[
+\sup_{i\ge1}
+\Prob\{\norm{Z_{n,i}}>\eps\}
+\le
+\frac1{\eps^2}
+\sup_{i>m_n}\bigl((a_i^{(n)})^2+(b_i^{(n)})^2\bigr)
+\longrightarrow0.
+\]
+Therefore every weak subsequential limit of the tail pairs
+$\bigl(X_n^{\mathrm{tail}},Y_n^{\mathrm{tail}}\bigr)$ has an infinitely
+divisible law on $\R^2$.
+\end{remark}
+
+% Suggested bibliography entry if this lemma is imported into RealSPR.tex:
+%
+% @book{sato-levy,
+%   author={Sato, Ken-iti},
+%   title={L\'evy Processes and Infinitely Divisible Distributions},
+%   series={Cambridge Studies in Advanced Mathematics},
+%   volume={68},
+%   publisher={Cambridge University Press},
+%   year={1999},
+% }
+
+\begin{thebibliography}{9}
+
+\bibitem{gnedenko-kolmogorov}
+B.~V. Gnedenko and A.~N. Kolmogorov,
+\emph{Limit Distributions for Sums of Independent Random Variables},
+Addison-Wesley, 1954. Translated by K.~L. Chung.
+
+\bibitem{sato-levy}
+Ken-iti Sato,
+\emph{L\'evy Processes and Infinitely Divisible Distributions},
+Cambridge Studies in Advanced Mathematics, vol.~68,
+Cambridge University Press, 1999.
+
+\end{thebibliography}
+
+\end{document}

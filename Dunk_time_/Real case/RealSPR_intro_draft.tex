@@ -1,0 +1,45 @@
+% Draft replacement for the opening paragraphs of the introduction in RealSPR.tex.
+
+In many inverse problems the phase is precisely the part of the signal that the
+measurement device does not see.  This phenomenon is already present in the
+Pauli problem from quantum mechanics, where one asks how much of a wave function
+is encoded by the magnitudes of the function and of its Fourier transform
+\cite{pauli1933allgemeinen,ramos-sousa-pauli}; it also appears throughout
+optics and signal processing, where detectors typically record intensities
+rather than signed or complex amplitudes
+\cite{sanz1984phase,MR3069958,eldar2014stability,grohs2020survey}.  The
+mathematical abstraction is the phase retrieval problem: recover an unknown
+vector or function from phaseless data.  In the real setting the unavoidable
+ambiguity is multiplication by a global sign, and the first question is whether
+this is the only obstruction.  A substantial finite-dimensional theory has
+grown around this question, including injectivity criteria, stability
+estimates, convex relaxations, random measurements, and structured models
+\cite{bandeira2014saving,balan2013,MR3069958,MR3260258,KS,DB,MR3746047}.
+The infinite-dimensional theory is more delicate.  Phase retrieval can hold in
+Hilbert spaces \cite{cahill2016infinite}, but the passage from uniqueness to a
+uniform inverse estimate is treacherous: stability may fail for continuous
+frames \cite{alaifari2017continuous}, and even canonical structured systems
+such as Gabor measurements can be severely ill-posed
+\cite{alaifari2021gabor,grohs2021stable,grohs20212,steinerberger2020stability}.
+
+This paper is concerned with that second, quantitative layer of the problem.
+For applications, qualitative uniqueness is not the end of the story: a
+reconstruction principle that collapses under small perturbations is not a
+usable measurement scheme.  This is a familiar lesson in modern harmonic
+analysis and signal recovery, where sampling, interpolation, and concentration
+theorems become robust tools only after one understands their stability
+mechanisms.  The function-space point of view of Freeman, Oikhberg, Pineau, and
+Taylor \cite{FOTP} makes this issue intrinsic: stable phase retrieval becomes a
+geometric property of a subspace of a Banach lattice, and in the Hilbert case it
+can be tested on orthogonal pairs.  The present work studies this geometry for
+closed spans of independent random variables in $L^2$.  Such spans are a
+natural probabilistic analogue of coordinate subspaces, and they sit exactly at
+the interface between phase retrieval and the geometry of independent sums.  In
+this setting, Calderbank, Daubechies, Freeman, and Freeman
+\cite{calderbank2022stable} proposed a sharp characterization in terms of the
+$L^1$ sizes of the coordinates; the role of the present paper is to prove the
+sufficiency direction up to one exceptional coordinate.  The need for a
+quantitative formulation is not cosmetic: examples with merely
+H\"older-stable recovery \cite{christ2022examples} show that, in
+infinite-dimensional phase retrieval, the modulus of stability is part of the
+phenomenon itself.

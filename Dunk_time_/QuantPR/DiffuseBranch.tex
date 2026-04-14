@@ -1,0 +1,301 @@
+\section{The diffuse branch}\label{sec:blocks}
+
+In the diffuse case, both $\tail_H(a \pm b)$ carry substantial $\ell^2$
+energy, spread across many coordinates each of size at most $\lambda(A)$.
+The goal is to show that $X_a$ and $X_b$ are both bounded away from zero
+with positive probability, which forces
+$\abs{X_a^2 - X_b^2}$ to be large.
+
+The argument has three layers. First, we partition the tail coordinates into
+blocks of comparable energy. Second, on the product space
+$\Omega \times \Omega$, the symmetrized block sums satisfy a small-ball
+bound via Sperner's antichain inequality. Third, a head--tail factorization
+converts the anticoncentration into a lower bound on $\eps$.
+
+\subsection{Greedy block partition}
+
+\begin{lemma}[Block partition]\label{lem:block-partition}
+\leanname{OneD\.Blocks\.exists\_block\_partition\_with\_bounds}
+Let $(a_i)_{i=1}^n$ be real numbers satisfying $s > 0$,
+$s \le \sum_{i=1}^n a_i^2$, and $a_i^2 \le \eta(A,s)$ for all $i$.
+Then there exist pairwise disjoint
+$G_1, \dots, G_{M(A)} \subseteq \{1, \dots, n\}$ with
+\[
+\eta(A,s) \le \sum_{i \in G_j} a_i^2 \le 2\,\eta(A,s)
+\quad \text{for } j = 1, \dots, M(A).
+\]
+\end{lemma}
+
+\begin{proof}
+Build the blocks greedily. The total energy is at least
+$s = 4M\eta$. At each step, when $m$ blocks remain, the unused energy
+is at least $2m\eta$, so a nonempty qualifying subset exists. Choosing a
+minimal qualifying subset $S$ with $\sum_{S} a_i^2 \ge \eta$: if this
+sum exceeds $2\eta$, dropping any one element still leaves at least
+$\eta$ (since each $a_i^2 \le \eta$), contradicting minimality.
+\end{proof}
+
+\subsection{Anticoncentration on the product space}%
+\label{sec:finite-conc}
+
+Fix a coefficient vector $c \in \R^n$ supported on $H^c$, and let
+$G_1, \dots, G_M$ be the block partition from
+Lemma~\ref{lem:block-partition}.
+Pass to the product space $(\Omega \times \Omega, \mu \otimes \mu)$ and
+define the differences
+$D_i(\omega_1, \omega_2)
+= \xi_i(\omega_1) - \xi_i(\omega_2)$,
+which are independent and symmetric
+(Theorem~\ref{thm:iIndepFun-differences-app}). The block sums
+$Y_j = \sum_{i \in G_j} c_i D_i$ inherit both properties.
+
+\begin{lemma}[Block mass]\label{lem:block-mass}
+\privateleanname{OneD\.FiniteConcentration\.block\_two\_sided\_mass}
+Let $\xi_1, \dots, \xi_n$ be independent, centered, unit-variance
+random variables with $\E[\abs{\xi_i}] \ge A > 0$. Let
+$(c_i)_{i \in G_j}$ satisfy
+$\eta \le \sum_{G_j} c_i^2 \le 2\eta$, and define
+$Y_j = \sum_{G_j} c_i D_i$ on $\Omega \times \Omega$.
+Set $a_0 = (A/16)\sqrt{\eta}$. Then
+\[
+(\mu \otimes \mu)\bigl(\abs{Y_j} \ge a_0\bigr)
+\ge A^2/256.
+\]
+\end{lemma}
+
+\begin{proof}
+Let $W = \sum_{G_j} c_i \xi_i$. The two-sided mass bound
+(Theorem~\ref{thm:two-sided-mass-app}) gives
+$\Prob(W \ge (A/16)\sqrt{\eta}) \ge A^2/256$ and likewise for $-W$.
+Since $\Prob(W \ge 0) + \Prob(W \le 0) \ge 1$, combining the events
+$\{W(\omega_1) \ge (A/16)\sqrt{\eta}\} \times \{W(\omega_2) \le 0\}$
+and its mirror yields the stated bound on
+$\{\abs{Y_j} \ge a_0\}$.
+\end{proof}
+
+\begin{lemma}[Small-ball bound]\label{lem:block-smallball}
+\privateleanname{OneD\.FiniteConcentration\.smallBallMass\_sum\_symmetric\_le}
+Let $Y_1, \dots, Y_M$ be independent symmetric random variables on
+$\Omega \times \Omega$ with $M = M(A) \ge 256$. Suppose
+$(\mu \otimes \mu)(\abs{Y_j} \ge a_0) \ge A^2/256$ for each $j$,
+and let $0 < r < a_0$. Then for every $t \in \R$,
+\[
+(\mu \otimes \mu)
+\Bigl(\abs{\textstyle\sum_{j=1}^{M} Y_j - t}
+\le r\Bigr)
+\le 1/8.
+\]
+\end{lemma}
+
+\begin{proof}
+Let $N = \#\{j : \abs{Y_j} \ge a_0\}$ and split:
+\[
+\Prob\Bigl(\abs{\textstyle\sum_j Y_j - t}
+\le r\Bigr)
+\le
+\Prob\Bigl(\abs{\textstyle\sum_j Y_j - t}
+\le r,\; N \ge 256\Bigr)
++ \Prob(N < 256).
+\]
+On $\{N \ge 256\}$, at least 256 of the $Y_j$ exceed $a_0 > r$ in
+absolute value, so the Sperner sign-flip bound
+(Theorem~\ref{thm:sperner-app}) gives a probability at most $1/16$.
+For the second term: the expected count
+$\sum_j \Prob(\abs{Y_j} \ge a_0) \ge M \cdot A^2/256 \ge 1024$,
+so the Chebyshev bound (Theorem~\ref{thm:chebyshev-active-app}) gives
+$\Prob(N < 256) \le 1/16$.
+\end{proof}
+
+\begin{proposition}[Symmetrized small-ball bound]\label{prop:symm-conc}
+\leanname{OneD\.FiniteConcentration\.symmetrized\_small\_ball\_le}
+Let $\xi_1, \dots, \xi_n$ be independent, centered, unit-variance
+random variables with $A \le \E[\abs{\xi_i}] \le B$ for
+$0 < A \le B < 1$. Let $c \in \R^n$ satisfy $s > 0$,
+$s \le \sum c_i^2$, and $\abs{c_i} \le \lambda_0(A,s)$ for all $i$.
+Then for every $t \in \R$,
+\[
+\mu\bigl(\abs{X_c - t} \le r_0(A,s)\bigr) \le 3/8,
+\]
+where $X_c = \sum_{i=1}^n c_i \xi_i$.
+\end{proposition}
+
+\begin{proof}
+Unsymmetrization (Theorem~\ref{thm:unsymmetrization-app}) gives
+\[
+\mu\bigl(\abs{X_c - t} \le r_0\bigr)^2
+\le
+(\mu \otimes \mu)
+\bigl(\abs{X_c(\omega_1) - X_c(\omega_2)} \le 2r_0\bigr).
+\]
+Write $X_c(\omega_1) - X_c(\omega_2) = \sum_j Y_j + T$, where $T$
+is the residual outside the blocks. Since $\sum_j Y_j$ and $T$ act
+on disjoint coordinates, the concentration function satisfies
+$\concFn(\sum_j Y_j + T, 2r_0) \le \concFn(\sum_j Y_j, 2r_0)$
+(\leanref{Imported\.L2Theory\.concFn\_add\_indep\_le}).
+One checks that $r_0 < a_0$ and
+$M(A) \ge 256$, so Lemma~\ref{lem:block-smallball} gives
+$\concFn(\sum_j Y_j, 2r_0) \le 1/8$. Hence
+$\mu(\abs{X_c - t} \le r_0) \le \sqrt{1/8} < 3/8$.
+\end{proof}
+
+\subsection{Joint anticoncentration and the cross estimate}
+
+Applying Proposition~\ref{prop:symm-conc} to two coefficient vectors
+simultaneously, we obtain:
+
+\begin{corollary}[Cross anticoncentration]\label{cor:cross-anticonc}
+\leanname{OneD\.Cross\.cross\_anticoncentration\_fin}
+Under the hypotheses of Proposition~\ref{prop:symm-conc}, let
+$c, d \in \R^n$ both satisfy $s > 0$, $s \le \sum c_i^2$,
+$s \le \sum d_i^2$, and
+$\abs{c_i}, \abs{d_i} \le \lambda_0(A,s)$. Then
+\[
+\Prob\bigl(r_0(A,s)
+  < \min(\abs{X_c},\,\abs{X_d})\bigr)
+\ge 1/4.
+\]
+\end{corollary}
+
+\begin{proof}
+At $t = 0$, Proposition~\ref{prop:symm-conc} gives
+$\Prob(\abs{X_c} \le r_0) \le 3/8$ and
+$\Prob(\abs{X_d} \le r_0) \le 3/8$.
+The union bound gives $3/8 + 3/8 = 3/4$, so the complement has
+probability at least $1/4$.
+\end{proof}
+
+It follows that the minimum of $\abs{X_c}$ and $\abs{X_d}$ has positive
+second moment, uniformly over all shifts:
+
+\begin{lemma}[Cross minimum-square bound]\label{lem:cross-min-sq}
+\privateleanname{OneD\.Cross\.cross\_anticoncentration\_fin}
+Let $c, d \in \R^n$ satisfy the hypotheses of
+Corollary~\ref{cor:cross-anticonc} with $s = 8\,s_0(A)$.
+Then for all $u, v \in \R$,
+\[
+\bigl(r_0(A,\, 8s_0)/4\bigr)^2
+\le
+\E\bigl[\min\bigl(\abs{X_c + u},\,
+  \abs{X_d + v}\bigr)^2\bigr].
+\]
+\end{lemma}
+
+\begin{proof}
+Corollary~\ref{cor:cross-anticonc} applied with shifts $-u, -v$ gives
+$\Prob(r_0 < \min(\abs{X_c+u}, \abs{X_d+v})) \ge 1/4$.
+Writing $f = \min(\abs{X_c+u}, \abs{X_d+v})$, this means
+$\E[f] \ge r_0/4$ (Markov), and $\E[f]^2 \le \E[f^2]$ (Jensen).
+\end{proof}
+
+The final ingredient converts anticoncentration of the tail into a
+lower bound on $\eps$, by factoring $X_a^2 - X_b^2$ into head and tail
+contributions:
+
+\begin{lemma}[Head--tail factorization]\label{lem:head-tail-factor}
+\privateleanname{OneD\.Cross\.finEps\_ge\_two\_cross\_min\_sq}
+Let $a, b \in \R^n$ be unit vectors with $\ip{a}{b} = 0$ and let
+$H \subseteq \{1, \dots, n\}$. Define tail-supported vectors
+\[
+c_i = \frac{a_i - b_i}{\sqrt{2}},\quad
+d_i = \frac{a_i + b_i}{\sqrt{2}}
+\quad \text{for } i \notin H,
+\qquad
+c_i = d_i = 0 \text{ for } i \in H.
+\]
+If there exists $r > 0$ with
+$r \le \E[\min(\abs{X_c+u},\, \abs{X_d+v})^2]$
+for all $u, v \in \R$, then $\eps(a,b) \ge 2r$.
+\end{lemma}
+
+\begin{proof}
+The identity $X_a^2 - X_b^2 = X_{a+b} \cdot X_{a-b}$ and the
+head--tail splitting give
+\[
+X_{a+b} \cdot X_{a-b}
+= 2\,\bigl(X_d + h_+/\sqrt{2}\bigr)
+    \bigl(X_c + h_-/\sqrt{2}\bigr),
+\]
+where $h_\pm = X_{\restr_H(a \pm b)}$ are the head sums. Thus
+\[
+\abs{X_a^2 - X_b^2}
+\ge 2\,\min\bigl(\abs{X_c + h_-/\sqrt{2}},\,
+\abs{X_d + h_+/\sqrt{2}}\bigr)^2.
+\]
+Since $X_c, X_d$ are supported on $H^c$ and $h_\pm$ on $H$, they
+are independent
+(\leanref{Imported\.L2Theory\.indepFun\_finLinComb\_disjoint}).
+Conditioning on $h_\pm$ and applying the hypothesis
+gives $\eps(a,b) \ge 2r$.
+\end{proof}
+
+\begin{proposition}[Diffuse cross branch]\label{prop:diffuse-cross}
+\leanname{OneD\.Cross\.diffuse\_cross\_branch\_fin}
+Let $a, b \in \R^n$ be unit vectors with $\ip{a}{b} = 0$ and
+$H = H(A,a,b)$. If
+\[
+16\,s_0(A) \le \norm{\tail_H(a - b)}_2^2
+\;\;\text{and}\;\;
+16\,s_0(A) \le \norm{\tail_H(a + b)}_2^2,
+\]
+and $\max(\abs{(\tail_H a)_i}, \abs{(\tail_H b)_i})
+\le \lambda(A)$ for all $i$, then
+$\eps(a,b) \ge c_{\mathrm{cross}}(A)$.
+\end{proposition}
+
+\begin{proof}
+The rotated coefficients $c, d$ from
+Lemma~\ref{lem:head-tail-factor} satisfy
+$\sum c_i^2 \ge 8s_0$, $\sum d_i^2 \ge 8s_0$, and
+$c_i^2 \le 2\lambda^2 \le \lambda_0(A, 8s_0)^2$.
+Lemma~\ref{lem:cross-min-sq} with $s = 8s_0$ gives
+$\E[\min^2] \ge (r_0/4)^2$ for all shifts, and
+Lemma~\ref{lem:head-tail-factor} converts this to
+$\eps \ge 2(r_0/4)^2$. Unwinding the definitions:
+\[
+2\bigl(r_0(A,\, 8s_0)/4\bigr)^2
+= \frac{A^8}{2^{55}}
+\ge \frac{A^8}{2^{57}}
+= c_{\mathrm{cross}}(A). \qedhere
+\]
+\end{proof}
+
+\section{Proof of the main theorem}\label{sec:main}
+
+\begin{theorem}[Epsilon lower bound]\label{thm:eps-lower}
+\leanname{Main\.UniformAB\.orthogonal\_eps\_lower\_bound}
+Let $a, b \in \R^n$ be unit vectors with $\ip{a}{b} = 0$, and let
+$\xi_1, \dots, \xi_n$ be independent random variables with
+$\E[\xi_i] = 0$, $\E[\xi_i^2] = 1$, and
+$A \le \E[\abs{\xi_i}] \le B$ for $0 < A \le B < 1$. Then
+\[
+\eps(a,b)
+\ge \min\bigl(c_{\mathrm{cross}}(A),\,
+c_{\mathrm{line}}(A,B)\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+Set $H = H(A,a,b)$ and apply the dichotomy
+(Lemma~\ref{lem:tail-dichotomy}).
+In the diffuse case,
+Proposition~\ref{prop:diffuse-cross} gives
+$\eps \ge c_{\mathrm{cross}}$ (the tail coefficient bound follows from
+the definition of $H$).
+In the concentrated case, Corollary~\ref{cor:headset-one-line} gives
+$\eps \ge c_{\mathrm{line}}$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Theorem~\ref{thm:eps-lower} gives
+$\eps(a,b) \ge \min(c_{\mathrm{cross}}, c_{\mathrm{line}})$,
+and the bridge inequality
+(Theorem~\ref{thm:eps-le-modulus-app}) gives
+$\eps(a,b) \le 2\,\delta(a,b)$.
+Combining:
+\[
+\delta(a,b) \ge \frac{\eps(a,b)}{2}
+\ge \frac{1}{2}
+\min(c_{\mathrm{cross}}, c_{\mathrm{line}})
+= c_\perp(A,B). \qedhere
+\]
+\end{proof}

@@ -1,0 +1,2067 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\gapgc}{\operatorname{gap}_{\mathrm{gc}}}
+\newcommand{\dT}{d_{\mathbb{T}}}
+
+\title{Complex stable phase retrieval with one exceptional coordinate}
+
+\author{Pedro Abdalla Teixeira\textsuperscript{1}}
+\author{Jaume de Dios Pont\textsuperscript{2}}
+\author{Jo\~ao Pedro Ramos\textsuperscript{3}}
+\author{Mitchell Taylor\textsuperscript{4}}
+
+\begin{document}
+\begin{abstract}
+We give a compactness proof of the complex one-exception stable phase retrieval
+theorem.  The proof is organized in the same head-tail architecture as the real
+one-exception argument: one first proves the coefficient decompositions and the
+head identification, then extracts a limit model in which a head pair and a
+tail pair are independent and satisfy an exact modulus identity, and finally
+proves a support theorem for the tail difference.  Two complementary support
+routes are recorded for the degenerate head case.  The first is purely
+geometric: cone-supported infinitely divisible laws are supported on additive
+subgroups of the cone, hence on either a complex line or a conjugate plane, and
+both possibilities force the tail difference onto a real line.  The second,
+included as a remark after the proof, uses the nontriviality of the Gaussian
+part of a diffuse tail limit.  Along the way we isolate the quantitative
+angular-spread estimate needed for the complex cross-coordinate probes and we
+import the rigorously proved compactness ingredients from the general complex
+stable phase retrieval theorem.
+\end{abstract}
+\maketitle
+\begingroup
+\renewcommand{\thefootnote}{\arabic{footnote}}
+\footnotetext[1]{Department of Mathematics, University of California, Irvine,
+  Irvine, California 92697, USA}
+\footnotetext[2]{Center for Data Science, New York University, New York,
+  New York 10011, USA}
+\footnotetext[3]{Instituto de Matem\'atica Pura e Aplicada (IMPA), Rio de
+  Janeiro, RJ, Brazil}
+\footnotetext[4]{Department of Mathematics, ETH Z\"urich, Z\"urich, Switzerland}
+\endgroup
+\setcounter{footnote}{0}
+
+\section{Introduction}
+
+Let $(\Omega,\mu)$ be a probability space and let $\xi_1,\ldots,\xi_n$ be
+independent complex-valued random variables.  The main theorem of
+\cite{complex_spr} states that if every $\xi_j$ satisfies a two-sided
+$L^1$-$L^2$ norm-equivalence bound and a uniform lower bound on the
+generalized-circle gap $\gapgc(\xi_j)\ge \kappa>0$, then there is a uniform
+orthogonal modulus gap
+\[
+  \bigl\|\,|X_a|-|X_b|\,\bigr\|_{L^2} \ge c(A,B,\kappa)>0
+\]
+for every pair of orthogonal unit vectors $a,b\in\C^n$.
+
+The theorem proved here is the one-exception analogue of
+\cite[Theorem~2.1]{complex_spr}: a single exceptional coordinate $\eta$ is
+allowed to violate the lower $L^1$-$L^2$ bound and the generalized-circle gap,
+while the good coordinates retain the same uniform hypotheses as in the fully
+homogeneous theorem.
+
+The present proof keeps the current \texttt{.tex} file as the main source but
+merges into it the rigorously proved compactness ingredients from
+Appendix~A of \cite{complex_spr_app}.  The resulting organization mirrors the
+real one-exception proof from \cite{compactness_real}.  First one proves the
+head-tail decompositions and the head identification by bounded probes.  Next
+one packages those lemmas into a compactness reduction, whose output is an
+exact modulus identity
+\[
+  |H_X+R_X|=|H_Y+R_Y|
+\]
+for an independent head pair and tail pair.  The proof then culminates in a
+support theorem for the tail difference.  When the head is nontrivial, the
+support theorem follows from a geometric elimination of the head variable.  In
+the degenerate case, one uses the additive-subgroup structure of cone-supported
+infinitely divisible laws to force the tail difference onto a real line.
+
+For completeness, we also keep the Gaussian route to the degenerate case.  That
+route is not needed in the final proof, but it gives an independent way to see
+that the same support conclusion follows from the nontriviality of the Gaussian
+part of a diffuse tail limit.
+
+\section{Background and notation}
+\label{sec:background}
+
+\begin{definition}[Generalized circle]
+A \emph{generalized circle} in $\C$ is either a Euclidean circle
+$\{z \in \C : |z-c|=r\}$ with $c \in \C$ and $r \ge 0$, or a real affine line
+in $\C \cong \R^2$.
+\end{definition}
+
+\begin{definition}[Generalized-circle gap {\cite[Definitions~3.3--3.4]{complex_spr}}]
+\label{def:gapgc}
+For a complex-valued random variable $\xi \in L^2(\mu)$, define
+\[
+  \gapgc(\xi)
+  :=
+  \inf_{\substack{A,C\in\R,\;B\in\C \\ A^2+2|B|^2+C^2=1}}
+  \bigl\|A|\xi|^2 + 2\,\Re(B\xi) + C\bigr\|_{L^1}.
+\]
+By \cite[Lemma~3.8]{complex_spr}, $\gapgc(\xi)=0$ if and only if
+$\supp(\xi)$ is contained in a generalized circle.
+\end{definition}
+
+\begin{definition}[Phase-invariant distance {\cite[Definition~2.2]{complex_spr}}]
+For $f,g \in L^2(\mu)$, set
+\[
+  \dT(f,g) := \inf_{\lambda \in \T} \|f-\lambda g\|_{L^2(\mu)}.
+\]
+\end{definition}
+
+We use the following lemmas from \cite{complex_spr}.
+
+\begin{lemma}[One-coordinate rigidity {\cite[Lemma~3.10]{complex_spr}}]
+\label{lem:one-coord}
+Let $S \subset \C$ be a set not contained in any generalized circle.  Let
+$\alpha,\beta,u,v \in \C$ and assume
+\[
+  |\alpha t + u| = |\beta t + v| \qquad \text{for every } t \in S.
+\]
+Then $|\alpha|=|\beta|$ and $\bar\alpha\,u=\bar\beta\,v$.  Consequently, either
+$\alpha=\beta=0$, or there exists $\lambda \in \T$ such that
+$\beta=\lambda\alpha$ and $v=\lambda u$.
+\end{lemma}
+
+\begin{lemma}[Support of an independent pair {\cite[Lemma~3.11]{complex_spr}}]
+\label{lem:supp-prod}
+If $U$ and $V$ are independent random variables taking values in Polish spaces,
+then $\supp(U,V)=\supp(U)\times \supp(V)$.
+\end{lemma}
+
+\begin{lemma}[Almost-sure vanishing extends to the support
+  {\cite[Lemma~3.12]{complex_spr}}]
+\label{lem:as-support}
+Let $S$ be a Polish space, let $Z$ be an $S$-valued random variable, and let
+$F:S\to\R$ be continuous.  If $F(Z)=0$ almost surely, then
+$F(x)=0$ for every $x\in\supp(Z)$.
+\end{lemma}
+
+\section{Main result and contradiction setup}
+\label{sec:main}
+
+\begin{theorem}[Complex one-exception orthogonal lower bound]
+\label{thm:main}
+Let $\eta$ be a complex-valued random variable satisfying
+\[
+  \E[\eta]=0,
+  \qquad
+  \E[|\eta|^2]=1.
+\]
+Fix constants $0 < A \le B < 1$ and $\kappa > 0$.  Then there exists
+\[
+  c = c(A,B,\kappa,\eta) > 0
+\]
+such that the following holds for every $n \in \N$.
+
+Let $\xi_1,\ldots,\xi_n$ be complex-valued random variables, independent of
+each other and of $\eta$, satisfying
+\[
+  \E[\xi_j]=0,
+  \qquad
+  \E[|\xi_j|^2]=1
+  \qquad (1\le j\le n),
+\]
+and assume:
+\begin{enumerate}[label=\rm(\arabic*)]
+\item for every $u=(u_1,\ldots,u_n)\in\C^n$,
+\[
+  A\|u\|_2
+  \le
+  \Bigl\|\sum_{j=1}^n u_j\xi_j\Bigr\|_{L^1}
+  \le
+  B\|u\|_2;
+\]
+\item $\gapgc(\xi_j)\ge \kappa$ for every $1\le j\le n$.
+\end{enumerate}
+For every $a=(a_0,a_1,\ldots,a_n)$ and $b=(b_0,b_1,\ldots,b_n)$ in $\C^{n+1}$
+with
+\[
+  \|a\|_2=\|b\|_2=1,
+  \qquad
+  \langle a,b\rangle=0,
+\]
+define
+\[
+  X_a := a_0\eta + \sum_{j=1}^n a_j\xi_j,
+  \qquad
+  X_b := b_0\eta + \sum_{j=1}^n b_j\xi_j.
+\]
+Then
+\[
+  \bigl\|\,|X_a|-|X_b|\,\bigr\|_{L^2} \ge c.
+\]
+\end{theorem}
+
+\begin{remark}
+Theorem~\ref{thm:main} is the natural one-exception analogue of
+\cite[Theorem~2.1]{complex_spr}.  The constant is allowed to depend on the full
+law of the exceptional variable $\eta$.
+\end{remark}
+
+\begin{corollary}[Complex one-exception stable phase retrieval]
+\label{cor:spr}
+Under the hypotheses of Theorem~\ref{thm:main}, let
+$E_n:=\operatorname{span}\{\eta,\xi_1,\ldots,\xi_n\}\subset L^2(\mu)$.  There
+exists $C=C(A,B,\kappa,\eta)<\infty$ such that for all $f,g\in E_n$,
+\[
+  \dT(f,g) \le C\,\bigl\|\,|f|-|g|\,\bigr\|_{L^2(\mu)}.
+\]
+\end{corollary}
+
+\begin{proof}
+This is proved exactly as in \cite[Corollary~2.4]{complex_spr} once the
+orthogonal lower bound is known.
+\end{proof}
+
+\begin{proposition}[Normalized counterexample array]
+\label{prop:counterexample}
+If Theorem~\ref{thm:main} fails, then there exist:
+\begin{enumerate}[label=\rm(\roman*)]
+\item a triangular array $(\xi_{n,i})_{n\ge 1,\ i\ge 1}$ such that for each
+  fixed $n$ the family
+  \[
+    (\eta,\xi_{n,1},\xi_{n,2},\dots)
+  \]
+  is independent, every $\xi_{n,i}$ is centered and satisfies
+  \[
+    \E[|\xi_{n,i}|^2]=1,
+    \qquad
+    \gapgc(\xi_{n,i})\ge \kappa,
+  \]
+  and for every finitely supported $u\in\ell^2(\N)$,
+  \[
+    A\|u\|_2
+    \le
+    \Bigl\|\sum_{i\ge 1} u_i\xi_{n,i}\Bigr\|_{L^1}
+    \le
+    B\|u\|_2;
+  \]
+\item vectors $a^{(n)},b^{(n)}\in \ell^2(\{0,1,2,\dots\})$ such that
+  \[
+    \|a^{(n)}\|_2=\|b^{(n)}\|_2=1,
+    \qquad
+    \langle a^{(n)},b^{(n)}\rangle=0,
+  \]
+  and, writing
+  \[
+    X_n:=a_0^{(n)}\eta+\sum_{i\ge 1} a_i^{(n)}\xi_{n,i},
+    \qquad
+    Y_n:=b_0^{(n)}\eta+\sum_{i\ge 1} b_i^{(n)}\xi_{n,i},
+  \]
+  one has
+  \[
+    \bigl\|\,|X_n|-|Y_n|\,\bigr\|_{L^2}\longrightarrow 0.
+  \]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+This is the standard contradiction setup: one takes violating orthogonal unit
+pairs row by row, and pads finite vectors by zeros.
+\end{proof}
+
+\section{Coefficient decompositions and the limit model}
+\label{sec:compactness}
+
+We now formulate the compactness scheme in the same language as
+\cite{compactness_real}.  The point is that the proof should work directly with
+the bad sequence of sums rather than first extracting limit laws for the
+individual coordinates.
+
+\begin{lemma}[Reordered profile decomposition]
+\label{lem:profile}
+After passing to a subsequence in Proposition~\ref{prop:counterexample} and, in
+each row, applying the same permutation to the good coordinates and to their
+coefficients, one may find vectors
+\[
+  a,b\in \ell^2(\{0,1,2,\dots\})
+\]
+and integers $m_n\to\infty$ such that, with
+\[
+  a^{(n)}_{\mathrm{head}}:=a^{(n)}\mathbf 1_{\{0,1,\dots,m_n\}},
+  \qquad
+  a^{(n)}_{\mathrm{tail}}:=a^{(n)}\mathbf 1_{\{m_n+1,m_n+2,\dots\}},
+\]
+and likewise for $b^{(n)}$, the following hold:
+\begin{enumerate}[label=\rm(\arabic*)]
+\item $a^{(n)}_{\mathrm{head}}\to a$ and
+  $b^{(n)}_{\mathrm{head}}\to b$ strongly in $\ell^2$;
+\item
+\[
+  \max_{i>m_n}\max\bigl(|a_i^{(n)}|,|b_i^{(n)}|\bigr)\longrightarrow 0;
+\]
+\item
+\[
+  \|a^{(n)}_{\mathrm{tail}}\|_2^2\longrightarrow 1-\|a\|_2^2,
+  \qquad
+  \|b^{(n)}_{\mathrm{tail}}\|_2^2\longrightarrow 1-\|b\|_2^2,
+\]
+and
+\[
+  \langle a^{(n)}_{\mathrm{tail}},b^{(n)}_{\mathrm{tail}}\rangle
+  \longrightarrow
+  -\langle a,b\rangle.
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+The proof is the same monotone-reordering and diagonal extraction used in the
+real one-exception paper; it depends only on the coefficient vectors.
+\end{proof}
+
+\begin{remark}
+The exceptional coordinate $\eta$ is kept fixed at index $0$.  Only the good
+coordinates are reordered.
+\end{remark}
+
+\begin{proposition}[Bounded probes for good coordinates]
+\label{prop:bounded-probes}
+Let $\xi$ be a centered complex-valued random variable satisfying
+\[
+  \E[|\xi|^2]=1,
+  \qquad
+  A\le \|\xi\|_{L^1}\le B<1.
+\]
+Then there exist bounded measurable functions $S,T:\Omega\to\C$ such that
+\[
+  \E[S]=\E[T]=0,
+  \qquad
+  \E[\xi\overline{S}]=\E[\overline{\xi}S]=1,
+  \qquad
+  \E[(|\xi|^2-1)T]=1,
+\]
+and
+\[
+  \|S\|_{L^\infty}\le \frac{2}{A},
+  \qquad
+  \|T\|_{L^\infty}\le \frac{2}{1-B}.
+\]
+\end{proposition}
+
+\begin{proof}
+Define the phase function
+\[
+  \phi :=
+  \begin{cases}
+    \xi/|\xi|,& \xi\ne 0,\\
+    0,& \xi=0.
+  \end{cases}
+\]
+Then $|\phi|\le 1$ and
+\[
+  \E[\xi\overline{\phi}] = \E[|\xi|] = \|\xi\|_{L^1}\ge A.
+\]
+Set
+\[
+  S:=\frac{\phi-\E[\phi]}{\E[|\xi|]}.
+\]
+Since $\E[\xi]=0$, one has
+\[
+  \E[\xi\overline{S}]
+  =
+  \frac{\E[\xi\overline{\phi}]-\E[\xi]\E[\overline{\phi}]}{\E[|\xi|]}
+  = 1.
+\]
+Taking complex conjugates gives $\E[\overline{\xi}S]=1$, and clearly
+$\E[S]=0$.  The bound
+\[
+  \|S\|_{L^\infty}\le \frac{2}{\E[|\xi|]}\le \frac{2}{A}
+\]
+is immediate.
+
+Next let
+\[
+  \psi:=\operatorname{sign}(|\xi|^2-1),
+\]
+which is real-valued and bounded by $1$ in modulus.  Then
+\[
+  \E[(|\xi|^2-1)\psi]=\E\bigl[\,||\xi|^2-1|\,\bigr].
+\]
+Moreover,
+\[
+  ||\xi|^2-1| = ||\xi|-1|(|\xi|+1)\ge ||\xi|-1|,
+\]
+so
+\[
+  \E\bigl[\,||\xi|^2-1|\,\bigr]
+  \ge
+  \E[\,||\xi|-1|\,]
+  \ge
+  1-\E[|\xi|]
+  \ge
+  1-B.
+\]
+Therefore, with
+\[
+  T:=\frac{\psi-\E[\psi]}{\E[(|\xi|^2-1)\psi]},
+\]
+we get $\E[T]=0$,
+\[
+  \E[(|\xi|^2-1)T]=1,
+\]
+and
+\[
+  \|T\|_{L^\infty}
+  \le
+  \frac{2}{\E[\,||\xi|^2-1|\,]}
+  \le
+  \frac{2}{1-B}.
+\]
+\end{proof}
+
+\begin{lemma}[Quantitative angular spread]
+\label{lem:angular-spread}
+Let $\xi$ be a centered complex-valued random variable with
+\[
+  \E[|\xi|^2]=1.
+\]
+Define
+\[
+  m:=\E[|\xi|],
+  \qquad
+  c:=\E\!\left[\frac{\xi^2}{|\xi|}\right],
+\]
+where $\xi^2/|\xi|$ is interpreted as $0$ on $\{\xi=0\}$.  Then
+\[
+  |c|\le m-\gapgc(\xi)^2.
+\]
+In particular, if $S$ is the linear probe from
+Proposition~\ref{prop:bounded-probes}, then
+\[
+  \rho:=\E[\xi S]=\frac{c}{m}
+\]
+satisfies
+\[
+  |\rho|\le 1-\gapgc(\xi)^2\le 1.
+\]
+\end{lemma}
+
+\begin{proof}
+If $c=0$, there is nothing to prove.  Otherwise choose $\omega\in\T$ so that
+\[
+  \omega^2 c = |c|.
+\]
+Write $\omega\xi = |\xi|e^{it}$.  Then
+\[
+  |c|
+  =
+  \Re(\omega^2 c)
+  =
+  \E\!\left[|\xi|\cos(2t)\right],
+\]
+so
+\[
+  m-|c|
+  =
+  \E\!\left[|\xi|\bigl(1-\cos(2t)\bigr)\right]
+  =
+  2\,\E\!\left[|\xi|\sin^2 t\right].
+\]
+
+Consider the generalized circle given by the line
+\[
+  \Im(\omega z)=0.
+\]
+The corresponding normalized test has the form
+\[
+  z\longmapsto \sqrt2\,\Im(\omega z),
+\]
+and therefore
+\[
+  \gapgc(\xi)\le \sqrt2\,\E\!\left[|\Im(\omega\xi)|\right]
+  =
+  \sqrt2\,\E\!\left[|\xi||\sin t|\right].
+\]
+By Cauchy--Schwarz,
+\[
+  \E\!\left[|\xi||\sin t|\right]^2
+  \le
+  \E[|\xi|]\,
+  \E\!\left[|\xi|\sin^2 t\right]
+  =
+  \frac{m(m-|c|)}{2}.
+\]
+Combining the last two displays gives
+\[
+  \gapgc(\xi)^2\le m(m-|c|)\le m-|c|,
+\]
+because $m\le \|\xi\|_{L^2}=1$.  This proves the first claim.  The identity
+\[
+  \E[\xi S]
+  =
+  \frac{\E[\xi^2/|\xi|]}{\E[|\xi|]}
+  =
+  \frac{c}{m}
+\]
+follows directly from the definition of $S$, and the stated bound on $|\rho|$
+is immediate.
+\end{proof}
+
+\begin{proposition}[Linear probe for the exceptional coordinate]
+\label{prop:exceptional-probe}
+Let $\eta$ be a centered complex-valued random variable satisfying
+\[
+  \E[|\eta|^2]=1.
+\]
+Then there exists a bounded measurable function $S_\eta$ such that
+\[
+  \E[S_\eta]=0,
+  \qquad
+  \E[\eta\overline{S_\eta}]
+  =
+  \E[\overline{\eta}S_\eta]
+  = 1.
+\]
+\end{proposition}
+
+\begin{proof}
+Define
+\[
+  \phi_\eta :=
+  \begin{cases}
+    \eta/|\eta|,& \eta\ne 0,\\
+    0,& \eta=0.
+  \end{cases}
+\]
+Then $\E[|\eta|]>0$ because $\E[|\eta|^2]=1$.  Set
+\[
+  S_\eta:=\frac{\phi_\eta-\E[\phi_\eta]}{\E[|\eta|]}.
+\]
+Exactly as above, $\E[S_\eta]=0$ and
+\[
+  \E[\eta\overline{S_\eta}]
+  =
+  \E[\overline{\eta}S_\eta]
+  =1.
+\]
+\end{proof}
+
+\begin{proposition}[Head identification]
+\label{prop:head}
+Assume the setup of Lemma~\ref{lem:profile}.  Then either:
+\begin{enumerate}[label=\rm(\arabic*)]
+\item there exists $\tau\in\T$ such that
+\[
+  a=\tau b
+\]
+and
+\[
+  \|a^{(n)}_{\mathrm{head}}-\tau b^{(n)}_{\mathrm{head}}\|_2\longrightarrow 0;
+\]
+\item or else
+\[
+  a_i=b_i=0
+  \qquad\text{for every } i\ge 1.
+\]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Since
+\[
+  \bigl\||X_n|^2-|Y_n|^2\bigr\|_{L^1}
+  \le
+  \bigl\||X_n|-|Y_n|\bigr\|_{L^2}
+  \bigl\||X_n|+|Y_n|\bigr\|_{L^2}
+  \le
+  2\bigl\||X_n|-|Y_n|\bigr\|_{L^2},
+\]
+we have
+\[
+  \bigl\||X_n|^2-|Y_n|^2\bigr\|_{L^1}\longrightarrow 0.
+\]
+
+Fix $i\ge 1$.  Let $T_{n,i}$ be the quadratic probe given by
+Proposition~\ref{prop:bounded-probes} for $\xi_{n,i}$.  Since $T_{n,i}$ is a
+bounded centered function of $\xi_{n,i}$ alone, it is independent of $\eta$ and
+of all $\xi_{n,j}$ with $j\ne i$.  Hence
+\[
+  \E\bigl[(|X_n|^2-|Y_n|^2)T_{n,i}\bigr]\longrightarrow 0.
+\]
+Expanding $|X_n|^2=X_n\overline{X_n}$ and using independence and centering, all
+terms vanish except the one involving $(|\xi_{n,i}|^2-1)T_{n,i}$.  Therefore
+\[
+  \E\bigl[(|X_n|^2-|Y_n|^2)T_{n,i}\bigr]
+  =
+  |a_i^{(n)}|^2-|b_i^{(n)}|^2.
+\]
+Passing to the limit gives
+\[
+  |a_i|^2=|b_i|^2
+  \qquad (i\ge 1).
+\]
+
+Now fix distinct indices $i,j\ge 1$.  Let $S_{n,i}$ and $S_{n,j}$ be the linear
+probes from Proposition~\ref{prop:bounded-probes}.  Since
+$\overline{S_{n,i}}S_{n,j}$ is bounded and depends only on
+$(\xi_{n,i},\xi_{n,j})$, we again have
+\[
+  \E\bigl[(|X_n|^2-|Y_n|^2)\overline{S_{n,i}}S_{n,j}\bigr]\longrightarrow 0.
+\]
+Set
+\[
+  A_{n,i,j}:=
+  a_i^{(n)}\overline{a_j^{(n)}}-b_i^{(n)}\overline{b_j^{(n)}},
+  \qquad
+  \rho_{n,\ell}:=\E[\xi_{n,\ell}S_{n,\ell}]
+  \qquad (\ell=i,j).
+\]
+As before, independence and centering eliminate every term except the two
+containing $\xi_{n,i}\overline{\xi_{n,j}}$ and $\xi_{n,j}\overline{\xi_{n,i}}$.
+Using
+\[
+  \E[\xi_{n,i}\overline{S_{n,i}}]=1,
+  \qquad
+  \E[\overline{\xi_{n,j}}S_{n,j}]=1,
+\]
+and taking complex conjugates where needed, we obtain
+\[
+  \E\bigl[(|X_n|^2-|Y_n|^2)\overline{S_{n,i}}S_{n,j}\bigr]
+  =
+  A_{n,i,j}
+  +
+  \overline{A_{n,i,j}}\,\rho_{n,j}\,\overline{\rho_{n,i}}.
+\]
+By Lemma~\ref{lem:angular-spread} and the standing lower bound
+$\gapgc(\xi_{n,\ell})\ge\kappa$, one has
+\[
+  |\rho_{n,\ell}|
+  \le
+  1-\kappa^2
+  \qquad (\ell=i,j).
+\]
+Hence
+\[
+  \bigl|A_{n,i,j}\bigr|
+  \le
+  \frac{
+    \bigl|\E\bigl[(|X_n|^2-|Y_n|^2)\overline{S_{n,i}}S_{n,j}\bigr]\bigr|
+  }{
+    1-(1-\kappa^2)^2
+  }
+  \longrightarrow 0,
+\]
+because
+\[
+  \bigl|A_{n,i,j}
+  +
+  \overline{A_{n,i,j}}\,\rho_{n,j}\,\overline{\rho_{n,i}}\bigr|
+  \ge
+  \bigl(1-|\rho_{n,j}\rho_{n,i}|\bigr)\,|A_{n,i,j}|.
+\]
+Passing to the limit yields
+\[
+  a_i\overline{a_j}=b_i\overline{b_j}
+  \qquad (i\ne j,\ i,j\ge 1).
+\]
+
+Let $S_\eta$ be given by Proposition~\ref{prop:exceptional-probe}.  For every
+$j\ge 1$, letting $S_{n,j}$ be the good-coordinate linear probe for $\xi_{n,j}$,
+we likewise obtain
+\[
+  \E\bigl[(|X_n|^2-|Y_n|^2)\overline{S_\eta}S_{n,j}\bigr]\longrightarrow 0
+\]
+and therefore
+\[
+  a_0^{(n)}\overline{a_j^{(n)}}-b_0^{(n)}\overline{b_j^{(n)}}\longrightarrow 0.
+\]
+Passing to the limit gives
+\[
+  a_0\overline{a_j}=b_0\overline{b_j}
+  \qquad (j\ge 1).
+\]
+
+Assume first that there exists $i_0\ge 1$ with $a_{i_0}\ne 0$.  Since
+$|a_{i_0}|=|b_{i_0}|$, there exists $\tau\in\T$ such that
+\[
+  a_{i_0}=\tau b_{i_0}.
+\]
+For every $j\ge 1$,
+\[
+  a_{i_0}\overline{a_j}
+  =
+  b_{i_0}\overline{b_j}
+  =
+  \overline{\tau}a_{i_0}\overline{b_j},
+\]
+so $a_j=\tau b_j$.  Taking $j=i_0$ in the exceptional-good identity gives
+\[
+  a_0\overline{a_{i_0}}
+  =
+  b_0\overline{b_{i_0}}
+  =
+  \tau b_0\overline{a_{i_0}},
+\]
+and therefore $a_0=\tau b_0$.  Thus $a=\tau b$.
+
+If instead $a_i=0$ for every $i\ge 1$, then $|a_i|=|b_i|$ implies
+$b_i=0$ for every $i\ge 1$, which is exactly alternative \textup{(2)}.
+
+In alternative \textup{(1)}, strong convergence of the head vectors gives
+\[
+  \|a^{(n)}_{\mathrm{head}}-\tau b^{(n)}_{\mathrm{head}}\|_2
+  \le
+  \|a^{(n)}_{\mathrm{head}}-a\|_2
+  +
+  \|b^{(n)}_{\mathrm{head}}-b\|_2
+  \longrightarrow 0.
+\]
+\end{proof}
+
+\begin{remark}
+The linear probe in the complex case is exactly the phase analogue of the sign
+probe in the real case: one replaces $\operatorname{sign}(\xi)$ by
+$\xi/|\xi|$.  The quadratic probe is unchanged, since $|\xi|^2-1$ is real.
+\end{remark}
+
+\begin{lemma}[Limit law for the head-tail decomposition]
+\label{lem:limit-law}
+With the notation above, set
+\[
+  X_n^{\mathrm{head}}
+  :=
+  a_0^{(n)}\eta+\sum_{1\le i\le m_n} a_i^{(n)}\xi_{n,i},
+  \qquad
+  X_n^{\mathrm{tail}}
+  :=
+  \sum_{i>m_n} a_i^{(n)}\xi_{n,i},
+\]
+and define $Y_n^{\mathrm{head}},Y_n^{\mathrm{tail}}$ analogously.  After
+passing to a further subsequence, the quadruple
+\[
+  \bigl(
+    X_n^{\mathrm{head}},
+    Y_n^{\mathrm{head}},
+    X_n^{\mathrm{tail}},
+    Y_n^{\mathrm{tail}}
+  \bigr)
+\]
+converges in distribution to
+\[
+  (H_X,H_Y,R_X,R_Y)\in\C^4,
+\]
+where:
+\begin{enumerate}[label=\rm(\arabic*)]
+\item $(H_X,H_Y)$ is independent of $(R_X,R_Y)$;
+\item
+\[
+  |H_X+R_X|=|H_Y+R_Y|
+  \qquad\text{almost surely;}
+\]
+\item either there exists $\tau\in\T$ such that
+  \[
+    H_X=\tau H_Y
+    \qquad\text{almost surely,}
+  \]
+  or else
+  \[
+    H_X=a_0\eta,
+    \qquad
+    H_Y=b_0\eta
+    \qquad\text{almost surely.}
+  \]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+The tightness and independence statements are the same as in the real proof.
+The last alternative is just Proposition~\ref{prop:head} transported to random
+variables: in alternative \textup{(1)} of Proposition~\ref{prop:head}, strong
+$L^2$ convergence of the head coefficient vectors gives
+\[
+  X_n^{\mathrm{head}}-\tau Y_n^{\mathrm{head}}\longrightarrow 0
+\]
+in $L^2$, hence $H_X=\tau H_Y$ almost surely.  In alternative \textup{(2)},
+\[
+  \sum_{1\le i\le m_n} |a_i^{(n)}|^2
+  \longrightarrow 0,
+  \qquad
+  \sum_{1\le i\le m_n} |b_i^{(n)}|^2
+  \longrightarrow 0,
+\]
+so
+\[
+  X_n^{\mathrm{head}}-a_0\eta\longrightarrow 0,
+  \qquad
+  Y_n^{\mathrm{head}}-b_0\eta\longrightarrow 0
+\]
+in $L^2$.
+\end{proof}
+
+\begin{proposition}[Compactness reduction to an exact head-tail identity]
+\label{prop:compactness-reduction}
+Assume that Theorem~\ref{thm:main} fails, and let the bad sequence be given by
+Proposition~\ref{prop:counterexample}.  Then, after passing to a subsequence,
+there exist:
+\begin{enumerate}[label=\rm(\arabic*)]
+\item an integer sequence $m_n\to\infty$ and reordered coefficient vectors
+  $a^{(n)},b^{(n)}$ as in Lemma~\ref{lem:profile};
+\item complex random variables $(H_X,H_Y,R_X,R_Y)$ such that
+  $(H_X,H_Y)$ is independent of $(R_X,R_Y)$;
+\item limiting head coefficients $a=(a_0,a_1,\dots)$ and $b=(b_0,b_1,\dots)$
+  satisfying the alternative of Proposition~\ref{prop:head};
+\item the exact modulus identity
+  \[
+    |H_X+R_X|=|H_Y+R_Y|
+    \qquad\text{almost surely.}
+  \]
+\end{enumerate}
+Moreover, either there exists $\tau\in\T$ such that
+\[
+  H_X=\tau H_Y
+  \qquad\text{almost surely,}
+\]
+or else
+\[
+  H_X=a_0\eta,
+  \qquad
+  H_Y=b_0\eta
+  \qquad\text{almost surely.}
+\]
+\end{proposition}
+
+\begin{proof}
+This is exactly the content of Lemma~\ref{lem:profile},
+Proposition~\ref{prop:head}, and Lemma~\ref{lem:limit-law}.
+\end{proof}
+
+\begin{lemma}[Lower $L^1$-$L^2$ comparability for independent real sums]
+\label{lem:real-l1l2}
+Let $\zeta_1,\dots,\zeta_N$ be independent centered real-valued random
+variables and assume that
+\[
+  \|\zeta_i\|_{L^1}\ge \delta \|\zeta_i\|_{L^2}
+  \qquad (1\le i\le N)
+\]
+for some $\delta>0$.  Then
+\[
+  \Bigl\|\sum_{i=1}^N \zeta_i\Bigr\|_{L^1}
+  \ge
+  \frac{\delta}{2\sqrt 2}
+  \Bigl(\sum_{i=1}^N \|\zeta_i\|_{L^2}^2\Bigr)^{1/2}.
+\]
+\end{lemma}
+
+\begin{proof}
+If $\sum_i \|\zeta_i\|_{L^2}^2=0$, there is nothing to prove.  By homogeneity, we
+may therefore assume
+\[
+  \sum_{i=1}^N \|\zeta_i\|_{L^2}^2=1.
+\]
+Let $\zeta_i'$ be an independent copy of $\zeta_i$, and set
+\[
+  S:=\sum_{i=1}^N \zeta_i,
+  \qquad
+  S':=\sum_{i=1}^N \zeta_i'.
+\]
+Then
+\[
+  2\|S\|_{L^1}\ge \|S-S'\|_{L^1}
+  =
+  \Bigl\|\sum_{i=1}^N (\zeta_i-\zeta_i')\Bigr\|_{L^1}.
+\]
+The differences $\zeta_i-\zeta_i'$ are independent and symmetric.  Conditioning
+on their absolute values and applying the Khintchine inequality gives
+\[
+  \Bigl\|\sum_{i=1}^N (\zeta_i-\zeta_i')\Bigr\|_{L^1}
+  \ge
+  \frac{1}{\sqrt 2}
+  \E\Bigl[\Bigl(\sum_{i=1}^N (\zeta_i-\zeta_i')^2\Bigr)^{1/2}\Bigr].
+\]
+Since
+\[
+  \sum_{i=1}^N c_i^2 |\widetilde\zeta_i-\widetilde\zeta_i'|
+  \le
+  \Bigl(\sum_{i=1}^N c_i^2(\widetilde\zeta_i-\widetilde\zeta_i')^2\Bigr)^{1/2},
+\]
+where we write
+\[
+  c_i:=\|\zeta_i\|_{L^2},
+  \qquad
+  \widetilde\zeta_i :=
+  \begin{cases}
+    \zeta_i/c_i,& c_i\ne 0,\\
+    0,& c_i=0,
+  \end{cases}
+\]
+so that $\sum_i c_i^2=1$ and $\|\widetilde\zeta_i\|_{L^2}=1$ whenever $c_i\ne 0$.
+Applying the previous argument to the sum $\sum_i c_i \widetilde\zeta_i$ gives
+\[
+  \|S\|_{L^1}
+  \ge
+  \frac{1}{2\sqrt 2}
+  \sum_{i=1}^N c_i^2
+  \|\widetilde\zeta_i-\widetilde\zeta_i'\|_{L^1}.
+\]
+Finally,
+\[
+  \|\widetilde\zeta_i-\widetilde\zeta_i'\|_{L^1}
+  \ge
+  \Bigl\|\E[\widetilde\zeta_i-\widetilde\zeta_i'\mid \widetilde\zeta_i]\Bigr\|_{L^1}
+  =
+  \|\widetilde\zeta_i\|_{L^1}
+  \ge \delta,
+\]
+because $\widetilde\zeta_i'$ is centered and
+$\|\widetilde\zeta_i\|_{L^1}\ge \delta \|\widetilde\zeta_i\|_{L^2}=\delta$.
+Hence
+\[
+  \Bigl\|\sum_{i=1}^N \zeta_i\Bigr\|_{L^1}
+  \ge
+  \frac{\delta}{2\sqrt 2}.
+\]
+Undoing the normalization yields the stated inequality.
+\end{proof}
+
+\begin{lemma}[Infinitely divisible laws supported on a generalized circle are line-supported]
+\label{lem:id-gc-line}
+Let $\mu$ be an infinitely divisible probability measure on $\C$.  If
+$\supp\mu$ is contained in a generalized circle, then $\supp\mu$ is contained in
+an affine line.
+\end{lemma}
+
+\begin{proof}
+If $\supp\mu$ is already contained in an affine line, there is nothing to
+prove.  It remains to exclude the case in which $\supp\mu$ is contained in a
+Euclidean circle $\Gamma$.
+
+Because $\mu$ is infinitely divisible, it is in particular $2$-divisible:
+there exists a probability measure $\nu$ such that $\mu=\nu*\nu$.  Let
+$A:=\supp\nu$.  Then
+\[
+  \supp\mu = \overline{A+A}.
+\]
+Assume for contradiction that $A$ contains two distinct points $x\ne y$.  Then
+\[
+  2x,\ x+y,\ 2y \in A+A \subset \supp\mu \subset \Gamma.
+\]
+But $x+y$ is the midpoint of the chord joining $2x$ and $2y$.  The midpoint of a
+nontrivial chord of a Euclidean circle lies strictly inside the enclosed disk,
+and therefore cannot belong to the circle itself.  This contradiction shows
+that $A$ is a singleton.  Hence $\mu=\nu*\nu$ is a point mass, and in
+particular its support is contained in an affine line.
+\end{proof}
+
+\begin{proposition}[Generalized-circle tail rigidity]
+\label{prop:tail-rigidity}
+Let $(\xi_{n,i})_{n\ge 1,\ i\ge 1}$ be a triangular array of independent
+centered complex-valued random variables satisfying
+\[
+  \E[|\xi_{n,i}|^2]=1,
+  \qquad
+  \gapgc(\xi_{n,i})\ge \kappa,
+\]
+and the uniform finite-support $L^1$-$L^2$ bounds
+\[
+  A\|u\|_2
+  \le
+  \Bigl\|\sum_{i\ge 1} u_i\xi_{n,i}\Bigr\|_{L^1}
+  \le
+  B\|u\|_2.
+\]
+Let $c^{(n)}\in\ell^2(\N)$ satisfy
+\[
+  \sup_n\|c^{(n)}\|_2<\infty,
+  \qquad
+  \max_i |c_i^{(n)}|\longrightarrow 0,
+\]
+and define
+\[
+  Z_n:=\sum_{i\ge 1} c_i^{(n)}\xi_{n,i}.
+\]
+If $Z_n$ converges in distribution to a random variable $Z$ whose law is
+supported on a generalized circle, then
+\[
+  \|c^{(n)}\|_2\longrightarrow 0.
+\]
+\end{proposition}
+
+\begin{proof}
+Assume for contradiction that $\|c^{(n)}\|_2\not\to 0$.  After passing to a
+subsequence, we may assume that
+\[
+  \delta \le \|c^{(n)}\|_2 \le M
+  \qquad\text{for every } n
+\]
+for some constants $\delta>0$ and $M<\infty$.
+
+Since
+\[
+  \E[|Z_n|^2]=\sum_{i\ge 1} |c_i^{(n)}|^2 = \|c^{(n)}\|_2^2 \le M^2,
+\]
+the family $(Z_n)_n$ is bounded in $L^2$.  In particular, the first moments are
+uniformly integrable.  Because every $Z_n$ is centered, passing to the weak
+limit gives
+\[
+  \E[Z]=0.
+\]
+
+The array of summands
+\[
+  Z_{n,i}:=c_i^{(n)}\xi_{n,i}
+\]
+is infinitesimal: for every $\varepsilon>0$,
+\[
+  \sup_i \mathbb P\bigl(|Z_{n,i}|>\varepsilon\bigr)
+  \le
+  \frac{1}{\varepsilon^2}\sup_i |c_i^{(n)}|^2
+  \longrightarrow 0.
+\]
+By the classical theorem on weak limits of row-wise independent infinitesimal
+triangular arrays, the law of $Z$ is infinitely divisible.  Since by hypothesis
+it is also supported on a generalized circle, Lemma~\ref{lem:id-gc-line} shows
+that $\supp(Z)$ is contained in an affine line.  Because $\E[Z]=0$, that line
+passes through the origin.  Hence there exists $\lambda\in\T$ such that
+\[
+  \lambda Z \in \R
+  \qquad\text{almost surely.}
+\]
+
+Define
+\[
+  Y_n := \Im(\lambda Z_n)
+  = \sum_{i\ge 1} Y_{n,i},
+  \qquad
+  Y_{n,i}:=\Im(\lambda c_i^{(n)}\xi_{n,i}).
+\]
+Then each $Y_{n,i}$ is a centered real random variable, the family
+$(Y_{n,i})_i$ is independent for each fixed $n$, and
+\[
+  Y_n \Rightarrow 0
+\]
+in distribution.
+
+We claim that each nonzero summand $Y_{n,i}$ satisfies a uniform lower
+$L^1$-$L^2$ comparability estimate.  If $c_i^{(n)}\ne 0$, write
+\[
+  \omega_{n,i} := \lambda\,\frac{c_i^{(n)}}{|c_i^{(n)}|}\in\T.
+\]
+Then
+\[
+  Y_{n,i} = |c_i^{(n)}|\,\Im(\omega_{n,i}\xi_{n,i}).
+\]
+For every $\omega\in\T$, choose
+\[
+  A=0,\qquad C=0,\qquad B=-\,\frac{i\overline{\omega}}{\sqrt 2}.
+\]
+Then
+\[
+  A^2+2|B|^2+C^2=1
+\]
+and
+\[
+  A|\xi|^2+2\Re(B\xi)+C = \sqrt 2\,\Im(\omega\xi).
+\]
+Therefore
+\[
+  \kappa
+  \le
+  \gapgc(\xi_{n,i})
+  \le
+  \sqrt 2\,\|\Im(\omega_{n,i}\xi_{n,i})\|_{L^1}
+  \le
+  \sqrt 2\,\|\Im(\omega_{n,i}\xi_{n,i})\|_{L^2}.
+\]
+Multiplying by $|c_i^{(n)}|$ gives
+\[
+  \|Y_{n,i}\|_{L^1} \ge \frac{\kappa}{\sqrt 2}|c_i^{(n)}|,
+  \qquad
+  \|Y_{n,i}\|_{L^2} \ge \frac{\kappa}{\sqrt 2}|c_i^{(n)}|.
+\]
+Since also $\|Y_{n,i}\|_{L^2}\le |c_i^{(n)}|$, we get
+\[
+  \|Y_{n,i}\|_{L^1}
+  \ge
+  \frac{\kappa}{\sqrt 2}\|Y_{n,i}\|_{L^2}.
+\]
+
+Applying Lemma~\ref{lem:real-l1l2} row by row, we obtain
+\[
+  \|Y_n\|_{L^1}
+  \ge
+  \frac{\kappa}{4}
+  \Bigl(\sum_{i\ge 1}\|Y_{n,i}\|_{L^2}^2\Bigr)^{1/2}
+  \ge
+  \frac{\kappa^2}{4\sqrt 2}\|c^{(n)}\|_2
+  \ge
+  \frac{\kappa^2\delta}{4\sqrt 2}.
+\]
+
+On the other hand, $Y_n\Rightarrow 0$ and
+\[
+  \sup_n \E[|Y_n|^2] \le \sup_n \E[|Z_n|^2]\le M^2,
+\]
+so the family $(|Y_n|)_n$ is uniformly integrable.  Hence
+\[
+  \|Y_n\|_{L^1}\longrightarrow 0,
+\]
+which contradicts the uniform positive lower bound above.
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:tail-rigidity} is the complex replacement for the
+one-dimensional tail rigidity used in the real proof.  Its proof separates the
+generalized-circle obstruction into two parts: infinite divisibility rules out
+the curved case, and the remaining line case reduces to the real
+$L^1$-$L^2$ argument after taking imaginary parts in the correct direction.
+\end{remark}
+
+\section{Tail support lemmas}
+\label{sec:proof}
+
+\begin{lemma}[Geometric reduction when the head is nontrivial]
+\label{lem:nontrivial-head-geometry}
+Let $H$ be a complex-valued random variable, let $(R_X,R_Y)$ be a
+complex-valued random vector independent of $H$, and let $\tau\in\T$.  Assume
+that
+\[
+  |H+R_X| = |\tau H + R_Y|
+  \qquad\text{almost surely.}
+\]
+If $\supp(H)$ contains at least two distinct points, then the law of
+\[
+  W:=R_Y-\tau R_X
+\]
+is supported on an affine line.
+\end{lemma}
+
+\begin{proof}
+By independence and Lemmas~\ref{lem:supp-prod} and~\ref{lem:as-support}, the
+identity
+\[
+  |H+R_X| = |\tau H + R_Y|
+\]
+holds for every
+\[
+  h\in \supp(H),
+  \qquad
+  (x,y)\in \supp(R_X,R_Y).
+\]
+Choose two distinct points $h_1,h_2\in \supp(H)$.  Fix
+$(x,y)\in \supp(R_X,R_Y)$ and write
+\[
+  w:=y-\tau x.
+\]
+For $j=1,2$ one has
+\[
+  |h_j+x| = |\tau(h_j+x)+w|.
+\]
+Squaring and cancelling $|h_j+x|^2$ gives
+\[
+  |w|^2 + 2\Re\bigl(\overline{\tau(h_j+x)}\,w\bigr)=0
+  \qquad (j=1,2).
+\]
+Subtracting the two identities yields
+\[
+  \Re\bigl(\overline{\tau(h_1-h_2)}\,w\bigr)=0.
+\]
+Thus every point of the image of $\supp(R_X,R_Y)$ under the continuous map
+\[
+  (x,y)\mapsto y-\tau x
+\]
+lies in the affine line
+\[
+  L:=\{w\in\C:\ \Re(\overline{\tau(h_1-h_2)}\,w)=0\}.
+\]
+Since $L$ is closed, the support of the pushforward law of $W$ is also
+contained in $L$.
+\end{proof}
+
+\begin{remark}
+This section collects the support lemmas used in the final compactness
+argument.  The nontrivial-head case is handled by a direct geometric
+elimination of the head variable.  The degenerate case $H_X\equiv H_Y\equiv 0$
+is treated by classifying additive subgroups of the cone
+\[
+  \Gamma:=\{(u,v)\in\C^2:\ |u|=|v|\}.
+\]
+\end{remark}
+
+\begin{lemma}[Two distinct unimodular slopes force real-line degeneracy]
+\label{lem:two-slopes-real-degenerate}
+Let $\tau_1,\tau_2\in\T$ with $\tau_1\ne \tau_2$, and for $j=1,2$ let
+\[
+  L_{\tau_j}:=\{(z,\tau_j z): z\in\C\}\subset \C^2.
+\]
+Let $S\subset (L_{\tau_1}\cup L_{\tau_2})\cap \{(u,v)\in\C^2:\ |u|=|v|\}$ and
+assume that
+\[
+  S+S\subset \{(u,v)\in\C^2:\ |u|=|v|\}.
+\]
+For $j=1,2$, define
+\[
+  K_j:=\{z\in\C:\ (z,\tau_j z)\in S\}.
+\]
+Then the following hold.
+\begin{enumerate}[label=\rm(\arabic*)]
+\item For every $z_1\in K_1$ and $z_2\in K_2$,
+  \[
+    \Re\bigl((1-\tau_1\overline{\tau_2})z_1\overline{z_2}\bigr)=0.
+  \]
+\item If $K_2$ contains a nonzero point, then $K_1$ is contained in a real line
+  through the origin.
+\item If $K_1$ and $K_2$ both contain nonzero points, then both sets are
+  contained in real lines through the origin.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Fix $z_1\in K_1$ and $z_2\in K_2$.  Then
+\[
+  x:=(z_1,\tau_1 z_1)\in S,
+  \qquad
+  y:=(z_2,\tau_2 z_2)\in S.
+\]
+By hypothesis, $x+y\in S+S$ belongs to the cone, so
+\[
+  |z_1+z_2| = |\tau_1 z_1+\tau_2 z_2|.
+\]
+Squaring and using $|\tau_1|=|\tau_2|=1$, we obtain
+\[
+  |z_1|^2+|z_2|^2+2\Re(z_1\overline{z_2})
+  =
+  |z_1|^2+|z_2|^2+2\Re(\tau_1\overline{\tau_2}\,z_1\overline{z_2}),
+\]
+hence
+\[
+  \Re\bigl((1-\tau_1\overline{\tau_2})z_1\overline{z_2}\bigr)=0.
+\]
+This proves \textup{(1)}.
+
+Assume now that $z_2\in K_2$ is nonzero.  Since $\tau_1\ne \tau_2$, the complex
+number
+\[
+  \lambda:=(1-\tau_1\overline{\tau_2})\overline{z_2}
+\]
+is nonzero.  By \textup{(1)}, every $z_1\in K_1$ satisfies
+\[
+  \Re(\lambda z_1)=0,
+\]
+which describes a real line through the origin in $\C\cong \R^2$.  This proves
+\textup{(2)}.  Interchanging the roles of the two slopes gives \textup{(3)}.
+\end{proof}
+
+\begin{lemma}[Covariance range of a non-line-supported rank-one complex vector]
+\label{lem:cov-range-rank-one}
+Let $\xi$ be a centered complex-valued random variable with
+\[
+  \E[|\xi|^2]<\infty,
+\]
+and let $(a,b)\in\C^2\setminus\{(0,0)\}$.  Define
+\[
+  V:=(a\xi,b\xi)\in\C^2.
+\]
+Assume that $\xi$ is not supported on a real line in $\C$.  Then the range of
+the real covariance operator of $V$ is exactly the real plane underlying the
+complex line
+\[
+  L:=\{(az,bz): z\in\C\}.
+\]
+\end{lemma}
+
+\begin{proof}
+Since $V$ is supported on $L$, the covariance range is contained in the
+underlying real plane $L_\R$.
+
+Conversely, let $\ell:\C^2\to\R$ be a real linear functional in the kernel of
+the covariance operator.  Because $V$ is centered, this means
+\[
+  \E[\ell(V)^2]=0,
+\]
+hence $\ell(V)=0$ almost surely.  By continuity, $\ell$ vanishes on
+$\supp(V)$.  Since $\xi$ is not supported on a real line, the real span of
+$\supp(\xi)$ is all of $\C$, and therefore the real span of $\supp(V)$ is the
+full plane $L_\R$.  Thus $\ell$ vanishes on $L_\R$, so the annihilator of the
+covariance range equals the annihilator of $L_\R$.  Hence the covariance range
+is exactly $L_\R$.
+\end{proof}
+
+\begin{lemma}[Gaussian part in the cone lies in one complex line]
+\label{lem:gaussian-one-slope}
+Let $\mu$ be an infinitely divisible probability measure on $\C^2$ supported on
+the cone
+\[
+  \Gamma:=\{(u,v)\in\C^2:\ |u|=|v|\}.
+\]
+Assume that $\mu$ arises as a weak limit of sums of independent infinitesimal
+vectors
+\[
+  V_{n,i}:=(a_{n,i}\xi_{n,i},\,b_{n,i}\xi_{n,i}),
+\]
+where each $\xi_{n,i}$ is centered, square-integrable, and satisfies
+\[
+  \gapgc(\xi_{n,i})>0.
+\]
+Then the Gaussian part of $\mu$ is supported on a single complex line
+\[
+  L_\tau:=\{(z,\tau z): z\in\C\}
+  \qquad\text{for some } \tau\in\T.
+\]
+\end{lemma}
+
+\begin{proof}
+Let $G$ denote the Gaussian part of $\mu$, and let $E\subset \C^2\cong\R^4$ be
+its support subspace.  Since $\mu$ is supported on $\Gamma$, the same is true of
+$G$, so
+\[
+  E\subset \Gamma.
+\]
+
+The Gaussian covariance of the limit is obtained from the accumulation of the
+row-wise covariance operators of the infinitesimal summands.  By
+Lemma~\ref{lem:cov-range-rank-one}, every nonzero covariance contribution is the
+real plane underlying a complex line
+\[
+  L_{n,i}:=\{(a_{n,i}z,b_{n,i}z): z\in\C\},
+\]
+because $\gapgc(\xi_{n,i})>0$ rules out support on a real line.
+
+Hence the Gaussian support subspace $E$ is generated, as a real vector space, by
+such planes $L_{n,i,\R}$.  Since $E\subset \Gamma$, every contributing plane is
+itself contained in $\Gamma$.  Therefore, whenever $(a_{n,i},b_{n,i})\ne(0,0)$
+and the corresponding covariance contribution is nonzero, one must have
+\[
+  |a_{n,i}|=|b_{n,i}|,
+\]
+so the associated complex line is of the form
+\[
+  L_{\tau_{n,i}}:=\{(z,\tau_{n,i}z): z\in\C\}
+  \qquad\text{with } \tau_{n,i}\in\T.
+\]
+
+Assume for contradiction that two distinct slopes $\tau_1\ne\tau_2$ occur among
+the planes contributing to $E$.  Then $E$ contains both complex lines
+$L_{\tau_1}$ and $L_{\tau_2}$.  Since $E$ is a real vector subspace, it is
+closed under addition, so
+\[
+  (L_{\tau_1}\cup L_{\tau_2}) + (L_{\tau_1}\cup L_{\tau_2}) \subset E\subset \Gamma.
+\]
+Applying Lemma~\ref{lem:two-slopes-real-degenerate} with
+\[
+  S:=L_{\tau_1}\cup L_{\tau_2}
+\]
+shows that the scalar set on each slope must be contained in a real line
+through the origin.  This is impossible because each contributing set is the
+full complex plane of scalars.  Hence only one slope can occur.
+
+Therefore all covariance contributions lie in one complex line $L_\tau$, and so
+their sum, namely the Gaussian covariance of $\mu$, has range contained in the
+underlying real plane $L_{\tau,\R}$.  Thus $G$ is supported on $L_\tau$.
+\end{proof}
+
+\begin{lemma}[Support of the L\'evy measure inherits cone additivity]
+\label{lem:levy-cone-additivity}
+Let $\mu$ be an infinitely divisible probability measure on $\C^2$ with L\'evy
+measure $\nu$, and assume that
+\[
+  \supp(\mu)\subset \Gamma:=\{(u,v)\in\C^2:\ |u|=|v|\}.
+\]
+Then:
+\begin{enumerate}[label=\rm(\arabic*)]
+\item $\supp(\nu)\subset \Gamma\cup\{0\}$;
+\item if $x,y\in \supp(\nu)\setminus\{0\}$, then
+\[
+  x+y\in \Gamma.
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Fix $x\in \supp(\nu)\setminus\{0\}$.  Choose an open neighborhood $U$ of $x$
+whose closure is bounded away from the origin.  Then $0<\nu(U)<\infty$.  Write
+\[
+  \nu = \nu|_U + \nu|_{U^c}
+\]
+and let $\mu_U$ and $\mu_{U^c}$ be the corresponding infinitely divisible laws,
+so that
+\[
+  \mu = \mu_U * \mu_{U^c}.
+\]
+Since $\nu(U)<\infty$, the law $\mu_U$ is a compound Poisson law.  In
+particular, with positive probability it has exactly one jump in $U$ and no
+other jumps, so every point of $U$ belongs to $\supp(\mu_U)$.  As convolution
+supports add, this implies
+\[
+  U \subset \supp(\mu_U)\subset \supp(\mu)-\supp(\mu_{U^c}).
+\]
+Taking closures and using $\supp(\mu)\subset \Gamma$ yields $x\in \Gamma$.
+This proves \textup{(1)}.
+
+Now let $x,y\in \supp(\nu)\setminus\{0\}$.  Choose disjoint open neighborhoods
+$U,V$ of $x,y$ whose closures are bounded away from $0$.  Then
+$0<\nu(U),\nu(V)<\infty$.  Let $\mu_{U,V}$ denote the compound Poisson law with
+L\'evy measure $\nu|_{U\cup V}$.  With positive probability, a sample from
+$\mu_{U,V}$ has exactly one jump in $U$, exactly one jump in $V$, and no other
+jumps in $U\cup V$.  Hence
+\[
+  U+V \subset \supp(\mu_{U,V}).
+\]
+As before, since $\mu=\mu_{U,V}*\mu_{(U\cup V)^c}$ and
+$\supp(\mu)\subset \Gamma$, it follows that every point of $U+V$ belongs to
+$\Gamma$.  Letting the neighborhoods shrink to $x$ and $y$ gives
+\[
+  x+y\in \Gamma.
+\]
+\end{proof}
+
+\begin{corollary}[Two slopes in the L\'evy measure force real-line degeneracy]
+\label{cor:levy-two-slopes}
+Let $\mu$ be an infinitely divisible probability measure on $\C^2$ supported on
+\[
+  \Gamma:=\{(u,v)\in\C^2:\ |u|=|v|\},
+\]
+and let $\nu$ be its L\'evy measure.  Suppose $\nu$ charges two distinct
+unimodular slope lines
+\[
+  L_{\tau_1}=\{(z,\tau_1 z): z\in\C\},
+  \qquad
+  L_{\tau_2}=\{(z,\tau_2 z): z\in\C\},
+  \qquad
+  \tau_1\ne \tau_2.
+\]
+Define
+\[
+  K_j:=\{z\in\C:\ (z,\tau_j z)\in \supp(\nu)\}
+  \qquad (j=1,2).
+\]
+Then every nonzero point of $K_1$ forces $K_2$ into a real line through the
+origin, and conversely.
+\end{corollary}
+
+\begin{proof}
+Apply Lemma~\ref{lem:levy-cone-additivity} with
+\[
+  S:=\supp(\nu)\setminus\{0\}.
+\]
+Then $S\subset \Gamma$ and $S+S\subset \Gamma$.  Lemma~\ref{lem:two-slopes-real-degenerate}
+therefore applies.
+\end{proof}
+
+\begin{remark}
+Corollary~\ref{cor:levy-two-slopes} is the jump-part analogue of
+Lemma~\ref{lem:two-slopes-real-degenerate}.  It shows that the only possible
+way for the L\'evy measure to charge two distinct unimodular slopes is through a
+real-line degeneracy of the scalar jump sets on those slopes.
+\end{remark}
+
+\begin{lemma}[Cone-supported infinitely divisible laws live on additive subgroups]
+\label{lem:id-cone-additive-subgroup}
+Let $\mu$ be an infinitely divisible probability measure on
+\[
+  \Gamma:=\{(u,v)\in\C^2:\ |u|=|v|\}.
+\]
+Then there exists an additive subgroup $G\subset \C^2$ such that
+\[
+  \supp(\mu)\subset \overline{G}\subset \Gamma.
+\]
+\end{lemma}
+
+\begin{proof}
+Since $\mu$ is infinitely divisible, there exists a probability measure $\nu$
+such that
+\[
+  \mu=\nu*\nu.
+\]
+Let
+\[
+  A:=\supp(\nu).
+\]
+By the support formula for convolutions on $\R^4\cong\C^2$,
+\[
+  \supp(\mu)=\supp(\nu*\nu)=\overline{A+A}.
+\]
+Since $\supp(\mu)\subset \Gamma$ and $\Gamma$ is closed, it follows that
+\[
+  A+A\subset \Gamma.
+\]
+
+Define the real quadratic form
+\[
+  Q(u,v):=|u|^2-|v|^2
+\]
+and the associated symmetric real bilinear form
+\[
+  B\bigl((u,v),(u',v')\bigr):=\Re(u\overline{u'}-v\overline{v'}).
+\]
+Then
+\[
+  Q(x+y)=Q(x)+Q(y)+2B(x,y).
+\]
+If $x\in A$, then $2x=x+x\in A+A\subset \Gamma$, so
+\[
+  0=Q(2x)=4Q(x),
+\]
+hence $x\in \Gamma$.  Thus
+\[
+  A\subset \Gamma.
+\]
+Now if $x,y\in A$, then $x+y\in A+A\subset \Gamma$, and therefore
+\[
+  0=Q(x+y)=Q(x)+Q(y)+2B(x,y)=2B(x,y),
+\]
+because $Q(x)=Q(y)=0$.  Hence
+\[
+  B(x,y)=0
+  \qquad (x,y\in A).
+\]
+
+Let $G$ be the additive subgroup generated by $A$.  Thus every $g\in G$ has
+the form
+\[
+  g=\sum_{j=1}^m n_j a_j,
+  \qquad n_j\in\mathbb Z,\ a_j\in A.
+\]
+Using bilinearity and the pairwise orthogonality just proved,
+\[
+  Q(g)=\sum_{j=1}^m n_j^2 Q(a_j)+2\sum_{1\le i<j\le m} n_i n_j B(a_i,a_j)=0.
+\]
+So
+\[
+  G\subset \Gamma.
+\]
+Finally, since $A+A\subset G$,
+\[
+  \supp(\mu)=\overline{A+A}\subset \overline{G}\subset \Gamma.
+\]
+\end{proof}
+
+\begin{lemma}[Additive subgroups of the cone]
+\label{lem:additive-subgroups-cone}
+Let $G\subset \Gamma$ be an additive subgroup, where
+\[
+  \Gamma:=\{(u,v)\in\C^2:\ |u|=|v|\}.
+\]
+Then there exists $\lambda\in\T$ such that
+\[
+  G\subset P_\lambda^+
+  \qquad\text{or}\qquad
+  G\subset P_\lambda^-,
+\]
+where
+\[
+  P_\lambda^+:=\{(z,\lambda z): z\in\C\},
+  \qquad
+  P_\lambda^-:=\{(z,\lambda \overline z): z\in\C\}.
+\]
+\end{lemma}
+
+\begin{proof}
+Let
+\[
+  H:=\operatorname{span}_{\R}(G)\subset \C^2\cong \R^4.
+\]
+Using the same forms
+\[
+  Q(u,v):=|u|^2-|v|^2,
+  \qquad
+  B\bigl((u,v),(u',v')\bigr):=\Re(u\overline{u'}-v\overline{v'}),
+\]
+we have, for every $x,y\in G$,
+\[
+  0=Q(x+y)-Q(x)-Q(y)=2B(x,y),
+\]
+because $x,y,x+y\in \Gamma$.  Thus
+\[
+  B(x,y)=0
+  \qquad (x,y\in G).
+\]
+By bilinearity, $B$ vanishes on $H\times H$, so $H$ is a totally isotropic
+real subspace for the form $B$.  Since $B$ has signature $(2,2)$ on $\R^4$,
+one has
+\[
+  \dim_{\R} H\le 2.
+\]
+
+If $\dim_{\R}H\le 1$, then every nonzero vector of $H$ belongs to $\Gamma$, and
+the line $H$ is contained in both some $P_\lambda^+$ and some $P_\lambda^-$.
+So the conclusion is immediate.
+
+Assume now that $\dim_{\R}H=2$.  Consider the projection
+\[
+  \pi_1:H\to\C,
+  \qquad
+  \pi_1(u,v):=u.
+\]
+If $(0,v)\in H$, then
+\[
+  |v|=|0|=0,
+\]
+so $(0,v)=0$.  Thus $\pi_1$ is injective.  Since both $H$ and $\C$ are
+2-dimensional over $\R$, the map $\pi_1$ is a real-linear isomorphism.  Hence
+$H$ is the graph of a real-linear map $T:\C\to\C$:
+\[
+  H=\{(z,Tz): z\in\C\}.
+\]
+Because $H\subset \Gamma$, one has
+\[
+  |Tz|=|z|
+  \qquad (z\in\C),
+\]
+so $T$ is a real-linear isometry of $\C\cong \R^2$.  Therefore either
+\[
+  Tz=\lambda z
+  \qquad\text{for all } z\in\C,
+\]
+or
+\[
+  Tz=\lambda \overline z
+  \qquad\text{for all } z\in\C,
+\]
+for some $\lambda\in\T$.  Thus
+\[
+  H=P_\lambda^+
+  \qquad\text{or}\qquad
+  H=P_\lambda^-.
+\]
+Since $G\subset H$, the proof is complete.
+\end{proof}
+
+\begin{remark}
+Lemmas~\ref{lem:id-cone-additive-subgroup} and
+\ref{lem:additive-subgroups-cone} give an alternative structural description of
+cone-supported infinitely divisible laws: their support is contained in the
+closure of an additive subgroup lying either in a complex line
+$P_\lambda^+$ or in a conjugate plane $P_\lambda^-$.  This is consistent with
+the Gaussian obstruction $(Z,\overline Z)$ and explains why the rank-one
+structure of the array is needed to rule out the conjugate-plane alternative.
+\end{remark}
+
+\begin{lemma}[Diffuse tails force a nontrivial Gaussian part]
+\label{lem:tail-gaussian-nontrivial}
+Let
+\[
+  V_{n,i}:=(a_i^{(n)}\xi_{n,i},\,b_i^{(n)}\xi_{n,i})\in\C^2\cong\R^4
+\]
+for $i>m_n$, where the coordinates $\xi_{n,i}$ are independent and satisfy
+\[
+  \E[\xi_{n,i}]=0,
+  \qquad
+  \E[|\xi_{n,i}|^2]=1,
+  \qquad
+  \E[|\xi_{n,i}|]\ge A>0.
+\]
+Define
+\[
+  \alpha_{n,i}:=\bigl(|a_i^{(n)}|^2+|b_i^{(n)}|^2\bigr)^{1/2}.
+\]
+Assume that
+\[
+  \max_{i>m_n}\alpha_{n,i}\longrightarrow 0,
+  \qquad
+  \sum_{i>m_n}\alpha_{n,i}^2\longrightarrow \sigma^2>0,
+\]
+and that the row sums
+\[
+  \sum_{i>m_n}V_{n,i}
+\]
+converge in distribution to an infinitely divisible law $\mu$ on $\C^2$.
+Then the Gaussian part of $\mu$ is nontrivial.
+\end{lemma}
+
+\begin{proof}
+Let
+\[
+  \beta_n:=\max_{i>m_n}\alpha_{n,i},
+  \qquad
+  r_n:=\beta_n^{1/2}.
+\]
+Then
+\[
+  r_n\downarrow 0,
+  \qquad
+  \frac{r_n}{\beta_n}\longrightarrow \infty.
+\]
+For each $i>m_n$ with $\alpha_{n,i}\ne 0$, set
+\[
+  K_{n,i}:=\frac{r_n}{\alpha_{n,i}}\ge \frac{r_n}{\beta_n}=\beta_n^{-1/2},
+\]
+so $K_{n,i}\to\infty$ uniformly in $i>m_n$.  Define the centered truncation
+\[
+  \widetilde\xi_{n,i}
+  :=
+  \xi_{n,i}\mathbf 1_{\{|\xi_{n,i}|\le K_{n,i}\}}
+  -
+  \E\!\left[\xi_{n,i}\mathbf 1_{\{|\xi_{n,i}|\le K_{n,i}\}}\right],
+\]
+and set
+\[
+  \widetilde V_{n,i}:=(a_i^{(n)}\widetilde\xi_{n,i},\,b_i^{(n)}\widetilde\xi_{n,i}).
+\]
+If $\alpha_{n,i}=0$, simply set $\widetilde\xi_{n,i}=0$ and
+$\widetilde V_{n,i}=0$.
+
+For every $K>0$ and every centered $\xi$ with $\E|\xi|^2=1$ and
+$\E|\xi|\ge A$, one has
+\[
+  \E|\xi|
+  \le
+  \left(\E\!\left[|\xi|^2\mathbf 1_{\{|\xi|\le K\}}\right]\right)^{1/2}
+  +
+  \E\!\left[|\xi|\mathbf 1_{\{|\xi|>K\}}\right]
+  \le
+  \left(\E\!\left[|\xi|^2\mathbf 1_{\{|\xi|\le K\}}\right]\right)^{1/2}
+  +
+  \frac1K,
+\]
+and therefore
+\[
+  \E\!\left[|\xi|^2\mathbf 1_{\{|\xi|\le K\}}\right]
+  \ge
+  \left(A-\frac1K\right)^2.
+\]
+Also, since $\E[\xi]=0$,
+\[
+  \left|
+    \E\!\left[\xi\mathbf 1_{\{|\xi|\le K\}}\right]
+  \right|
+  =
+  \left|
+    \E\!\left[\xi\mathbf 1_{\{|\xi|>K\}}\right]
+  \right|
+  \le
+  \E\!\left[|\xi|\mathbf 1_{\{|\xi|>K\}}\right]
+  \le
+  \frac1K.
+\]
+Hence
+\[
+  \operatorname{Var}\!\left(
+    \xi\mathbf 1_{\{|\xi|\le K\}}
+    -
+    \E\!\left[\xi\mathbf 1_{\{|\xi|\le K\}}\right]
+  \right)
+  \ge
+  \left(A-\frac1K\right)^2-\frac1{K^2}.
+\]
+Choose $K_0$ large enough that
+\[
+  c_0:=\left(A-\frac1{K_0}\right)^2-\frac1{K_0^2}>0.
+\]
+Since $K_{n,i}\to\infty$ uniformly, for all sufficiently large $n$ one has
+$K_{n,i}\ge K_0$ for every $i>m_n$.  Therefore
+\[
+  \E|\widetilde\xi_{n,i}|^2\ge c_0
+  \qquad (i>m_n).
+\]
+
+Next,
+\[
+  |\widetilde V_{n,i}|
+  \le
+  |V_{n,i}|\mathbf 1_{\{|V_{n,i}|\le r_n\}}
+  +
+  \E\!\left[|V_{n,i}|\mathbf 1_{\{|V_{n,i}|\le r_n\}}\right]
+  \le
+  2r_n,
+\]
+so the centered truncation array is bounded and infinitesimal.  Moreover,
+\[
+  \E|\widetilde V_{n,i}|^2
+  =
+  \alpha_{n,i}^2\,\E|\widetilde\xi_{n,i}|^2
+  \ge
+  c_0\,\alpha_{n,i}^2
+\]
+for all large $n$.  Summing over $i>m_n$ gives
+\[
+  \sum_{i>m_n}\E|\widetilde V_{n,i}|^2
+  \ge
+  c_0\sum_{i>m_n}\alpha_{n,i}^2
+  \longrightarrow
+  c_0\sigma^2>0.
+\]
+
+By the standard shrinking-truncation theorem for infinitesimal triangular
+arrays and infinitely divisible limits, the covariance matrices of these
+centered truncations converge to the Gaussian covariance matrix of $\mu$; see
+for instance Parthasarathy~\cite[Chapter~IV, \S5, pp.~82--96; \S6,
+pp.~97--101; \S7, pp.~102--108]{parthasarathy}; these are the passages
+where the accompanying infinitely divisible laws are constructed and the
+Gaussian component is identified through the covariance of shrinking centered
+truncations.  Since the traces stay bounded away from zero, that Gaussian
+covariance matrix is nonzero.  Thus the Gaussian part of $\mu$ is nontrivial.
+\end{proof}
+
+\begin{lemma}[Degenerate cone case reduces to a line]
+\label{lem:degenerate-cone-line-reduction}
+Let $(R_X,R_Y)$ be the tail limit given by Lemma~\ref{lem:limit-law}, and
+assume
+\[
+  H_X\equiv 0,
+  \qquad
+  H_Y\equiv 0.
+\]
+Then there exists $\tau\in\T$ such that the law of
+\[
+  R_Y-\tau R_X
+\]
+is supported on an affine line.
+\end{lemma}
+
+\begin{proof}
+Let
+\[
+  \mu:=\text{law}(R_X,R_Y).
+\]
+Since $H_X\equiv H_Y\equiv 0$, Lemma~\ref{lem:limit-law} gives
+\[
+  |R_X|=|R_Y|
+  \qquad\text{almost surely,}
+\]
+so
+\[
+  \supp(\mu)\subset \Gamma:=\{(u,v)\in\C^2:\ |u|=|v|\}.
+\]
+
+By Lemmas~\ref{lem:id-cone-additive-subgroup} and
+\ref{lem:additive-subgroups-cone}, there exists $\lambda\in\T$ such that
+\[
+  \supp(\mu)\subset P_\lambda^+
+  \qquad\text{or}\qquad
+  \supp(\mu)\subset P_\lambda^-,
+\]
+where
+\[
+  P_\lambda^+:=\{(z,\lambda z): z\in\C\},
+  \qquad
+  P_\lambda^-:=\{(z,\lambda \overline z): z\in\C\}.
+\]
+
+If $\supp(\mu)\subset P_\lambda^+$, then
+\[
+  R_Y=\lambda R_X
+  \qquad\text{almost surely,}
+\]
+so choosing $\tau:=\lambda$ gives
+\[
+  R_Y-\tau R_X=0
+  \qquad\text{almost surely.}
+\]
+This is already stronger than the conclusion.
+
+It remains to treat the case
+\[
+  \supp(\mu)\subset P_\lambda^-.
+\]
+Then for every support point of $\mu$ there exists $z\in\C$ such that
+\[
+  (R_X,R_Y)=(z,\lambda\overline z).
+\]
+Choosing $\tau:=\lambda$, we obtain
+\[
+  R_Y-\tau R_X
+  =
+  \lambda(\overline z-z)
+  \in
+  i\lambda\,\R.
+\]
+Thus the law of $R_Y-\tau R_X$ is supported on the real line
+\[
+  i\lambda\,\R\subset\C.
+\]
+\end{proof}
+
+\begin{remark}
+Lemma~\ref{lem:tail-gaussian-nontrivial} is exactly where the uniform lower
+$L^1$ bound enters the degenerate-head case.  It gives a positive lower bound
+for the variances of shrinking centered truncations without any appeal to
+uniform $L^2$-integrability of the coordinate family.
+\end{remark}
+
+\begin{remark}
+The jump-part lemmas above remain useful as complementary structural
+information.  In particular, Corollary~\ref{cor:levy-two-slopes} shows that any
+attempt to prove the theorem using only the L\'evy measure would still be
+forced into a real-line-degenerate two-slope analysis.
+\end{remark}
+
+\begin{remark}[Historical route via quadratic mass]
+Before Lemma~\ref{lem:tail-gaussian-nontrivial} was isolated, the degenerate
+case was naturally led by the observation
+\[
+  \sum_{i>m_n}\bigl(|a_i^{(n)}|^2+|b_i^{(n)}|^2\bigr)\longrightarrow 2.
+\]
+Lemma~\ref{lem:tail-gaussian-nontrivial} is the formal version of that
+heuristic: the shrinking-truncation method does produce a nonzero Gaussian part
+once the uniform lower $L^1$ bound is fed into the truncation estimates.
+\end{remark}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Assume for contradiction that Theorem~\ref{thm:main} fails.  Let the bad
+sequence be given by Proposition~\ref{prop:counterexample}.  Apply
+Proposition~\ref{prop:compactness-reduction}.  Thus, after passing to a
+subsequence, there exist head and tail limits $(H_X,H_Y,R_X,R_Y)$ with
+$(H_X,H_Y)$ independent of $(R_X,R_Y)$ and
+\[
+  |H_X+R_X|=|H_Y+R_Y|
+  \qquad\text{almost surely.}
+\]
+
+\medskip
+\noindent
+\textbf{Case 1: $H_X$ is not almost surely constant.}
+By Proposition~\ref{prop:compactness-reduction}, there exists $\tau\in\T$ such
+that
+\[
+  H_Y=\tau H_X
+  \qquad\text{almost surely.}
+\]
+Since $\supp(H_X)$ contains at least two distinct points,
+Lemma~\ref{lem:nontrivial-head-geometry} shows that the law of
+\[
+  W:=R_Y-\tau R_X
+\]
+is supported on an affine line, hence on a generalized circle.
+
+Now
+\[
+  W_n:=Y_n^{\mathrm{tail}}-\tau X_n^{\mathrm{tail}}
+  =
+  \sum_{i>m_n}(b_i^{(n)}-\tau a_i^{(n)})\,\xi_{n,i}
+\]
+converges in distribution to $W$.  The coefficients are diffuse because
+Lemma~\ref{lem:profile} gives
+\[
+  \max_{i>m_n}|b_i^{(n)}-\tau a_i^{(n)}|
+  \le
+  2\max_{i>m_n}\max\bigl(|a_i^{(n)}|,|b_i^{(n)}|\bigr)\longrightarrow 0.
+\]
+Therefore Proposition~\ref{prop:tail-rigidity} implies
+\[
+  \|b^{(n)}_{\mathrm{tail}}-\tau a^{(n)}_{\mathrm{tail}}\|_2\longrightarrow 0.
+\]
+By Proposition~\ref{prop:head},
+\[
+  \|b^{(n)}_{\mathrm{head}}-\tau a^{(n)}_{\mathrm{head}}\|_2\longrightarrow 0.
+\]
+Hence
+\[
+  \|b^{(n)}-\tau a^{(n)}\|_2\longrightarrow 0.
+\]
+This contradicts the orthogonal normalization, since
+\[
+  \|b^{(n)}-\tau a^{(n)}\|_2^2
+  =
+  \|a^{(n)}\|_2^2+\|b^{(n)}\|_2^2
+  -2\Re\bigl(\tau\langle a^{(n)},b^{(n)}\rangle\bigr)
+  = 2.
+\]
+
+\medskip
+\noindent
+\textbf{Case 2: $H_X$ is almost surely constant.}
+Since $H_X$ is centered as a weak limit of centered random variables, one has
+\[
+  H_X\equiv 0,
+  \qquad
+  H_Y\equiv 0.
+\]
+By Lemma~\ref{lem:degenerate-cone-line-reduction}, there exists $\tau_0\in\T$
+such that the law of
+\[
+  W:=R_Y-\tau_0 R_X
+\]
+is supported on an affine line, hence on a generalized circle.  Therefore
+Proposition~\ref{prop:tail-rigidity} applied to
+\[
+  W_n:=Y_n^{\mathrm{tail}}-\tau_0 X_n^{\mathrm{tail}}
+\]
+shows that
+\[
+  \|b^{(n)}_{\mathrm{tail}}-\tau_0 a^{(n)}_{\mathrm{tail}}\|_2\longrightarrow 0.
+\]
+Because $H_X\equiv H_Y\equiv 0$, the head limits vanish, so
+\[
+  \|a^{(n)}_{\mathrm{head}}\|_2\longrightarrow 0,
+  \qquad
+  \|b^{(n)}_{\mathrm{head}}\|_2\longrightarrow 0.
+\]
+Thus
+\[
+  \|b^{(n)}-\tau_0 a^{(n)}\|_2\longrightarrow 0,
+\]
+again contradicting the orthogonal normalization.
+\end{proof}
+
+\begin{remark}[Alternative Gaussian route in the degenerate case]
+The proof of Lemma~\ref{lem:degenerate-cone-line-reduction} does not use the
+Gaussian part.  Nevertheless, the same conclusion also follows from
+Lemma~\ref{lem:tail-gaussian-nontrivial}.  Indeed, if
+\[
+  |R_X|=|R_Y|
+\]
+and one writes the tail law as a convolution of its Gaussian part and its
+independent remainder, then the Gaussian part is nontrivial and, by
+Lemma~\ref{lem:gaussian-one-slope}, lies in a single complex line
+\[
+  \{(z,\tau z): z\in\C\}.
+\]
+Using the exact modulus identity and Lemma~\ref{lem:nontrivial-head-geometry}
+with the Gaussian first coordinate as the new head again forces
+$R_Y-\tau R_X$ onto an affine line.  Thus the degenerate case admits both a
+pure support proof and an independent Gaussian-based proof.
+\end{remark}
+
+\bibliographystyle{plain}
+\begin{thebibliography}{10}
+
+\bibitem{complex_spr}
+P.~Abdalla Teixeira, J.~de~Dios Pont, J.~P.~Ramos, and M.~Taylor,
+\newblock A complex stable phase retrieval theorem,
+\newblock Preprint, 2024.
+
+\bibitem{complex_spr_app}
+P.~Abdalla Teixeira, J.~de~Dios Pont, J.~P.~Ramos, and M.~Taylor,
+\newblock A complex stable phase retrieval theorem, appendix draft,
+\newblock Preprint, 2024.
+
+\bibitem{compactness_real}
+P.~Abdalla Teixeira, J.~de~Dios Pont, J.~P.~Ramos, and M.~Taylor,
+\newblock A compactness proof of stable phase retrieval,
+\newblock Preprint, 2024.
+
+\bibitem{FOTP}
+D.~Freeman, D.~Okpoti, S.~A.~Teixeira, and D.~Phong,
+\newblock Phase retrieval in infinite-dimensional Hilbert spaces,
+\newblock Preprint, 2023.
+
+\bibitem{calderbank2022stable}
+A.~R.~Calderbank, I.~Daubechies, B.~Freeman, and S.~Freeman,
+\newblock Stable phase retrieval and perturbations of frames,
+\newblock {\em SIAM J.\ Appl.\ Algebra Geom.}, 2022.
+
+\bibitem{gnedenko-kolmogorov}
+B.~V.~Gnedenko and A.~N.~Kolmogorov,
+\newblock {\em Limit Distributions for Sums of Independent Random Variables},
+\newblock Addison-Wesley, 1954.
+
+\bibitem{parthasarathy}
+K.~R.~Parthasarathy,
+\newblock {\em Probability Measures on Metric Spaces},
+\newblock Academic Press, 1967; AMS Chelsea reprint, 2005.
+
+\end{thebibliography}
+
+\end{document}

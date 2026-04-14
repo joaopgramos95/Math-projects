@@ -1,0 +1,2332 @@
+
+\documentclass[12pt]{article}
+
+\usepackage{amsmath, amsthm, amssymb, mathtools}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+
+\geometry{margin=1.25in}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{warning}[theorem]{Warning}
+
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\type}{type}
+\DeclareMathOperator{\Stab}{Stab}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\PW}{\mathrm{PW}}
+\newcommand{\Sph}{\mathbb{S}}
+\newcommand{\wh}{\widehat}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\ip}[2]{\left\langle #1,\, #2\right\rangle}
+\newcommand{\re}{\operatorname{Re}}
+
+% Status markers
+\newcommand{\proven}{\textbf{\color{teal}[Proved]}}
+\newcommand{\conditional}{\textbf{\color{orange}[Conditional]}}
+\newcommand{\open}{\textbf{\color{red}[Open]}}
+\newcommand{\heuristic}{\textbf{\color{purple}[Heuristic]}}
+
+\title{\textbf{Nonlinear Convolution Equations, Spectral Rigidity,\\
+and the Sharp Restriction Constant on $S^1$}\\[0.5em]
+\large A Compactness Route to Finiteness of Critical Values}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\bigskip
+
+% =======================================================================
+\section{Overview and Strategy}
+% =======================================================================
+
+The ultimate target of this programme is the sharp Fourier extension
+constant on the unit circle $S^1\subset\R^2$:
+\[
+  \mathcal R
+  :=
+  \sup_{0\neq f\in L^2(S^1)}
+  \frac{\norm{\wh{f\sigma}}_{L^6(\R^2)}}{\norm{f}_{L^2(S^1)}},
+\]
+where $\sigma$ is arclength measure on $S^1$.  Every extremiser satisfies a
+nonlinear convolution equation on the sphere that fits into a general
+framework studied in the first part of this note.
+
+\subsection{The main strategy}
+
+After normalising $\norm{f}_{L^2}=1$ and writing $u=\wh{f\sigma}$, an
+extremiser satisfies the Euler--Lagrange equation
+\[
+  u = c\bigl((|u|^4u)\ast\wh\sigma\bigr),
+  \qquad c=\Lambda^{-1},\qquad \Lambda=\norm{u}_{L^6}^6.
+\]
+The strategy is:
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Spectral support forcing.}  Show that $\wh u$ is supported
+    on~$S^1$, reducing from all of~$\R^2$ to a density
+    $\rho\in L^2(S^1)$.  \proven
+  \item \textbf{Fredholm structure.}  Prove that the linearisation of the
+    Euler--Lagrange map at any critical point is Fredholm of index zero,
+    so that solutions are locally isolated modulo symmetry.  \proven
+  \item \textbf{Compactness modulo symmetry.}  Show that the set of normalised
+    critical points is sequentially compact after quotienting by the symmetry
+    group $G=U(1)\times SO(2)\ltimes\R^2$.  \open
+  \item \textbf{Nondegeneracy.}  At each critical point, verify that the kernel
+    of the linearisation equals the tangent space to the symmetry orbit.
+    At the constant solution, this reduces to finitely many Bessel integral
+    inequalities.  \conditional
+  \item \textbf{Finiteness and identification.}  Conclude that the critical
+    values $\Lambda_j$ are finitely many, and identify the sharp constant as
+    $\mathcal R = \max_j \Lambda_j^{1/6}$.  \conditional
+\end{enumerate}
+
+\subsection{Status summary}
+\renewcommand{\arraystretch}{1.4}
+\begin{center}
+\begin{tabular}{lll}
+\hline
+\textbf{Component} & \textbf{Status} & \textbf{Key input} \\
+\hline
+Spectral support forcing (any $n$) &
+  \proven & Paley--Wiener + support calculus \\
+Compactness of $T$ on $\PW$ (general) &
+  \proven & Rellich for PW spaces \\
+Compactness of $K_{u_0}$ on $L^2(S^1)$ &
+  \proven & Truncation + Hilbert--Schmidt \\
+Fredholm structure ($I-K$ index 0) &
+  \proven & Riesz--Schauder \\
+1D case ($S^0$) & \proven & Explicit algebraic solution \\
+Nondegeneracy at constant solution &
+  \conditional & Bessel integrals $\mathcal J_n$ \\
+Existence of maximiser &
+  \proven & Profile decomposition + strict convexity \\
+Compactness modulo $G$ (all critical pts) &
+  \open & Ruling out multi-profile splitting \\
+Finiteness of critical values &
+  \conditional & Items 3 + 4 above \\
+Higher-dimensional generalisations &
+  \open & Incidence-fibre smoothing \\
+\hline
+\end{tabular}
+\end{center}
+
+% =======================================================================
+% PART I: GENERAL THEORY
+% =======================================================================
+
+\part{General Theory}
+
+% =======================================================================
+\section{Setup and Notation}
+\label{sec:setup}
+% =======================================================================
+
+We work throughout with \emph{entire functions of finite exponential type}.
+An entire function $u:\C\to\C$ has \emph{exponential type} $\tau\geq 0$ if
+$\abs{u(z)}\leq Ce^{\tau\abs{z}}$ for some $C>0$ and all $z\in\C$.
+The \emph{Paley--Wiener--Schwartz theorem} identifies this class:
+$u$ is entire of type $\leq\tau$ with $u|_{\R}\in L^2(\R)$ if and only if
+$\wh u\in L^2$ is supported in $[-\tau,\tau]$.
+We write $\PW_\tau$ for the corresponding Hilbert space.
+
+Fourier conventions:
+\[
+  \wh u(\xi)=\int_\R u(x)e^{-ix\xi}\,dx,
+  \qquad
+  u(x)=\frac{1}{2\pi}\int_\R \wh u(\xi)e^{ix\xi}\,d\xi,
+\]
+so $\widehat{u\ast v}=\wh u\cdot\wh v$ and
+$\widehat{u\cdot v}=\tfrac{1}{2\pi}\wh u\ast\wh v$.
+
+Throughout, $k\geq 1$ is a fixed positive integer, $c\in\C\setminus\{0\}$
+is a fixed constant, and $f$ is an entire function of exponential type
+$\tau_f>0$ whose restriction to~$\R$ lies in $L^2(\R)$.
+
+% =======================================================================
+\section{The Two Convolution Equations}
+\label{sec:two-eqns}
+% =======================================================================
+
+\subsection{The equation $u^k=c\,(u\ast f)$: spectral expansion kills solutions}
+
+In Fourier space the equation reads
+$\wh u^{\ast k}(\xi)=c\,\wh u(\xi)\wh f(\xi)$.
+
+\begin{proposition}[Type obstruction]  \label{prop:type-obstruction}
+  Let $u\in\PW_\tau$ with $\tau>0$ satisfy $u^k=c(u\ast f)$ for $k\geq 2$.
+  Then $u\equiv 0$.
+\end{proposition}
+
+\begin{proof}
+  The Titchmarsh convolution theorem gives
+  $\supp(\wh u^{\ast k})\subseteq[-k\tau,k\tau]$, while the right side is
+  supported in $[-\tau,\tau]$.  For $k\geq 2$ this forces $\tau=0$, so $u$
+  is a polynomial; degree comparison then forces $u$ to be constant, and the
+  only constants satisfying the equation are the $(k-1)$-th roots of
+  $c\wh f(0)$ together with $0$.
+\end{proof}
+
+\begin{corollary}
+  For $k\geq 2$ the solution set of $u^k=c(u\ast f)$ in the Paley--Wiener
+  class is a finite discrete set of at most $k$ constants.
+\end{corollary}
+
+\subsection{The equation $u=c\,(u^k\ast f)$: compact fixed-point structure}
+\label{sec:reversed-eqn}
+
+We now turn to the equation
+\begin{equation}  \label{eq:main}
+  u = c\,(u^k\ast f).
+\end{equation}
+In Fourier space:
+\begin{equation}  \label{eq:main-fourier}
+  \wh u(\xi) = c\,\wh u^{\ast k}(\xi)\cdot\wh f(\xi).
+\end{equation}
+
+\begin{proposition}[Type self-consistency]
+  Any solution $u\in\PW_\tau$ of~\eqref{eq:main} satisfies $\tau\leq\tau_f$.
+\end{proposition}
+
+\begin{proof}
+  The right side of~\eqref{eq:main-fourier} is supported in
+  $\supp(\wh u^{\ast k})\cap\supp(\wh f)\subseteq[-\tau_f,\tau_f]$.
+\end{proof}
+
+This is the key contrast: the equation $u=c(u^k\ast f)$ does \emph{not}
+force $\tau=0$; solutions of positive exponential type exist as long as
+$\tau\leq\tau_f$.
+
+\begin{proposition}[Compactness of $T$ on Paley--Wiener spaces]
+  \label{prop:T-compact-PW}
+  Define $T:\PW_{\tau_f}\to\PW_{\tau_f}$ by $T(v)=c(v^k\ast f)$.  Then
+  $T$ maps bounded sets in $\PW_\tau$ (for any $\tau>\tau_f$) to precompact
+  sets in $\PW_\tau$.  In particular, $T:\PW_\tau\to\PW_\tau$ is a compact
+  operator.
+\end{proposition}
+
+\begin{proof}
+  Since $v\in\PW_{\tau_f}$ implies $v^k\in\PW_{k\tau_f}$, the function
+  $v^k\ast f$ has Fourier support in
+  $\supp(\wh{v^k})\cap\supp(\wh f)\subseteq[-\tau_f,\tau_f]$.
+  Hence $T$ maps $\PW_\tau$ into $\PW_{\tau_f}$, and the inclusion
+  $\PW_{\tau_f}\hookrightarrow\PW_\tau$ is compact by the Rellich-type
+  theorem for Paley--Wiener spaces.
+\end{proof}
+
+\subsection{Fredholm structure and local manifold theorem}
+
+At a solution $u_0$ of~\eqref{eq:main}, the Fr\'echet derivative of
+$G(u):=u-c(u^k\ast f)$ is
+\[
+  DG(u_0)[h] = h - ck(u_0^{k-1}h\ast f) =: (I-K)[h],
+\]
+where $K:h\mapsto ck(u_0^{k-1}h\ast f)$ is compact by the same argument.
+By Riesz--Schauder, $I-K$ is \textbf{Fredholm of index zero}.
+
+\begin{theorem}[Local manifold structure]
+  \label{thm:local-mfd}
+  Let $u_0$ be a solution of~\eqref{eq:main} at which $DG(u_0)=I-K$ is
+  invertible.  Then $u_0$ is an isolated solution.  More generally, the
+  solution set near $u_0$ is a smooth manifold of dimension
+  $\dim\ker(I-K)$, which is finite.
+\end{theorem}
+
+\begin{remark}[Direct contraction argument]
+  For $u,v$ in a ball of radius $R$ in $\PW_{\tau_f}$, Young's inequality
+  gives
+  $\norm{T(u)-T(v)} \leq \abs{c}kR^{k-1}\norm{f}_{L^1}\norm{u-v}$.
+  This is a contraction whenever $R<(\abs{c}k\norm{f}_{L^1})^{-1/(k-1)}$,
+  giving local uniqueness without spectral theory.
+\end{remark}
+
+\subsection{Comparison of the two equations}
+
+\renewcommand{\arraystretch}{1.5}
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\hline
+& $u^k=c(u\ast f)$ & $u=c(u^k\ast f)$ \\
+\hline
+Fourier identity & $\wh u^{\ast k}=c\wh u\wh f$ &
+  $\wh u=c\wh u^{\ast k}\cdot\wh f$ \\
+Type constraint ($k\geq 2$) & Forces $\tau=0$ (Titchmarsh) &
+  Allows $\tau\leq\tau_f$ \\
+Operator structure & No compactness & $T$ compact \\
+Linearisation & Not Fredholm in general &
+  $I-K$, Fredholm index $0$ \\
+Solutions ($k\geq 2$, generic) &
+  Finitely many constants & Isolated; Leray--Schauder applies \\
+\hline
+\end{tabular}
+\caption{Analytic contrast between the two convolution equations.}
+\end{table}
+
+% =======================================================================
+\section{Spectral Support Forcing}
+\label{sec:spectral-forcing}
+% =======================================================================
+
+We specialise to $f=\wh\sigma$, where $\sigma$ is the surface measure on
+$S^{n-1}\subset\R^n$.  By the Paley--Wiener theorem, $f$ is entire of
+exponential type~$1$, and $\wh f=(2\pi)^n\sigma$ as a distribution.
+
+\begin{proposition}[Spectral support forcing]
+  \label{prop:support-forcing}
+  If $u$ is entire of exponential type satisfying $u=c(u^k\ast\wh\sigma)$,
+  then $\wh u$ is a distribution supported on~$S^{n-1}$.
+  The same conclusion holds for the equation $u=c(|u|^{2(k-1)}u\ast\wh\sigma)$.
+\end{proposition}
+
+\begin{proof}
+  From~\eqref{eq:main-fourier}, $\wh u=c\,\wh u^{\ast k}\cdot(2\pi)^n\sigma$.
+  The right side is supported on $\supp\sigma=S^{n-1}$.
+
+  For the $|u|^{2(k-1)}u$ variant: writing $|u|^{2(k-1)}u=u^k\bar u^{k-1}$
+  in Fourier space involves $(k-1)$-fold convolutions of $\wh{\bar u}$, where
+  $\wh{\bar u}(\xi)=\overline{\wh u(-\xi)}$.  Since $S^{n-1}$ is symmetric
+  under $\xi\mapsto-\xi$, the support of all convolved terms lies in the
+  sumset of copies of $\pm S^{n-1}$, and multiplication by $\sigma$ restricts
+  back to $S^{n-1}$.
+\end{proof}
+
+\begin{remark}
+  In dimension $n\geq 2$, the conclusion $\supp\wh u\subseteq S^{n-1}$ means
+  $u$ is a \emph{Herglotz wave function}, satisfying $(-\Delta-1)u=0$.
+\end{remark}
+
+\subsection{Reduction to a density equation on the sphere}
+
+Write $\wh u=\rho\,d\sigma$ for $\rho\in L^2(S^{n-1})$, so
+\[
+  u(x) = \int_{S^{n-1}}\rho(\omega)e^{ix\cdot\omega}\,d\sigma(\omega).
+\]
+The equation $u=c(u^k\ast\wh\sigma)$ then reduces to the
+\emph{spherical fixed-point equation}
+\begin{equation}  \label{eq:sphere-eq}
+  \rho(\omega) = c\int_{V_k(\omega)}\rho(\omega_1)\cdots\rho(\omega_k)
+    \,d\sigma_{\mathrm{fiber}}(\omega_1,\ldots,\omega_k),
+  \qquad \sigma\text{-a.e.}\ \omega\in S^{n-1},
+\end{equation}
+where $V_k(\omega)=\{(\omega_1,\ldots,\omega_k)\in(S^{n-1})^k:
+\omega_1+\cdots+\omega_k=\omega\}$ is the incidence fibre.
+
+\begin{warning}[Incidence fibre $\neq$ spherical convolution]
+  \label{warn:not-convolution}
+  The operator $T(\rho)(\omega)=\int_{V_k(\omega)}\rho^{\otimes k}\,
+  d\sigma_\mathrm{fiber}$ is \emph{not} the same as convolution by the
+  spherical measure.  In particular, the Funk--Hecke theorem does not
+  diagonalise~$T$ in spherical harmonics.  Any reduction to finitely many
+  harmonic coefficients requires separate justification.
+\end{warning}
+
+% =======================================================================
+\section{The One-Dimensional Case: Complete Solution}
+\label{sec:1D}
+% =======================================================================
+
+For $n=1$, $S^0=\{-1,+1\}$, $\sigma=\delta_{-1}+\delta_{+1}$, and
+$f(x)=\wh\sigma(x)=2\cos x$.  Proposition~\ref{prop:support-forcing} forces
+$\wh u=a\delta_{-1}+b\delta_{+1}$, so $u(x)=ae^{-ix}+be^{ix}$.
+
+\subsection{Algebraic reduction}
+
+Expanding $u^k$ and computing $u^k\ast f$ picks out frequencies
+$\pm 1$, which exist only when $k$ is \textbf{odd}.
+
+\begin{proposition}[Parity obstruction]
+  If $k$ is even, the equation $u=c(u^k\ast f)$ with $f=2\cos$ has only
+  $u\equiv 0$.
+\end{proposition}
+
+For $k$ odd, setting $\beta_k:=\binom{k}{(k-1)/2}$ and comparing coefficients
+of $e^{\mp ix}$ gives the single constraint
+\begin{equation}  \label{eq:constraint}
+  ab = \lambda_k,
+  \qquad
+  \lambda_k := \left(\frac{1}{2\pi c\beta_k}\right)^{2/(k-1)}.
+\end{equation}
+
+\begin{theorem}[Complete solution in 1D]  \label{thm:main-1d}
+  \proven\quad
+  Let $k\geq 3$ be odd, $c\in\C\setminus\{0\}$, $f=2\cos$.
+  The solution set of $u=c(u^k\ast f)$ in the Paley--Wiener class is
+  \[
+    \{0\}
+    \;\cup\;
+    \bigsqcup_{j=0}^{(k-3)/2}
+      \{(a,b)\in\C^2:ab=\omega^j\lambda_k\},
+    \qquad \omega=e^{4\pi i/(k-1)}.
+  \]
+  This is a finite union of $(k-1)/2$ smooth one-dimensional complex
+  manifolds (each $\cong\C^*$), plus the origin.
+  Each component is exactly the translation orbit of any single non-trivial
+  solution on it: the translation $u(x)\mapsto u(x-t)$ acts by
+  $(a,b)\mapsto(e^{-it}a,e^{it}b)$, preserving~$ab$.
+\end{theorem}
+
+\begin{example}[$k=3$]
+  $\beta_3=3$.  Constraint: $ab=(6\pi c)^{-1}$.  One component, the
+  translation orbit of $u(x)=(6\pi c)^{-1/2}\cos x$.
+\end{example}
+
+\begin{example}[$k=5$]
+  $\beta_5=10$.  Constraint: $ab=(20\pi c)^{-1/2}$.  Two components
+  (the scaling group $\mu_2=\{1,-1\}$ generates a second hyperbola).
+\end{example}
+
+\begin{remark}[Real solutions]
+  For real-valued solutions $b=\bar a$, so $ab=|a|^2\geq 0$.  Only the
+  hyperbola with $\lambda_k\in\R_{>0}$ contributes; the real solution
+  manifold is the circle $|a|=|\lambda_k|^{1/2}$, parametrised by
+  translations.
+\end{remark}
+
+% =======================================================================
+% PART II: THE S^1 RESTRICTION PROBLEM
+% =======================================================================
+
+\part{The $S^1$ Restriction Problem}
+
+% =======================================================================
+\section{The Sharp Restriction Constant and Its Euler--Lagrange Equation}
+\label{sec:restriction}
+% =======================================================================
+
+\subsection{Setup}
+
+The sharp Fourier extension constant on $S^1\subset\R^2$ is
+\[
+  \mathcal R
+  :=
+  \sup_{\substack{f\in L^2(S^1)\\ f\neq 0}}
+  \frac{\norm{Ef}_{L^6(\R^2)}}{\norm{f}_{L^2(S^1)}},
+  \qquad
+  (Ef)(x):=\int_{S^1}f(\omega)e^{ix\cdot\omega}\,d\sigma(\omega),
+\]
+where $\sigma$ is the arclength measure on $S^1$ (total mass $2\pi$).
+Every extension $u=Ef$ satisfies $(-\Delta-1)u=0$.
+
+\subsection{The Euler--Lagrange equation}
+
+Normalise $\norm{f}_{L^2(S^1)}=1$.  A critical point of
+$f\mapsto\norm{Ef}_{L^6}^6$ on the unit sphere satisfies
+\begin{equation}  \label{eq:EL}
+  E^*(|u|^4u) = \Lambda f,
+  \qquad u=Ef,\qquad \Lambda=\norm{u}_{L^6}^6,
+\end{equation}
+where $E^*:L^{6/5}(\R^2)\to L^2(S^1)$ is the adjoint restriction:
+$(E^*g)(\omega)=\int_{\R^2}g(x)e^{-ix\cdot\omega}\,dx$ restricted to
+$\omega\in S^1$.  Equivalently,
+\begin{equation}  \label{eq:EL-u}
+  u = c\bigl((|u|^4u)\ast\wh\sigma\bigr),
+  \qquad c=\Lambda^{-1}.
+\end{equation}
+
+\begin{warning}[The nonlinearity is $|u|^4u$, not $u^5$]
+  The restriction problem gives $|u|^4u=u^3\bar u^2$, which is
+  degree~$5$ but \emph{not} holomorphic.  The linearisation is
+  \emph{real-linear}, not complex-linear: the Jacobian couples the Fourier
+  mode~$n$ to mode~$-n$.  This distinction is essential for the spectral
+  analysis in Section~\ref{sec:nondeg}.
+\end{warning}
+
+\subsection{The symmetry group}
+
+The natural symmetry group is
+\[
+  G = U(1)\times SO(2)\ltimes\R^2,
+  \qquad \dim G=4.
+\]
+It acts on densities by
+\[
+  (e^{i\alpha},R,x_0)\cdot f(\omega)
+  = e^{i\alpha}e^{-ix_0\cdot\omega}f(R^{-1}\omega).
+\]
+Phase, rotation, and modulation/translation all preserve $\norm{f}_{L^2}$
+and $\norm{Ef}_{L^6}$, hence preserve~$\Lambda$.  Every critical point
+generates a $G$-orbit of critical points with the same~$\Lambda$.
+
+\begin{definition}[Shape]
+  A \emph{shape} is an equivalence class of normalised critical points modulo
+  the $G$-action.  Two critical points with the same shape have the same
+  critical value~$\Lambda$.
+\end{definition}
+
+\subsection{What ``finding all critical values'' means}
+
+The search problem is: determine the finite set
+\[
+  \mathcal Z
+  :=
+  \{(f,\Lambda):E^*(|Ef|^4Ef)=\Lambda f,\;\norm{f}_2=1\}/G.
+\]
+If $\mathcal Z$ is finite, the sharp restriction constant is
+\[
+  \mathcal R = \max_{[f,\Lambda]\in\mathcal Z}\Lambda^{1/6}
+  = c_{\min}^{-1/6},
+\]
+where $c_{\min}$ is the smallest positive $c_j=\Lambda_j^{-1}$.
+The normalisation $\norm{f}_2=1$ is essential: without it, $\alpha u$ solves
+the equation with $c$ replaced by $c\alpha^{-4}$, preventing discreteness.
+
+\subsection{Positive representatives for extremisers}
+
+The exponent $6$ gives a useful reduction for the \emph{extremiser}
+search.
+
+\begin{lemma}[Even-exponent positivity reduction]
+  \label{lem:positive-reduction}
+  For every $f\in L^2(S^1)$,
+  \[
+    \norm{Ef}_{L^6(\R^2)} \leq \norm{E|f|}_{L^6(\R^2)}.
+  \]
+  Consequently, if $f$ is an extremiser, then $|f|$ is also an extremiser.
+  In particular, to identify the sharp constant it is enough to search
+  among nonlinear eigenfunctions with a nonnegative representative.
+\end{lemma}
+
+\begin{proof}
+  By Plancherel and the fact that $6=2\cdot 3$, up to the fixed Fourier
+  normalisation constant,
+  \[
+    \norm{Ef}_{L^6}^6
+    = \norm{(f\sigma)*(f\sigma)*(f\sigma)}_{L^2(\R^2)}^2 .
+  \]
+  The convolution density satisfies the pointwise estimate
+  \[
+    \abs{(f\sigma)*(f\sigma)*(f\sigma)}
+    \leq (|f|\sigma)*(|f|\sigma)*(|f|\sigma)
+  \]
+  almost everywhere.  Squaring and integrating, then applying Plancherel
+  in the reverse direction, gives the asserted inequality.
+
+  Since $\norm{|f|}_{L^2(S^1)}=\norm{f}_{L^2(S^1)}$, replacing an
+  extremiser by its modulus preserves the quotient and hence produces
+  another extremiser.
+\end{proof}
+
+\begin{remark}
+  Lemma~\ref{lem:positive-reduction} is an extremiser reduction, not a
+  classification of all critical points.  A non-maximal critical point need
+  not have a nonnegative representative.  Thus the full compactness theorem
+  for every critical sequence remains stronger than what is needed merely
+  to compute~$\mathcal R$.
+\end{remark}
+
+% =======================================================================
+\section{Fredholm Structure of the Linearisation}
+\label{sec:fredholm}
+% =======================================================================
+
+\subsection{The extension operator $E$ is not compact}
+
+One might hope that $E:L^2(S^1)\to L^6(\R^2)$ is compact, which would
+immediately give compactness of the nonlinear map $T(f)=E^*(|Ef|^4Ef)$.
+This is \textbf{false}.
+
+\begin{proposition}[$E$ is not compact]
+  \label{prop:E-not-compact}
+  \proven\quad
+  The extension operator $E:L^2(S^1)\to L^6(\R^2)$ is bounded
+  (Stein--Tomas) but not compact.
+\end{proposition}
+
+\begin{proof}
+  Fix $f\in L^2(S^1)$ with $\norm{f}_2=1$ and $\norm{Ef}_{L^6}>0$.
+  For $n\in\N$, define $f_n(\omega):=e^{-ine_1\cdot\omega}f(\omega)$
+  where $e_1=(1,0)$.  Then $\norm{f_n}_2=1$ and
+  $Ef_n(x)=Ef(x-ne_1)=u(x-ne_1)$, a translate of $u=Ef$.
+
+  For $n\neq m$ with $|n-m|$ large, the supports of $|u(\cdot-ne_1)|$ and
+  $|u(\cdot-me_1)|$ in any $L^6$-significant region are essentially disjoint
+  (since $u(x)\to 0$ as $|x|\to\infty$ by Riemann--Lebesgue), so
+  \[
+    \norm{Ef_n-Ef_m}_{L^6}
+    = \norm{u(\cdot-ne_1)-u(\cdot-me_1)}_{L^6}
+    \;\xrightarrow{|n-m|\to\infty}\;
+    2^{1/6}\norm{u}_{L^6}>0.
+  \]
+  Hence $\{Ef_n\}$ has no Cauchy subsequence.
+\end{proof}
+
+The obstruction is the noncompact translation symmetry: high-frequency
+modulations on $S^1$ shift the extension arbitrarily far in $x$-space.
+This means compactness of the critical set requires quotienting by~$G$;
+it cannot be deduced from a single operator bound.
+
+\subsection{The linearised operator $K_{u_0}$ is compact}
+
+Despite the non-compactness of $E$, the \emph{specific} operator appearing
+in the linearisation is compact, thanks to the decay of the solution $u_0$.
+
+\begin{definition}
+  At a critical point $f_0$ with $u_0=Ef_0$, define the linearised operator
+  $K=K_{u_0}:L^2(S^1)\to L^2(S^1)$ by
+  \[
+    Kh := E^*\bigl(DN(u_0)[Eh]\bigr),
+  \]
+  where $DN(u_0)[v]=3|u_0|^4v+2|u_0|^2u_0^2\bar v$ is the (real-linear)
+  Fr\'echet derivative of $N(u)=|u|^4u$.
+\end{definition}
+
+\begin{theorem}[Compactness of $K_{u_0}$]
+  \label{thm:K-compact}
+  \proven\quad
+  For any $u_0=Ef_0$ with $f_0\in L^2(S^1)$, the operator
+  $K_{u_0}:L^2(S^1)\to L^2(S^1)$ is compact.
+\end{theorem}
+
+\begin{proof}
+  We prove compactness for the ``main term''
+  $K_1 h:=E^*(|u_0|^4 Eh)$; the argument for
+  $K_2 h:=E^*(|u_0|^2 u_0^2\overline{Eh})$ is identical,
+  and $K=3K_1+2K_2$.
+
+  \medskip\noindent
+  \textbf{Step 1: Truncation.}
+  For $R>0$ let $\chi_R$ denote the indicator of $B(0,R)\subset\R^2$ and
+  set $K_1^R h:=E^*(\chi_R\,|u_0|^4\,Eh)$.  Then
+  \[
+    \norm{K_1-K_1^R}_{L^2\to L^2}
+    \leq
+    \norm{E^*}_{L^{6/5}\to L^2}
+    \;\norm{(1-\chi_R)|u_0|^4}_{L^{3/2}}
+    \;\norm{E}_{L^2\to L^6}.
+  \]
+  Here $\norm{E}$ and $\norm{E^*}$ are the (finite) Stein--Tomas constants,
+  and
+  \[
+    \norm{(1-\chi_R)|u_0|^4}_{L^{3/2}}^{3/2}
+    = \int_{|x|>R}|u_0|^6\,dx
+    \;\xrightarrow{R\to\infty}\; 0,
+  \]
+  since $u_0\in L^6(\R^2)$.  Hence $\norm{K_1-K_1^R}_{\mathrm{op}}\to 0$.
+
+  \medskip\noindent
+  \textbf{Step 2: $K_1^R$ is Hilbert--Schmidt.}
+  The integral kernel of $K_1^R$ on $S^1\times S^1$ is
+  \[
+    \mathcal K_R(\omega,\omega')
+    = \int_{B(0,R)}|u_0(x)|^4\,e^{ix\cdot(\omega'-\omega)}\,dx.
+  \]
+  Since $|u_0|^4\chi_R\in L^1(\R^2)\cap L^\infty(\R^2)$ (bounded and
+  compactly supported), its Fourier transform is continuous on $\R^2$.
+  Therefore $\mathcal K_R$ is continuous on the compact set $S^1\times S^1$,
+  hence bounded, and in particular belongs to $L^2(S^1\times S^1)$.
+  Thus $K_1^R$ is Hilbert--Schmidt, hence compact.
+
+  \medskip\noindent
+  \textbf{Step 3: Conclusion.}
+  $K_1=\lim_{R\to\infty}K_1^R$ in operator norm, where each $K_1^R$ is
+  compact.  Hence $K_1$ is compact.
+\end{proof}
+
+\begin{corollary}[Fredholm structure]  \label{cor:fredholm}
+  \proven\quad
+  At any critical point $f_0$ of the restriction functional with
+  $\norm{f_0}_2=1$ and $\Lambda_0=\norm{Ef_0}_6^6>0$, the operator
+  \[
+    L := K_{u_0} - \Lambda_0 I
+  \]
+  has the form $L=K-\Lambda_0 I$ with $K$ compact.  Therefore
+  $L:L^2(S^1)\to L^2(S^1)$ is Fredholm of index zero.
+  In particular, $\ker L$ is finite-dimensional, and $L$ is invertible
+  if and only if $\ker L=\{0\}$.
+\end{corollary}
+
+\begin{remark}[Self-adjointness]
+  With respect to the real inner product
+  $\re\ip{f}{g}_{L^2(S^1)}$, the operator $K$ is self-adjoint.
+  Indeed, $DN(u_0)$ is self-adjoint on $L^2(\R^2,\re\ip{\cdot}{\cdot})$
+  (it is the Hessian of the real functional $u\mapsto\tfrac{1}{6}|u|^6$),
+  and $E^*$ is the adjoint of $E$.  Consequently, the eigenvalues of $L$
+  are real.
+\end{remark}
+
+% =======================================================================
+\section{Nondegeneracy at the Constant Solution}
+\label{sec:nondeg}
+% =======================================================================
+
+\subsection{Setup}
+
+The constant function $f_0=(2\pi)^{-1/2}$ has $\norm{f_0}_{L^2(S^1)}=1$.
+Its extension is the radial function
+\[
+  u_0(x) = Ef_0(x) = (2\pi)^{1/2}J_0(|x|),
+\]
+where $J_0$ is the Bessel function of order zero.  Set $A:=(2\pi)^{1/2}$, so
+$u_0(r)=AJ_0(r)$.  The critical value is
+\[
+  \Lambda = \norm{u_0}_{L^6}^6
+  = A^6\cdot 2\pi\int_0^\infty J_0(r)^6\,r\,dr
+  = 16\pi^4\int_0^\infty J_0(r)^6\,r\,dr.
+\]
+
+The stabiliser of $f_0$ under $G$ is $\Stab_G(f_0)=SO(2)$ (rotations of
+$S^1$ fix the constant function).  The orbit has dimension
+$\dim G-\dim\Stab=4-1=3$, generated by phase ($U(1)$) and translations
+($\R^2$).
+
+\subsection{Fourier decomposition of the linearised operator}
+
+Since $u_0$ is radial, the linearised operator
+$K:L^2(S^1)\to L^2(S^1)$ preserves each pair of Fourier modes
+$\{e^{in\theta},e^{-in\theta}\}$.  We use the Fourier expansion
+\[
+  h(\theta)=\sum_{m\in\Z}c_m e^{im\theta},
+  \qquad
+  Eh(r,\phi)=\sum_{m\in\Z} 2\pi\,i^{|m|}c_m\,J_{|m|}(r)\,e^{im\phi},
+\]
+where $(r,\phi)$ are polar coordinates in $\R^2$.
+
+\begin{proposition}[Eigenvalue structure]
+  \label{prop:eigenvalues}
+  \proven\quad
+  Define the Bessel integrals
+  \begin{equation}  \label{eq:Jn-def}
+    \mathcal J_n := \int_0^\infty J_0(r)^4\,J_n(r)^2\,r\,dr,
+    \qquad n\geq 0,
+  \end{equation}
+  and $\mathcal I_n:=16\pi^4\mathcal J_n$, so that $\Lambda=\mathcal I_0$.
+  Then, on the sector $\{c_ne^{in\theta}+c_{-n}e^{-in\theta}\}$ with
+  $n\geq 1$, the operator $K=E^*DN(u_0)E$ acts as a $4\times 4$
+  real-linear map with eigenvalues
+  \[
+    5\mathcal I_n\quad(\text{multiplicity }2)
+    \qquad\text{and}\qquad
+    \mathcal I_n\quad(\text{multiplicity }2).
+  \]
+  On the sector $n=0$, the eigenvalues are $5\mathcal I_0$ (for real
+  perturbations) and $\mathcal I_0$ (for imaginary perturbations), each
+  with multiplicity~$1$.
+\end{proposition}
+
+\begin{proof}
+  Write $v=Eh$ where $h=c_ne^{in\theta}+c_{-n}e^{-in\theta}$.  Then
+  $v=2\pi i^n J_n(r)[c_ne^{in\phi}+c_{-n}e^{-in\phi}]$
+  (using $E(e^{im\theta})=2\pi i^{|m|}J_{|m|}(r)e^{im\phi}$).
+
+  Since $u_0=AJ_0(r)$ is real and radial,
+  $DN(u_0)[v]=3u_0^4 v+2u_0^4\bar v$. The $e^{in\phi}$ component of
+  $DN(u_0)[v]$ is $2\pi A^4J_0^4J_n[3i^nc_n+2(-i)^n\bar c_{-n}]$,
+  and the $e^{-in\phi}$ component is
+  $2\pi A^4J_0^4J_n[3i^nc_{-n}+2(-i)^n\bar c_n]$.
+
+  Applying $E^*$ and using the identity
+  $\langle E^*g,e^{im\theta}\rangle=2\pi(-i)^{|m|}\int_0^\infty
+  g_m(r)J_{|m|}(r)\,r\,dr$
+  (where $g_m$ is the $m$-th angular Fourier coefficient of~$g$),
+  together with $(-i)^ni^n=1$ and $(-i)^{2n}=(-1)^n$, one computes:
+  \begin{align}
+    (Kh)_n &= \mathcal I_n\bigl[3c_n+2(-1)^n\bar c_{-n}\bigr],
+    \label{eq:Kn}\\
+    (Kh)_{-n} &= \mathcal I_n\bigl[3c_{-n}+2(-1)^n\bar c_n\bigr].
+    \label{eq:K-n}
+  \end{align}
+  Writing $c_n=p+iq$, $c_{-n}=s+it$ (real and imaginary parts), the system
+  decouples into a \emph{real part} and an \emph{imaginary part}, each a
+  $2\times 2$ real system.  For both parities of~$n$, both $2\times 2$
+  matrices have the same eigenvalues: $5$ and $1$ (with the eigenvectors
+  exchanging between the real and imaginary blocks as $(-1)^n$ changes sign).
+  Hence the eigenvalues of~$K$ on the sector are $5\mathcal I_n$ and
+  $\mathcal I_n$, each with multiplicity~$2$.
+  The $n=0$ case is analogous with multiplicities halved.
+\end{proof}
+
+\subsection{Identification of the symmetry kernel}
+
+\begin{proposition}[Symmetry directions]
+  \label{prop:symmetry-kernel}
+  \proven\quad
+  The kernel of $L=K-\Lambda I$ on $L^2(S^1)$ includes the following
+  directions, with the indicated eigenvalue identities.
+  \begin{enumerate}[leftmargin=2em]
+    \item \textbf{Phase} ($n=0$, imaginary):
+      $h=if_0$.  This lies in the $\mathcal I_0$-eigenspace of~$K$.
+      Since $\Lambda=\mathcal I_0$, the $L$-eigenvalue is $0$.
+    \item \textbf{Translations} ($n=1$):
+      $h=-i(\hat x_0\cdot\omega)f_0$ for $\hat x_0\in\R^2$.
+      This lies in the $5\mathcal I_1$-eigenspace of~$K$.
+      Since translations are an exact symmetry, $5\mathcal I_1=\Lambda$.
+    \item \textbf{No rotation direction}:
+      $\partial_\theta f_0=0$ since $f_0$ is constant.
+  \end{enumerate}
+  In particular, $\mathcal I_1=\Lambda/5$, i.e.,
+  \begin{equation}  \label{eq:bessel-identity}
+    5\int_0^\infty J_0(r)^4\,J_1(r)^2\,r\,dr
+    = \int_0^\infty J_0(r)^6\,r\,dr.
+  \end{equation}
+  This is a Bessel function identity forced by translation invariance.
+\end{proposition}
+
+\begin{proof}
+  (i) is verified by direct computation: $E(if_0)=iu_0$,
+  $DN(u_0)[iu_0]=3u_0^4(iu_0)+2u_0^4(-iu_0)=iu_0^5$, and
+  $E^*(iu_0^5)=iE^*(u_0^5)=i\Lambda f_0=\Lambda(if_0)$.
+
+  (ii) The translation $f\mapsto e^{-ix_0\cdot\omega}f$ gives
+  $h=-i(\hat x_0\cdot\omega)f_0$ at first order.  The corresponding
+  extension perturbation is $Eh=-\hat x_0\cdot\nabla u_0$
+  (verified by differentiating $E(e^{-ix_0\cdot\omega}f_0)(x)=u_0(x-x_0)$
+  in $x_0$).  Differentiating the Euler--Lagrange equation
+  $E^*(|u_0(\cdot-x_0)|^4 u_0(\cdot-x_0))=\Lambda e^{-ix_0\cdot\omega}f_0$
+  in $x_0$ at $x_0=0$ gives $Kh=\Lambda h$, confirming that $h$ is in
+  $\ker L$.
+
+  From the eigenvalue structure, $h=-i(\hat x_0\cdot\omega)f_0$ has
+  Fourier support on $n=\pm 1$ with $c_{-1}=-\bar c_1$.  Substituting
+  into~\eqref{eq:Kn}--\eqref{eq:K-n} shows this lies in the
+  $5\mathcal I_1$-eigenspace, whence $5\mathcal I_1=\Lambda$.
+
+  (iii) $f_0$ is constant, so $\partial_\theta f_0=0$. $\square$
+\end{proof}
+
+\begin{remark}[Euler identity]
+  The identity $Kf_0=5\Lambda f_0$ (in the $n=0$ real sector) follows from
+  the degree-$5$ homogeneity of $N$: $DN(u)[u]=5N(u)$ for all $u$.
+  Hence $Kf_0=E^*(DN(u_0)[u_0])=5E^*(N(u_0))=5\Lambda f_0$.
+\end{remark}
+
+\subsection{The nondegeneracy criterion}
+
+The eigenvalues of $L=K-\Lambda I$ on the $n$-th sector are
+$5\mathcal I_n-\Lambda$ and $\mathcal I_n-\Lambda$.  At $n=0$: $0$ (phase)
+and $4\Lambda$ (amplitude).  At $n=1$: $0$ (translations, multiplicity~2) and
+$-4\Lambda/5$ (multiplicity~2).
+
+\begin{theorem}[Nondegeneracy reduces to Bessel integrals]
+  \label{thm:nondeg-criterion}
+  \conditional\quad
+  The constant solution $f_0=(2\pi)^{-1/2}$ is nondegenerate modulo
+  $G$ (i.e., $\ker L=T_{f_0}(G\cdot f_0)$ on the tangent space to
+  $\norm{f}_2=1$) if and only if
+  \begin{equation}  \label{eq:nondeg-cond}
+    \boxed{
+    \mathcal I_n\neq\Lambda
+    \quad\text{and}\quad
+    5\mathcal I_n\neq\Lambda
+    \qquad\text{for all } n\geq 2.}
+  \end{equation}
+  Equivalently, in terms of the Bessel integrals~\eqref{eq:Jn-def}:
+  \[
+    \mathcal J_n\neq\mathcal J_0
+    \quad\text{and}\quad
+    5\mathcal J_n\neq\mathcal J_0
+    \qquad\text{for all } n\geq 2.
+  \]
+\end{theorem}
+
+\begin{proof}
+  By Proposition~\ref{prop:eigenvalues}, the eigenvalues of $L$ on the
+  $n$-th sector ($n\geq 2$) are $5\mathcal I_n-\Lambda$ and
+  $\mathcal I_n-\Lambda$, each with multiplicity~$2$.  These are both
+  nonzero if and only if~\eqref{eq:nondeg-cond} holds.  The symmetry
+  directions exhaust the kernel at $n=0$ and $n=1$ by
+  Proposition~\ref{prop:symmetry-kernel}.
+\end{proof}
+
+\subsection{Asymptotic analysis of $\mathcal J_n$}
+
+\begin{lemma}[Decay of $\mathcal J_n$]
+  \label{lem:Jn-decay}
+  \proven\quad
+  $\mathcal J_n\to 0$ as $n\to\infty$.  More precisely,
+  $\mathcal J_n=O(n^{-1})$.
+\end{lemma}
+
+\begin{proof}
+  For $r<n(1-\varepsilon)$, the Bessel function $J_n(r)$ is exponentially
+  small.  For $r\geq n$, the uniform bound $|J_0(r)|\leq 1$ and the
+  asymptotic $|J_\nu(r)|\leq Cr^{-1/2}$ (valid for $r\geq\nu$ and all
+  $\nu\geq 0$) give
+  \[
+    \int_n^\infty J_0(r)^4\,J_n(r)^2\,r\,dr
+    \leq C\int_n^\infty r^{-2}\cdot r^{-1}\cdot r\,dr
+    = C\int_n^\infty r^{-2}\,dr = C/n.  \qedhere
+  \]
+\end{proof}
+
+Since $\mathcal J_n\to 0$ while $\mathcal J_0>0$ and
+$\mathcal J_0/5>0$, the conditions~\eqref{eq:nondeg-cond} hold for all
+sufficiently large~$n$.  Only finitely many values of~$n$ need to be
+checked.
+
+\begin{lemma}[Parity structure of the asymptotics]
+  \label{lem:parity}
+  For moderate~$n$ (before the $J_n$-support retreats past the main
+  lobe of $J_0$), the large-$r$ average of $J_0(r)^4J_n(r)^2$ depends
+  on the parity of~$n$.  Using the asymptotics
+  $J_\nu(r)\sim\sqrt{2/\pi r}\cos(r-\nu\pi/2-\pi/4)$ for $r\gg\nu$:
+  \begin{itemize}
+    \item \textbf{Even~$n$:}
+      $\cos(r-n\pi/2-\pi/4)=\pm\cos(r-\pi/4)$, so
+      $\langle J_0^4J_n^2\rangle_{\mathrm{avg}}
+      \sim(2/\pi r)^3\cdot\tfrac{5}{16}$,
+      the same coefficient as~$\langle J_0^6\rangle$.
+    \item \textbf{Odd~$n$:}
+      $\cos(r-n\pi/2-\pi/4)=\pm\sin(r-\pi/4)$, so
+      $\langle J_0^4J_n^2\rangle_{\mathrm{avg}}
+      \sim(2/\pi r)^3\cdot\tfrac{1}{16}$,
+      which is $\tfrac{1}{5}$ of the even case.
+  \end{itemize}
+  Consequently, for moderate even~$n$, $\mathcal J_n$ is close to
+  $\mathcal J_0$ (deficiency only from the small-$r$ region where
+  $J_n(r)\ll J_0(r)$), while for moderate odd~$n$, $\mathcal J_n$ is
+  close to $\mathcal J_0/5=\mathcal J_1$.
+\end{lemma}
+
+\begin{remark}[Which conditions are tight?]
+  The identity $\mathcal J_1=\mathcal J_0/5$ (from translation invariance)
+  shows that the condition $5\mathcal J_n=\mathcal J_0$ \emph{is} achieved
+  at $n=1$.  For even~$n$, the condition $\mathcal J_n=\mathcal J_0$ is
+  never achieved ($\mathcal J_n<\mathcal J_0$ due to the small-$r$
+  deficiency), but the margin may be small for $n=2$.  The most delicate
+  check is therefore whether $5\mathcal J_n=\mathcal J_0$ for some
+  \emph{even} $n\geq 2$ (where $\mathcal J_n$ is close to $\mathcal J_0$,
+  hence $5\mathcal J_n$ is close to $5\mathcal J_0\gg\Lambda$, making
+  this condition safe), and whether $\mathcal J_n=\mathcal J_0$ for some
+  \emph{odd} $n\geq 3$ (where $\mathcal J_n\approx\mathcal J_0/5$, well
+  below $\mathcal J_0$, also safe).
+
+  \textbf{Upshot:} the asymptotic structure makes the nondegeneracy
+  conditions~\eqref{eq:nondeg-cond} very plausible, but does not close the
+  argument.  A rigorous verification requires evaluating $\mathcal J_n$ for
+  $n=2,3,\ldots,n_*$ (where $n_*$ is the threshold beyond which the
+  $O(1/n)$ bound suffices) and confirming the two inequalities at each.
+  This is a finite numerical computation that can be made rigorous with
+  interval arithmetic.
+\end{remark}
+
+\subsection{Nondegeneracy at non-constant solutions}
+\label{sec:nondeg-nonconst}
+
+If there exist non-constant critical points of the restriction functional,
+their nondegeneracy must be established separately.  At a non-constant
+$f_0$, the extension $u_0=Ef_0$ is not radial, so $K_{u_0}$ does not
+decompose into Fourier sectors.  Two approaches are available:
+
+\paragraph{Direct spectral analysis.}
+If $u_0$ has a discrete symmetry (e.g., if $f_0$ is a real-valued
+even function on $S^1$), the problem decomposes into finitely many
+symmetry sectors, each finite-dimensional.
+
+\paragraph{Generic transversality (Sard--Smale).}
+Introduce a family of $G$-equivariant perturbations $F_p(\rho)=\rho-cT_p(\rho)$
+and show that the parameter derivatives span the cokernel of $DF_p(\rho)$
+at every zero.  This gives nondegeneracy for a generic parameter~$p$.
+To cover the original (unperturbed) problem, one must either verify that
+the spherical measure is a regular parameter, or continue the generic
+solution set to the original parameter without bifurcation.
+
+\begin{remark}[Varying $c$ alone is insufficient]
+  As noted in Warning~\ref{warn:not-convolution}, varying only the scalar
+  $c$ provides a one-parameter family, which is generically too small for
+  Sard--Smale (the cokernel at a degenerate zero may have dimension
+  $>1$).  A richer family of perturbations is needed.
+\end{remark}
+
+% =======================================================================
+\section{Compactness Modulo Symmetry}
+\label{sec:compactness}
+% =======================================================================
+
+\subsection{Regularity bootstrap}
+
+\begin{proposition}[Smoothness and gauge-fixed uniform bounds]
+  \label{prop:bootstrap}
+  \proven\quad
+  If $f\in L^2(S^1)$ satisfies $E^*(|Ef|^4Ef)=\Lambda f$ with
+  $\Lambda>0$, then $f\in C^\infty(S^1)$.  Moreover, for each
+  $k\geq 0$ there exists $C_k=C_k(\varepsilon)$ such that
+  $\norm{f}_{C^k(S^1)}\leq C_k$ for all normalised critical points
+  with $\Lambda\geq\varepsilon$ in a fixed translation gauge; in
+  particular, this applies in the nonnegative slice used in
+  Lemma~\ref{lem:positive-gauge}.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+  Write $u=Ef$, $g=|u|^4u$.  Since $\wh u=f\,d\sigma$ is supported on
+  $S^1$, the Fourier transform $\wh g$ is supported in the Minkowski sum
+  $S^1+S^1+S^1+S^1+S^1=\overline{B(0,5)}$ (using $|u|^4u=u^3\bar u^2$
+  and $\wh{\bar u}$ supported on $-S^1=S^1$).  Thus $g$ is
+  \emph{frequency-localised} to $B(0,5)$.
+
+  The Euler--Lagrange equation gives $f=\Lambda^{-1}\wh g\big|_{S^1}$,
+  so $f$ inherits the regularity of~$\wh g$ restricted to the compact
+  curve $S^1\subset B(0,5)$.  The $n$-th Fourier coefficient of $f$
+  on $S^1$ is
+  \begin{equation}\label{eq:fourier-bootstrap}
+    \wh f(n)
+    = \Lambda^{-1}\cdot 2\pi(-i)^{|n|}
+      \int_0^\infty g_n(r)\,J_{|n|}(r)\,r\,dr,
+  \end{equation}
+  where $g_n(r)$ is the $n$-th angular Fourier coefficient of~$g$.
+  For $|n|\gg 1$, $J_{|n|}(r)$ is exponentially small for $r<|n|/2$
+  (Debye bounds), and the contribution from $r>|n|/2$ is controlled by
+  the $L^{6/5}$ tail of~$g$ via H\"older and the Bessel asymptotics
+  $J_\nu(r)=O(r^{-1/2})$ for $r>\nu$.  An inductive argument (improved
+  decay of $\wh f(n)$ feeds back into improved regularity of $f$ and
+  hence of $u$ and~$g$) yields $|\wh f(n)|=O(|n|^{-N})$ for all~$N$.
+  The constants are obtained from the $L^2$ normalisation, the lower
+  bound $\Lambda\geq\varepsilon$, and the Euler--Lagrange equation, by
+  this energy/bootstrap scheme.
+
+  The translation-gauge qualification is necessary.  If
+  $f_x(\omega)=e^{-ix\cdot\omega}f(\omega)$, then $f_x$ is again a
+  normalised critical point with the same~$\Lambda$, while
+  $\norm{f_x}_{C^1}$ grows like~$|x|$ in general.  Once the translation
+  parameter is fixed, or once one works in the nonnegative slice below,
+  this obstruction is absent.
+\end{proof}
+
+\begin{corollary}[Uniform pointwise decay in a fixed gauge]
+  \label{cor:uniform-decay}
+  For all normalised critical points in a fixed translation gauge with
+  $\Lambda\geq\varepsilon$,
+  \[
+    |Ef(x)|\leq C(\varepsilon)\,(1+|x|)^{-1/2}
+    \qquad\text{for all }x\in\R^2.
+  \]
+  Equivalently, for an arbitrary translated representative the same
+  estimate holds around its translation centre.
+\end{corollary}
+\begin{proof}
+  By the bootstrap, $\norm{f}_{C^1}\leq C(\varepsilon)$.  The standard
+  stationary-phase estimate for extension from a $C^\infty$ curve in
+  $\R^2$ with $C^1$ density gives $|Ef(x)|=O(|x|^{-1/2})$
+  for $|x|\geq 1$, and
+  $|Ef(x)|\leq(2\pi)^{1/2}\norm{f}_{L^2}\leq(2\pi)^{1/2}$ everywhere.
+\end{proof}
+
+\subsection{Profile decomposition for the circle extension}
+
+The extension $E:L^2(S^1)\to L^6(\R^2)$ is not compact
+(Proposition~\ref{prop:E-not-compact}), and the sole obstruction is
+the translation symmetry.  The following decomposition, analogous to
+results of Merle--Vega and Shao for the paraboloid, captures this
+defect of compactness completely.
+
+\begin{theorem}[Profile decomposition]
+  \label{thm:profile-decomp}
+  \conditional\quad
+  Let $f_j\in L^2(S^1)$ with $\norm{f_j}_2\leq C$.  After passing
+  to a subsequence, there exist profiles $\phi^k\in L^2(S^1)$
+  ($k=1,2,\ldots$) and group elements
+  $g_j^k=(e^{i\alpha_j^k},R_j^k,x_j^k)\in G$ satisfying the
+  \emph{divergence condition}
+  $|x_j^k-x_j^l|\to\infty$ for all $k\neq l$,
+  such that for each $K\geq 1$,
+  \begin{equation}\label{eq:profile-decomp}
+    f_j = \sum_{k=1}^K(g_j^k)^{-1}\cdot\phi^k + r_j^K,
+  \end{equation}
+  with the decoupling identities
+  \begin{align}
+    \norm{f_j}_2^2
+    &= \textstyle\sum_{k=1}^K\norm{\phi^k}_2^2
+      + \norm{r_j^K}_2^2 + o(1),
+    \label{eq:L2-decouple}\\
+    \norm{Ef_j}_6^6
+    &= \textstyle\sum_{k=1}^K\norm{E\phi^k}_6^6
+      + \norm{Er_j^K}_6^6 + o(1),
+    \label{eq:L6-decouple}
+  \end{align}
+  and $\norm{Er_j^K}_{L^6}\to 0$ as $K\to\infty$ (after further
+  subsequence extraction at each stage).
+\end{theorem}
+
+The $L^2$ decoupling~\eqref{eq:L2-decouple} is elementary:
+for $k\neq l$,
+$\ip{e^{-ix_j^k\cdot\omega}\phi^k}{e^{-ix_j^l\cdot\omega}\phi^l}
+=\int_{S^1}\phi^k\overline{\phi^l}\,
+e^{i(x_j^l-x_j^k)\cdot\omega}\,d\sigma\to 0$
+by the Riemann--Lebesgue lemma on $S^1$.
+
+The $L^6$ decoupling~\eqref{eq:L6-decouple} is deeper.  Since
+$E(e^{-ix_j^k\cdot\omega}\phi^k)(x)=(E\phi^k)(x-x_j^k)$, distinct
+profiles produce extensions centred at diverging locations.  A
+Br\'ezis--Lieb argument using the Herglotz wave decay
+$|E\phi^k(x)|=O(|x|^{-1/2})$ (valid once $\phi^k$ is smooth;
+for $L^2$ profiles, one approximates and uses density) then gives the
+$L^6$ asymptotic additivity.
+
+The \emph{construction} of the decomposition proceeds iteratively.
+The key input is an inverse Strichartz inequality for $S^1$:
+
+\begin{lemma}[Inverse Strichartz for $S^1$]
+  \label{lem:inv-strichartz}
+  If $\norm{f_j}_2=1$ and $\norm{Ef_j}_{L^6}\geq\delta>0$, then
+  there exist $x_j\in\R^2$ such that the re-centred sequence
+  $\tilde f_j(\omega):=e^{ix_j\cdot\omega}f_j(\omega)$ has a
+  subsequence converging weakly to some $\phi\neq 0$ in $L^2(S^1)$.
+\end{lemma}
+
+\begin{proof}
+  Since $\norm{Ef_j}_6^6\geq\delta^6$, a covering argument gives
+  $x_j\in\R^2$ with $\int_{B(x_j,1)}|Ef_j|^6\geq c\delta^6$.
+  Set $\tilde u_j(x):=Ef_j(x+x_j)=E\tilde f_j(x)$.  Then
+  $\int_{B(0,1)}|\tilde u_j|^6\geq c\delta^6$.
+
+  Every Herglotz wave satisfies $(\Delta+1)u=0$ and
+  $\norm{u}_{L^\infty}\leq(2\pi)^{1/2}\norm{f}_2=(2\pi)^{1/2}$.
+  By interior Schauder estimates for $\Delta u+u=0$, the family
+  $\{\tilde u_j\}$ is equicontinuous on $\overline{B(0,1)}$.
+  Arzel\`a--Ascoli extracts a uniformly convergent subsequence
+  $\tilde u_j\to u_\infty$ on $\overline{B(0,1)}$.
+
+  Meanwhile, $\tilde f_j\rightharpoonup\phi$ (Banach--Alaoglu,
+  after subsequence).  Weak convergence gives
+  $E\tilde f_j(x)\to E\phi(x)$ pointwise for every~$x$
+  (since $\omega\mapsto e^{ix\cdot\omega}\in L^2(S^1)$).  So
+  $u_\infty=E\phi$.  From
+  $\int_{B(0,1)}|u_\infty|^6\geq c\delta^6>0$, we get
+  $\phi\neq 0$.
+\end{proof}
+
+\begin{remark}[Simplification from compact frequency support]
+  For the paraboloid $\{(\xi,|\xi|^2)\}$, profile decompositions must
+  account for parabolic rescalings (a second family of symmetries).
+  For $S^1$, the frequency set is compact with no scaling symmetry,
+  so translations are the sole defect of compactness.  Moreover, the
+  inverse Strichartz lemma follows from elliptic regularity for
+  $\Delta u+u=0$, rather than from bilinear restriction estimates.
+\end{remark}
+
+\subsection{Profiles of critical sequences inherit the equation}
+
+The following result is the key structural input: if the original
+sequence consists of critical points, then each profile in the
+decomposition is itself a critical point.
+
+\begin{proposition}[Each profile is a critical point]
+  \label{prop:profile-critical}
+  \proven\quad
+  Let $(f_j,\Lambda_j)$ be normalised critical points with
+  $\Lambda_j\to\Lambda_\infty>0$, and let $\phi^1,\phi^2,\ldots$
+  be the profiles from Theorem~\ref{thm:profile-decomp} (re-indexed
+  so that $x_j^1=0$).  Then each profile satisfies
+  \begin{equation}\label{eq:profile-EL}
+    E^*(|E\phi^k|^4E\phi^k) = \Lambda_\infty\phi^k.
+  \end{equation}
+  In particular, $\psi^k:=\phi^k/\norm{\phi^k}_2$ is a normalised
+  critical point with eigenvalue
+  $\widetilde\Lambda_k=\Lambda_\infty/\norm{\phi^k}_2^4$.
+\end{proposition}
+
+\begin{proof}
+  We prove~\eqref{eq:profile-EL} for $k=1$; the case $k\geq 2$
+  follows by applying the translation $y_j^k:=x_j^k-x_j^1$
+  (which diverges) and repeating the argument.
+
+  Set $v^l:=E\phi^l$ and $w_j:=Er_j$.  Write
+  $\tilde f_j:=e^{ix_j^1\cdot\omega}f_j$ for the re-centred
+  sequence, so
+  $\tilde u_j:=E\tilde f_j
+  =v^1+\sum_{l\geq 2}v^l(\cdot-y_j^l)+w_j$.
+  The Euler--Lagrange equation, tested against arbitrary
+  $h\in L^2(S^1)$, reads
+  \begin{equation}\label{eq:EL-tested}
+    \Lambda_j\ip{\tilde f_j}{h}_{L^2(S^1)}
+    = \int_{\R^2}|\tilde u_j|^4\tilde u_j\,\overline{Eh}\,dx.
+  \end{equation}
+
+  \textbf{Left side.}
+  Since $\tilde f_j=\phi^1+\sum_{l\geq 2}e^{-iy_j^l\cdot\omega}\phi^l
+  +r_j$ and $\ip{e^{-iy_j^l\cdot\omega}\phi^l}{h}\to 0$ by
+  Riemann--Lebesgue ($|y_j^l|\to\infty$), the left side converges to
+  $\Lambda_\infty\ip{\phi^1}{h}$.
+
+  \textbf{Right side.}
+  Decompose $|\tilde u_j|^4\tilde u_j=|v^1|^4v^1+N_j$, where
+  $N_j$ collects all terms containing at least one factor of
+  $\eta_j:=\tilde u_j-v^1=\sum_{l\geq 2}v^l(\cdot-y_j^l)+w_j$.
+  We show $\int N_j\,\overline{Eh}\to 0$.
+
+  \emph{Step (i): $\eta_j$ vanishes locally in $L^6$.}
+  For each fixed $R>0$:
+  $\norm{v^l(\cdot-y_j^l)}_{L^6(B(0,R))}
+  =\norm{v^l}_{L^6(B(-y_j^l,R))}\to 0$ as $j\to\infty$ (since
+  $v^l\in L^6(\R^2)$ and $B(-y_j^l,R)$ escapes to infinity), and
+  $\norm{w_j}_{L^6}\to 0$.  Hence
+  $\norm{\eta_j}_{L^6(B(0,R))}\to 0$.
+
+  \emph{Step (ii): individual translated-profile terms vanish.}
+  Fix $l\geq 2$.  The typical cross term to estimate is
+  $I_j^l:=\int|v^1(x)|^4\,v^l(x-y_j^l)\,\overline{Eh(x)}\,dx$.
+  Split $\R^2$ into $B(0,R)$ and its complement.
+  \begin{itemize}
+    \item On $B(0,R)$: $|v^1|\leq(2\pi)^{1/2}$, so
+      $|I_j^l|_{B(0,R)}|\leq C\norm{v^l(\cdot-y_j^l)}_{L^6(B(0,R))}
+      \norm{Eh}_{L^6}\to 0$ by step~(i).
+    \item On $\R^2\setminus B(0,R)$:
+      $|I_j^l|_{\R^2\setminus B}|\leq C\norm{v^l}_6
+      \norm{Eh}_{L^6(|x|>R)}\to 0$ as $R\to\infty$ (since
+      $Eh\in L^6$ has vanishing tails).
+  \end{itemize}
+  An $\varepsilon/3$ argument in $R$ and $j$ gives $I_j^l\to 0$.
+
+  \emph{Step (iii): the remainder.}
+  Terms involving $w_j=Er_j$ are bounded by
+  $C\norm{w_j}_6^{}\norm{Eh}_6\to 0$ (using
+  $\norm{v^1}_\infty\leq C$ and H\"older).
+
+  \emph{Step (iv): higher-order cross terms.}
+  Every monomial in $N_j$ has at least one factor $\eta_j$ or
+  $\bar\eta_j$.  The same local-vanishing argument applies: on
+  $B(0,R)$, the factor of $\eta_j$ is small in $L^6$; on the
+  complement, $Eh$ is small in $L^6$.
+
+  \medskip
+  Combining: the right side of~\eqref{eq:EL-tested} converges to
+  $\int|v^1|^4v^1\,\overline{Eh}
+  =\ip{E^*(|E\phi^1|^4E\phi^1)}{h}$.
+  Since $h$ is arbitrary,
+  $E^*(|E\phi^1|^4E\phi^1)=\Lambda_\infty\phi^1$.
+
+  The rescaling: if $\alpha_k:=\norm{\phi^k}_2>0$, then
+  $\psi^k:=\phi^k/\alpha_k$ satisfies
+  $E^*(|E\psi^k|^4E\psi^k)
+  =\alpha_k^{-5}E^*(|E\phi^k|^4E\phi^k)
+  =\Lambda_\infty\alpha_k^{-5}\phi^k
+  =(\Lambda_\infty/\alpha_k^4)\psi^k$.
+\end{proof}
+
+\subsection{Existence of a maximiser}
+
+\begin{theorem}[Existence of extremisers for $S^1$ restriction]
+  \label{thm:maximiser}
+  \proven\quad
+  The sharp restriction constant $\mathcal R$ is attained: there exists
+  $f_*\in L^2(S^1)$ with $\norm{f_*}_2=1$ and
+  $\norm{Ef_*}_{L^6}=\mathcal R$.
+\end{theorem}
+
+\begin{proof}
+  Let $f_j$ be a maximising sequence: $\norm{f_j}_2=1$,
+  $\Lambda_j:=\norm{Ef_j}_6^6\to\mathcal R^6>0$.  Apply the profile
+  decomposition (Theorem~\ref{thm:profile-decomp}).
+
+  \textbf{Step 1: at least one profile.}
+  Since $\norm{Er_j^K}_6\to 0$ as $K\to\infty$ while
+  $\Lambda_j\to\mathcal R^6>0$, the
+  decoupling~\eqref{eq:L6-decouple} forces $\phi^1\neq 0$.
+
+  \textbf{Step 2: no splitting.}
+  By the restriction inequality, $\norm{E\phi^k}_6^6
+  \leq\mathcal R^6\norm{\phi^k}_2^6$.  Set $\alpha_k:=\norm{\phi^k}_2$
+  and $a_k:=\alpha_k^2$.  The decoupling gives
+  $\mathcal R^6\leq\mathcal R^6\sum_{k}a_k^3$.
+  From~\eqref{eq:L2-decouple}, $\sum_k a_k\leq 1$.
+
+  If $M\geq 2$ profiles are nonzero, all $a_k>0$ and $\sum a_k\leq 1$.
+  But the multinomial expansion
+  $\bigl(\sum_k a_k\bigr)^3
+  =\sum_k a_k^3+3\sum_{k\neq l}a_k^2a_l+6\sum_{k<l<m}a_ka_la_m$
+  shows $\sum_k a_k^3<\bigl(\sum_k a_k\bigr)^3\leq 1$ (since the
+  cross terms are strictly positive).  This gives
+  $\mathcal R^6<\mathcal R^6$, a contradiction.
+
+  \textbf{Step 3: convergence.}
+  With a single profile: $f_j=g_j^{-1}\cdot\phi^1+r_j$,
+  $\norm{r_j}_2\to 0$, $\norm{\phi^1}_2=1$.  Hence
+  $g_j\cdot f_j\to\phi^1$ strongly, and $\phi^1$ is a maximiser.
+\end{proof}
+
+\begin{remark}[The homogeneity gap]
+  The argument uses $6>2$: the $L^6$ norm is superquadratic in~$f$,
+  making $\sum a_k^3<(\sum a_k)^3$ when there are multiple profiles.
+  This mechanism is specific to maximising sequences and does not
+  extend to sub-maximal critical points.
+\end{remark}
+
+\subsection{The splitting obstruction for general critical sequences}
+
+For a general sequence of critical points with
+$\Lambda_j\to\Lambda_\infty\in[\varepsilon,\mathcal R^6)$, the
+strict-convexity argument breaks down: multi-profile decompositions
+are \emph{algebraically consistent} with the Euler--Lagrange equation.
+
+\begin{proposition}[Structure of multi-profile decompositions at
+  critical sequences]
+  \label{prop:multi-profile}
+  \proven\quad
+  Suppose a sequence of normalised critical points with
+  $\Lambda_j\to\Lambda_\infty>0$ admits a profile decomposition
+  with $M\geq 2$ nonzero profiles $\phi^1,\ldots,\phi^M$.  Then:
+  \begin{enumerate}[leftmargin=2em]
+    \item Each normalised profile $\psi^k=\phi^k/\alpha_k$ (where
+      $\alpha_k:=\norm{\phi^k}_2$) is a critical point with
+      eigenvalue
+      $\widetilde\Lambda_k=\Lambda_\infty/\alpha_k^4
+      >\Lambda_\infty$.
+    \item The number of profiles satisfies
+      $M\leq(\mathcal R^6/\varepsilon)^{1/2}$.
+    \item The identity $\sum_k\alpha_k^6\widetilde\Lambda_k
+      =\Lambda_\infty\sum_k\alpha_k^2=\Lambda_\infty$ holds
+      automatically, so the energy decomposition produces no
+      contradiction.
+  \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+  (1) Proposition~\ref{prop:profile-critical} gives
+  $E^*(|E\phi^k|^4E\phi^k)=\Lambda_\infty\phi^k$.  Rescaling:
+  $E^*(|E\psi^k|^4E\psi^k)=(\Lambda_\infty/\alpha_k^4)\psi^k$,
+  so $\widetilde\Lambda_k=\Lambda_\infty/\alpha_k^4$.  Since
+  $\alpha_k^2<\sum_l\alpha_l^2=1$, we have $\alpha_k<1$ and
+  $\widetilde\Lambda_k>\Lambda_\infty$.
+
+  (2) From $\widetilde\Lambda_k\leq\mathcal R^6$:
+  $\alpha_k^4\geq\Lambda_\infty/\mathcal R^6
+  \geq\varepsilon/\mathcal R^6$, so
+  $\alpha_k^2\geq(\varepsilon/\mathcal R^6)^{1/2}$.  The constraint
+  $\sum_k\alpha_k^2=1$ gives the bound on~$M$.
+
+  (3) $\sum_k\alpha_k^6\widetilde\Lambda_k
+  =\sum_k\alpha_k^6\cdot\Lambda_\infty/\alpha_k^4
+  =\Lambda_\infty\sum_k\alpha_k^2=\Lambda_\infty$. \qedhere
+\end{proof}
+
+Part~(3) is the central difficulty:
+\textbf{the Euler--Lagrange equation alone does not prevent a critical
+sequence from splitting into bubbles at diverging locations, each
+individually a critical point at a higher eigenvalue level.}
+This is the open content of Theorem~\ref{thm:compactness-mod-G}:
+
+\begin{theorem}[Compactness modulo $G$]
+  \label{thm:compactness-mod-G}
+  \open\quad
+  Let $(f_j,\Lambda_j)$ be normalised critical points with
+  $\Lambda_j\geq\varepsilon>0$.  Then there exist $g_j\in G$ and a
+  subsequence such that $g_j\cdot f_j\to f_\infty$ strongly in
+  $L^2(S^1)$ and $\Lambda_j\to\Lambda_\infty=\norm{Ef_\infty}_6^6$.
+\end{theorem}
+
+Equivalently: every critical sequence has \textbf{exactly one
+nonzero profile} in its decomposition.
+
+\subsection{Approaches to rule out splitting}
+
+We describe three general strategies that may close the gap, and then an
+extremiser-specific refinement using nonnegative representatives.
+
+\paragraph{(A) Descending induction on critical values.}
+At the maximal level $\Lambda=\mathcal R^6$,
+Theorem~\ref{thm:maximiser} proves single-profile concentration.
+Suppose inductively that compactness modulo~$G$ holds for critical
+sequences with $\Lambda_j\to\Lambda'$ for all
+$\Lambda'>\Lambda_\infty$.  A splitting at level~$\Lambda_\infty$
+produces profiles at levels $\widetilde\Lambda_k>\Lambda_\infty$,
+where the inductive hypothesis already gives finiteness of shapes.
+The splitting identity $\sum_k\alpha_k^2=1$,
+$\widetilde\Lambda_k=\Lambda_\infty/\alpha_k^4$ imposes algebraic
+constraints relating the profile masses to the (now finitely many)
+critical values above $\Lambda_\infty$.
+
+\emph{Difficulty}: the base case gives one shape (the maximiser);
+but the inductive step requires both finiteness and nondegeneracy at
+every intermediate level, creating a dependency between this theorem
+and the results of Section~\ref{sec:nondeg}.  Breaking this
+circularity requires either a direct nondegeneracy argument at all
+levels, or an independent route to single-profile concentration.
+
+\paragraph{(B) Pohozaev--Morawetz monotonicity.}
+A localised identity for $u=c(|u|^4u\ast\wh\sigma)$ could yield
+a monotonicity formula controlling the spatial distribution of
+$|u|^6$ and preventing mass separation.  The starting point would be
+to multiply the equation by a radial weight $a(|x|)\,\bar u$ and
+integrate; the resulting identity relates $\int a'|u|^6$ to boundary
+terms and the nonlocal convolution structure.
+
+\emph{Difficulty}: the convolution against $\wh\sigma$ (which decays
+only like $|x|^{-1/2}$) introduces long-range interactions that
+resist clean localisation.
+
+\paragraph{(C) Unique continuation for the integrated equation.}
+If one can show that two critical points $\phi^1,\phi^2$ at levels
+$\widetilde\Lambda_1,\widetilde\Lambda_2>\Lambda_\infty$ cannot
+coexist as profiles of a common critical sequence---i.e., the
+relation
+\[
+  f_j\approx e^{-ix_j^1\cdot\omega}\phi^1+e^{-ix_j^2\cdot\omega}\phi^2,
+  \qquad |x_j^1-x_j^2|\to\infty,
+\]
+contradicts $E^*(|Ef_j|^4Ef_j)=\Lambda_jf_j$ at order beyond the
+profile-level Euler--Lagrange---this would rule out splitting.  The
+relevant obstruction would arise from cross terms at intermediate
+spatial scales $|x|\sim|x_j^1-x_j^2|^{1/2}$ where the two Herglotz
+waves overlap at polynomial (not exponential) level.
+
+\paragraph{(D) Positive gauge for the extremiser search.}
+For the sharp constant, Lemma~\ref{lem:positive-reduction} allows the
+search to be restricted to nonnegative critical points.  This is not
+available for arbitrary critical sequences, but it removes much of the
+translation ambiguity: a nonnegative representative cannot be translated
+nontrivially and remain nonnegative.
+
+\begin{lemma}[Nonnegativity fixes the translation parameter]
+  \label{lem:positive-gauge}
+  Let $0\neq f\in L^2(S^1)$ with $f\geq 0$ a.e.  If
+  \[
+    e^{i\alpha}e^{-ix_0\cdot\omega}f(R^{-1}\omega)\geq 0
+    \qquad\text{for a.e. }\omega\in S^1,
+  \]
+  then $x_0=0$.  In that case the remaining phase must satisfy
+  $e^{i\alpha}=1$ on the support of $f$.
+\end{lemma}
+
+\begin{proof}
+  The set where $f(R^{-1}\omega)>0$ has positive measure.  On this set,
+  the phase $e^{i\alpha}e^{-ix_0\cdot\omega}$ must equal~$1$.  If
+  $x_0\neq 0$, the set
+  $\{\omega\in S^1:e^{i\alpha}e^{-ix_0\cdot\omega}=1\}$ is finite, since
+  it is a finite union of level sets $x_0\cdot\omega=\alpha+2\pi m$.
+  This cannot contain a positive-measure subset of~$S^1$.  Hence $x_0=0$.
+\end{proof}
+
+The profile-decomposition consequence is the following.  By the
+gauge-fixed bootstrap in Proposition~\ref{prop:bootstrap}, a
+nonnegative critical sequence with $\Lambda_j\geq\varepsilon$ satisfies
+$\norm{f_j}_{C^1(S^1)}\leq C_\varepsilon$.  Thus every escaping profile
+vanishes: for $|x_j|\to\infty$ and $h\in C^1(S^1)$, stationary phase gives
+\[
+  \int_{S^1} e^{ix_j\cdot\omega} f_j(\omega)\overline{h(\omega)}
+  \,d\sigma(\omega)
+  = O_{C_\varepsilon,h}(|x_j|^{-1/2}),
+\]
+and density extends this weak convergence to all $h\in L^2(S^1)$.  In the
+iterative profile construction, after subtracting finitely many previously
+selected profiles, the terms involving
+$e^{i(x_j^k-x_j^\ell)\cdot\omega}\phi^\ell$ also vanish by the
+Riemann--Lebesgue lemma whenever the translation parameters diverge.
+Thus a candidate profile with $|x_j^k|\to\infty$ has zero weak limit.
+
+Thus the extra input needed for the extremiser search is not a new
+profile-decomposition mechanism, but the standard gauge-fixed bootstrap:
+the $L^2$ normalisation, the equation, and the lower bound on~$\Lambda$
+give the uniform norms, while positivity supplies the gauge because pure
+translation orbits leave the nonnegative slice by
+Lemma~\ref{lem:positive-gauge}.  This closes the escaping-profile
+obstruction for the extremiser search without proving compactness of the
+full critical set.
+
+\begin{remark}[Sufficiency for identifying $\mathcal R$]
+  \label{rem:sufficiency-max}
+  For the purpose of \emph{computing} the sharp constant~$\mathcal R$,
+  the full Theorem~\ref{thm:compactness-mod-G} is not needed.
+  Theorem~\ref{thm:maximiser} gives existence of a maximiser, and if
+  the maximiser is unique modulo~$G$ (e.g., the constant function
+  $f_0=(2\pi)^{-1/2}$), then $\mathcal R=\norm{Ef_0}_{L^6}$ and
+  the problem is solved.  The open compactness theorem would
+  additionally yield finiteness of \emph{all} critical values above
+  $\varepsilon$, which is a stronger structural result.
+\end{remark}
+
+\begin{remark}[Accumulation of critical values at zero]
+  \label{rem:accumulation}
+  Whether critical values can accumulate at~$0$ is unknown.  The
+  compactness + nondegeneracy programme gives finiteness only
+  above a fixed threshold.  For the sharp constant, it suffices to
+  work above any $\varepsilon$ smaller than the maximum critical
+  value.
+\end{remark}
+
+% =======================================================================
+\section{From the Three Inputs to the Sharp Constant}
+\label{sec:finiteness}
+% =======================================================================
+
+\subsection{Finiteness after the positivity reduction}
+
+\begin{theorem}[Finiteness of positive critical values in compact windows]
+  \label{thm:positive-values-finite}
+  \proven\quad
+  Fix $0<\Lambda_-<\Lambda_+<\infty$.  Then the set
+  \[
+    \mathcal V_+(\Lambda_-,\Lambda_+)
+    :=
+    \left\{
+      \Lambda\in[\Lambda_-,\Lambda_+]:
+      \begin{array}{l}
+      \exists f\in L^2(S^1),\ f\geq 0,\ \norm{f}_2=1,\\
+      E^*(|Ef|^4Ef)=\Lambda f
+      \end{array}
+    \right\}
+  \]
+  is finite.
+\end{theorem}
+
+\begin{proof}
+  Let
+  \[
+    \mathcal C_+
+    :=
+    \left\{
+      (f,\Lambda):
+      f\geq0,\ \norm{f}_2=1,\ \Lambda\in[\Lambda_-,\Lambda_+],\
+      E^*(|Ef|^4Ef)=\Lambda f
+    \right\}.
+  \]
+
+  \emph{Step 1: compactness of the positive slice.}
+  By the gauge-fixed bootstrap, Proposition~\ref{prop:bootstrap}, for
+  every $m\geq0$ there is a constant $C_m=C_m(\Lambda_-)$ such that
+  $\norm{f}_{C^m(S^1)}\leq C_m$ for every $(f,\Lambda)\in\mathcal C_+$.
+  The reason this applies without an additional translation choice is
+  precisely Lemma~\ref{lem:positive-gauge}: the nonnegative slice fixes
+  the noncompact translation parameter.
+
+  Given a sequence $(f_j,\Lambda_j)\in\mathcal C_+$, pass to a subsequence
+  with $\Lambda_j\to\Lambda_\infty\in[\Lambda_-,\Lambda_+]$.  The uniform
+  $C^{m+1}$ bound and Arzel\`a--Ascoli give, after passing to a further
+  subsequence, $f_j\to f_\infty$ in $C^m(S^1)$ for each fixed~$m$ (and in
+  particular in $L^2$).  Then $f_\infty\geq0$ and
+  $\norm{f_\infty}_2=1$.  Since
+  \[
+    T(f):=E^*(|Ef|^4Ef)
+  \]
+  is continuous $L^2(S^1)\to L^2(S^1)$ by Stein--Tomas and H\"older,
+  passing to the limit in $T(f_j)=\Lambda_j f_j$ gives
+  $T(f_\infty)=\Lambda_\infty f_\infty$.  Hence
+  $(f_\infty,\Lambda_\infty)\in\mathcal C_+$.  Thus $\mathcal C_+$ is
+  compact in $L^2(S^1)\times\R$.
+
+  \emph{Step 2: local finite-dimensional analytic structure.}
+  Work on the real Hilbert space $H:=L^2(S^1;\C)$ with real inner product
+  $\re\ip{\cdot}{\cdot}$.  Define
+  \[
+    \Phi:H\times\R\to H\times\R,\qquad
+    \Phi(f,\Lambda):=\bigl(T(f)-\Lambda f,\ \norm{f}_2^2-1\bigr).
+  \]
+  The map $T$ is a real-analytic quintic polynomial map:
+  $T(f)=E^*((Ef)^3(\overline{Ef})^2)$.  At a zero $(f_0,\Lambda_0)$,
+  \[
+    D\Phi_{(f_0,\Lambda_0)}(h,\mu)
+    =
+    \left(
+      (K_{u_0}-\Lambda_0 I)h-\mu f_0,\
+      2\re\ip{f_0}{h}
+    \right),
+    \qquad u_0=Ef_0.
+  \]
+  By Corollary~\ref{cor:fredholm}, $K_{u_0}-\Lambda_0 I$ is Fredholm of
+  index~$0$.  The displayed derivative is a finite-rank perturbation of
+  $(h,\mu)\mapsto((K_{u_0}-\Lambda_0 I)h,\mu)$, and is therefore Fredholm
+  of index~$0$.
+
+  The analytic Fredholm Lyapunov--Schmidt reduction now applies: near
+  each zero of~$\Phi$, the zero set $\Phi^{-1}(0)$ is homeomorphic to the
+  zero set of a finite-dimensional real-analytic map.  By the standard
+  local structure theorem for real-analytic sets (equivalently,
+  Lojasiewicz local finiteness), this local zero set has only finitely
+  many connected components, and each such component is locally
+  arc-connected through finitely many analytic arcs.
+
+  \emph{Step 3: the value is constant on local critical components.}
+  Let $J(f):=\norm{Ef}_{L^6}^6$.  On $\Phi^{-1}(0)$ one has
+  $\Lambda=J(f)$, because
+  \[
+    \Lambda\norm{f}_2^2
+    =\re\ip{T(f)}{f}
+    =\int_{\R^2}|Ef(x)|^6\,dx.
+  \]
+  If $t\mapsto(f(t),\Lambda(t))$ is a $C^1$ arc in $\Phi^{-1}(0)$, then
+  $\norm{f(t)}_2=1$ and $T(f(t))=\Lambda(t)f(t)$, so
+  \[
+    \frac{d}{dt}J(f(t))
+    =6\re\ip{T(f(t))}{f'(t)}
+    =6\Lambda(t)\re\ip{f(t)}{f'(t)}
+    =0.
+  \]
+  Therefore $J(f(t))$, and hence $\Lambda(t)$, is constant on every such
+  arc.  Since the local analytic components are connected by finite
+  chains of these arcs, $\Lambda$ is constant on each local connected
+  component of $\Phi^{-1}(0)$.
+
+  Finally, compactness of $\mathcal C_+$ gives a finite cover by
+  neighbourhoods of the type described in Step~2.  Each neighbourhood
+  contains only finitely many local critical components, and Step~3 gives
+  at most one value of~$\Lambda$ on each of them.  Hence the projection
+  of $\mathcal C_+$ onto the $\Lambda$ coordinate, namely
+  $\mathcal V_+(\Lambda_-,\Lambda_+)$, is finite.
+\end{proof}
+
+\subsection{A spectral gap around the constant value}
+
+Let
+\[
+  f_0=(2\pi)^{-1/2},\qquad
+  \Lambda_0:=\norm{Ef_0}_{L^6}^6
+  =16\pi^4\int_0^\infty J_0(r)^6\,r\,dr.
+\]
+If $C_{\mathrm{ST}}$ denotes any explicit Stein--Tomas bound for
+$E:L^2(S^1)\to L^6(\R^2)$, then every normalised critical value satisfies
+$\Lambda\leq C_{\mathrm{ST}}^6$.  Thus, when working with the eigenvalue
+parameter~$\Lambda$ rather than with the restriction norm
+$\Lambda^{1/6}$, the natural finite window for the extremiser search is
+\[
+  W_0:=\left[\frac12\Lambda_0,\ C_{\mathrm{ST}}^6\right].
+\]
+By Theorem~\ref{thm:positive-values-finite},
+$\mathcal V_+(W_0):=\mathcal V_+(\Lambda_0/2,C_{\mathrm{ST}}^6)$ is a
+finite set and contains~$\Lambda_0$.  Hence the nonlinear spectral gap
+around the constant value,
+\begin{equation}\label{eq:positive-gap-def}
+  \gamma_0
+  :=
+  \operatorname{dist}\bigl(
+    \Lambda_0,\,
+    \mathcal V_+(W_0)\setminus\{\Lambda_0\}
+  \bigr),
+\end{equation}
+is strictly positive, with the convention $\gamma_0=+\infty$ if
+$\mathcal V_+(W_0)=\{\Lambda_0\}$.
+
+The proof of Theorem~\ref{thm:positive-values-finite} gives positivity of
+$\gamma_0$, but not a numerical lower bound.  To make the gap quantitative,
+one needs to quantify two pieces.
+
+\paragraph{Local isolation at the constant.}
+On the slice orthogonal to phase and translations, define the linear
+nondegeneracy gap
+\[
+  \nu_0:=
+  \min\left\{
+    \frac45\Lambda_0,\;
+    \inf_{n\geq2}\abs{\mathcal I_n-\Lambda_0},\;
+    \inf_{n\geq2}\abs{5\mathcal I_n-\Lambda_0}
+  \right\},
+  \qquad
+  \mathcal I_n=16\pi^4\mathcal J_n.
+\]
+If interval arithmetic proves $\nu_0\geq\underline\nu>0$ and
+$M_0(r)$ is a Lipschitz constant for the derivative of the sliced
+Euler--Lagrange map in the $L^2$ ball
+$\norm{f-f_0}_2\leq r$, then the Newton--Kantorovich estimate
+\[
+  r_0\leq \frac{\underline\nu}{2M_0(r_0)}
+\]
+certifies that the constant is the only positive critical point in that
+ball, up to the trivial rotation symmetry of the constant.
+
+A rough numerical quadrature of the Bessel integrals gives
+\[
+  \int_0^\infty J_0(r)^6r\,dr \approx 0.33678766,\qquad
+  \Lambda_0\approx 524.899,\qquad
+  \Lambda_0^{1/6}\approx 2.84018,
+\]
+and suggests
+\[
+  \frac{\nu_0}{\Lambda_0}
+  =
+  \min_{n\geq2}
+  \left\{
+    \abs{\frac{\mathcal I_n}{\Lambda_0}-1},
+    \abs{\frac{5\mathcal I_n}{\Lambda_0}-1}
+  \right\}
+  \approx
+  0.452,
+\]
+with the minimum apparently coming from the $5\mathcal I_2-\Lambda_0$
+branch.  A reasonable first rigorous target is therefore
+\begin{equation}\label{eq:nu-target}
+  \nu_0\geq 0.4\,\Lambda_0.
+\end{equation}
+This target only requires a finite interval-arithmetic check for the
+small modes, together with the already proved tail estimate
+$\mathcal J_n\to0$ for large~$n$.
+
+\paragraph{Current certified finite-mode check.}
+The script \texttt{numerics/circle\_gap\_flint\_verify.py} gives a first
+ball-arithmetic certificate for the small-mode part of this target.  It uses
+\texttt{python-flint} Arb balls, evaluates the Bessel functions at the
+midpoints of the radial mesh, and encloses the variation on each interval by
+the elementary bounds $\abs{J_m}\leq1$ and $\abs{J'_m}\leq1$ for integer
+$m$ on the real line.  With cutoff $R=200$ and the conditional tail majorant
+$\abs{J_m(r)}\leq (2/(\pi r))^{1/2}$ on $[R,\infty)$, the current runs prove
+\[
+  \frac{\mathcal J_2}{\mathcal J_0}\leq 0.117364,\qquad
+  \frac{\mathcal J_3}{\mathcal J_0}\leq 0.091870,\qquad
+  \frac{\mathcal J_n}{\mathcal J_0}\leq 0.072366
+  \quad (4\leq n\leq12).
+\]
+The first number is the bottleneck and was obtained with mesh
+$h=0.0025$; the other displayed bounds use $h=0.01$.  In particular, for
+$2\leq n\leq12$ the finite-mode certificate proves
+\[
+  \frac{\mathcal J_n}{\mathcal J_0}<0.12,
+\]
+and hence
+\[
+  \abs{5\mathcal I_n-\Lambda_0}>0.4\Lambda_0,\qquad
+  \abs{\mathcal I_n-\Lambda_0}>0.4\Lambda_0
+  \qquad (2\leq n\leq12).
+\]
+What remains for a complete proof of~\eqref{eq:nu-target} is to replace or
+quote the tail majorant in a final form and prove the large-mode estimate
+for all $n\geq13$.
+
+\paragraph{Global separation from the rest of the positive window.}
+After the local ball $\norm{f-f_0}_2<r_0$ has been certified, the remaining
+set
+\[
+  \mathcal C_+^{\mathrm{far}}
+  :=
+  \left\{
+    (f,\Lambda):
+    \begin{array}{l}
+      f\geq0,\ \norm{f}_2=1,\ E^*(|Ef|^4Ef)=\Lambda f,\\
+      \Lambda\in W_0,\ \norm{f-f_0}_2\geq r_0
+    \end{array}
+  \right\}
+\]
+is compact.  A validated search on this compact set should return finitely
+many disjoint value intervals $B_1,\ldots,B_N$ containing every positive
+critical value in the far region.  Then the explicit certificate
+\[
+  \gamma_{\mathrm{cert}}
+  :=
+  \min_{1\leq j\leq N,\ \Lambda_0\notin B_j}
+  \operatorname{dist}(\Lambda_0,B_j)
+\]
+is a rigorous lower bound for~$\gamma_0$.
+
+Thus the current proof gives the qualitative gap~\eqref{eq:positive-gap-def}.
+The practical quantitative route is: certify the local linear
+target~\eqref{eq:nu-target}, use it to remove a ball around the constant
+by Newton--Kantorovich, and then use the interval search on the compact
+far region to produce $\gamma_{\mathrm{cert}}$.
+
+\subsection{What a rigorous brute-force search would mean}
+\label{sec:bruteforce-search}
+
+The phrase ``search the compact region'' should not be interpreted as
+requiring a prior description of the compact set.  The algorithm searches
+a computable \emph{outer enclosure} of that compact set.  The compactness
+theorem supplies the analytic reason such an enclosure can be made finite;
+the actual numerical proof must supply explicit constants.
+
+There are two complementary brute-force targets.
+
+\paragraph{Eigenvalue exclusion.}
+Fix an interval $I\subset W_0$ for~$\Lambda$.  A rigorous search attempts
+to prove:
+\[
+  \nexists f\geq0,\quad \norm{f}_2=1,\quad
+  E^*(|Ef|^4Ef)=\Lambda f,\quad \Lambda\in I,
+\]
+except possibly inside boxes already validated as containing known
+solutions.  The output of such a search is not ``success/failure'' in the
+usual numerical sense.  Each box in the finite cover is labelled
+\emph{empty}, \emph{validated}, or \emph{undecided}.  A theorem is obtained
+only if no undecided boxes remain.
+
+\paragraph{Direct upper-bound search.}
+Instead of solving the Euler--Lagrange equation, one can try to prove the
+stronger variational statement
+\[
+  \sup_{\substack{f\geq0\\ \norm{f}_2=1}}
+  \norm{Ef}_{L^6}^6
+  \leq \Lambda_0+\eta.
+\]
+If an eigenvalue gap $\gamma_0>\eta$ has already been certified in the
+positive window, then this upper bound forces the maximiser to have value
+$\Lambda_0$.  This route may be computationally easier because it asks for
+upper bounds on a scalar polynomial functional, rather than for a complete
+classification of roots of a vector equation.
+
+\paragraph{Fourier truncation and tails.}
+Write
+\[
+  f(\theta)=\sum_{n\in\Z}a_ne^{in\theta},\qquad
+  P_Nf=\sum_{|n|\leq N}a_ne^{in\theta},\qquad r_N=f-P_Nf.
+\]
+For real-valued nonnegative candidates, $a_{-n}=\overline{a_n}$; if one
+also imposes an even symmetry ansatz, the unknowns reduce further to real
+cosine coefficients.  The bootstrap gives an explicit tail estimate of
+the form
+\[
+  \norm{r_N}_{L^2}\leq \tau_N(B_m),
+  \qquad
+  \tau_N(B_m)\to0,
+\]
+where $B_m$ is a certified $C^m$ or Sobolev bound for positive critical
+points in the window.  Thus one searches over the finite coefficient vector
+$(a_{-N},\ldots,a_N)$ and an interval uncertainty representing~$r_N$.
+
+The finite-dimensional residual is
+\[
+  F_k(a,\Lambda)
+  :=
+  \widehat{T(P_Nf)}(k)-\Lambda a_k,
+  \qquad |k|\leq N,
+\]
+with an explicit interval error for all terms containing at least one
+factor of~$r_N$.  A convenient crude tail bound follows from
+Stein--Tomas and the Lipschitz estimate for $z\mapsto |z|^4z$:
+\[
+  \norm{T(f)-T(P_Nf)}_2
+  \leq
+  C\,C_{\mathrm{ST}}^6
+  \bigl(\norm{f}_2+\norm{P_Nf}_2\bigr)^4
+  \norm{r_N}_2,
+\]
+with an absolute constant~$C$.  This is probably not sharp enough for the
+final proof, but it is the correct first enclosure.  The Bessel-product
+technology should be used later to reduce this overestimate.
+
+\paragraph{Why sixfold Bessel products appear.}
+The extension of one Fourier mode is
+\[
+  E(e^{in\theta})(r,\phi)
+  =2\pi i^{|n|}J_{|n|}(r)e^{in\phi}.
+\]
+Consequently, the coefficient $\widehat{T(P_Nf)}(k)$ is a finite quintic
+sum over indices satisfying the angular selection rule
+\[
+  n_1+n_2+n_3-n_4-n_5-k=0,
+\]
+with constants given by radial integrals of six Bessel functions:
+\[
+  \int_0^\infty
+  J_{|n_1|}(r)J_{|n_2|}(r)J_{|n_3|}(r)
+  J_{|n_4|}(r)J_{|n_5|}(r)J_{|k|}(r)\,r\,dr.
+\]
+These constants must be enclosed rigorously.  This is exactly the type of
+input studied by Oliveira e Silva--Thiele in their estimates for sixfold
+Bessel products, and by the band-limited maximiser papers described below.
+
+\paragraph{Interval branch-and-bound.}
+The finite search region is a box in
+\[
+  (a_{-N},\ldots,a_N,\Lambda),
+\]
+augmented by interval constraints for normalisation, positivity, and the
+tail.  Positivity can be enforced by interval evaluation on arcs: if
+$P_Nf$ is bounded below by more than the certified tail and mesh
+interpolation error, the box is positive; if it is forced negative
+somewhere, the box is discarded; otherwise it is subdivided.
+
+For the eigenvalue search, each box is processed as follows.
+\begin{enumerate}[leftmargin=2em]
+  \item Evaluate the interval residuals $F_k$ and the normalisation
+    residual.  If some residual interval excludes~$0$, discard the box.
+  \item Apply an interval Newton or Krawczyk operator to the finite system.
+    If it proves no zero lies in the box, discard it.  If it maps strictly
+    into the box, validate a unique zero.
+  \item If neither test succeeds, subdivide the box, unless the box is
+    already below the target resolution; in that case it is marked
+    undecided and no theorem is claimed.
+\end{enumerate}
+For the variational upper-bound search, the analogous step is interval
+upper-bounding of the scalar functional $\norm{E(P_Nf)}_6^6$ plus the
+tail error.  Boxes whose upper bound is below $\Lambda_0+\eta$ are
+discarded; boxes near the top are subdivided or handled by local concavity
+at the constant.
+
+\paragraph{How this could prove the sharp constant.}
+A plausible staged proof would be:
+\begin{enumerate}[leftmargin=2em]
+  \item Certify the local linear gap target
+    $\nu_0\geq0.4\Lambda_0$ by interval Bessel integration.
+  \item Use Newton--Kantorovich to remove an explicit ball around~$f_0$.
+  \item Run the eigenvalue exclusion search on
+    $[\Lambda_0,\Lambda_0+\gamma]$ outside that ball.  If it exhausts the
+    boxes, then no positive critical value lies in this interval.
+  \item Separately prove by branch-and-bound that
+    $\norm{Ef}_6^6\leq\Lambda_0+\gamma/2$ for all positive normalised
+    candidates in the compact window.
+  \item Since an extremiser exists and may be chosen nonnegative, the
+    maximising value must then equal~$\Lambda_0$.
+\end{enumerate}
+The same architecture can be run in restriction-norm units
+$\Lambda^{1/6}$.  One should be careful about scales: near~$\Lambda_0$,
+a gap of $10^{-3}$ in $\Lambda^{1/6}$ corresponds to a gap of order
+$6\Lambda_0^{5/6}\cdot10^{-3}$ in~$\Lambda$.
+
+\paragraph{Relevant numerical and analytic references.}
+The closest existing works are:
+\begin{itemize}[leftmargin=2em]
+  \item D. Oliveira e Silva and C. Thiele,
+    \emph{Estimates for certain integrals of products of six Bessel
+    functions}, Rev. Mat. Iberoam. 33 (2017), no. 4, 1423--1462,
+    \href{https://doi.org/10.4171/RMI/977}{doi:10.4171/RMI/977}.
+    This is the main reference for rigorous estimates of the sixfold
+    Bessel integrals needed in the residual coefficients.
+  \item E. Carneiro, D. Foschi, D. Oliveira e Silva and C. Thiele,
+    \emph{A sharp trilinear inequality related to Fourier restriction on
+    the circle}, Rev. Mat. Iberoam. 33 (2017), no. 4, 1463--1486,
+    \href{https://doi.org/10.4171/RMI/978}{doi:10.4171/RMI/978}.
+    This uses the sixfold Bessel estimates and proves, among other things,
+    that constants are local extremizers for the circle Tomas--Stein
+    problem.
+  \item D. Oliveira e Silva, C. Thiele and P. Zorin-Kranich,
+    \emph{Band-limited maximizers for a Fourier extension inequality on
+    the circle}, Exp. Math. 31 (2022), no. 1, 192--198,
+    \href{https://doi.org/10.1080/10586458.2019.1596847}
+    {doi:10.1080/10586458.2019.1596847}.  They prove uniqueness of
+    constants among real-valued functions with Fourier modes up to
+    degree~$30$.
+  \item J. Barker, C. Thiele and P. Zorin-Kranich,
+    \emph{Band-limited maximizers for a Fourier extension inequality on
+    the circle, II}, Exp. Math. 32 (2023), no. 2, 280--293,
+    \href{https://doi.org/10.1080/10586458.2021.1926011}
+    {doi:10.1080/10586458.2021.1926011}.  This pushes the band-limited
+    computation to modes up to degree~$120$.
+  \item R. E. Moore, R. B. Kearfott and M. J. Cloud,
+    \emph{Introduction to Interval Analysis}, SIAM, 2009.  This is a
+    standard reference for interval Newton and Krawczyk methods.
+  \item F. Johansson, \emph{Arb: efficient arbitrary-precision
+    midpoint-radius interval arithmetic}, IEEE Trans. Comput. 66 (2017),
+    no. 8, 1281--1292,
+    \href{https://doi.org/10.1109/TC.2017.2690633}
+    {doi:10.1109/TC.2017.2690633}.  Arb/ball arithmetic is a natural
+    implementation platform for rigorous Bessel-integral and polynomial
+    residual enclosures.
+\end{itemize}
+
+\begin{theorem}[Conditional finiteness of shapes]
+  \label{thm:finiteness}
+  \conditional\quad
+  Assume:
+  \begin{enumerate}[leftmargin=2em]
+    \item Compactness modulo $G$ (Theorem~\ref{thm:compactness-mod-G})
+      holds for critical points with $\Lambda\geq\varepsilon$;
+    \item Every such critical point is nondegenerate modulo $G$
+      (i.e., $\ker L=T_{f_0}(G\cdot f_0)$ on the tangent space to the
+      unit sphere).
+  \end{enumerate}
+  Then the set of shapes $\{[f,\Lambda]\in\mathcal Z:\Lambda\geq\varepsilon\}$
+  is finite.  In particular, the set of critical values above $\varepsilon$
+  is finite.
+\end{theorem}
+
+\begin{proof}
+  By compactness modulo~$G$, the quotient
+  $\mathcal Z_\varepsilon:=\{f:\text{critical},\,\Lambda\geq\varepsilon\}/G$
+  is compact.
+
+  By nondegeneracy: at each $[f_0]\in\mathcal Z_\varepsilon$, choose a slice
+  $S_{f_0}$ complementary to $T_{f_0}(G\cdot f_0)$ in the tangent space
+  to $\norm{f}_2=1$.  The condition $\ker L|_{S_{f_0}}=\{0\}$ plus
+  Fredholm index zero implies $L|_{S_{f_0}}$ is invertible with bounded
+  inverse $\norm{L^{-1}|_{S_{f_0}}}\leq\mu_{f_0}^{-1}$.  By the
+  implicit function theorem, $[f_0]$ is an isolated point of
+  $\mathcal Z_\varepsilon$.
+
+  A compact set all of whose points are isolated is finite.
+\end{proof}
+
+\begin{corollary}[Identification of the sharp constant]
+  Under the hypotheses of Theorem~\ref{thm:finiteness}, the sharp
+  restriction constant is
+  \[
+    \mathcal R = \max\{\Lambda_j^{1/6}:\Lambda_j\geq\varepsilon\}
+  \]
+  for any $\varepsilon$ smaller than all critical values in the finite list.
+  The maximiser is the shape achieving the largest~$\Lambda_j$.
+\end{corollary}
+
+\subsection{What remains for the sharp constant on $S^1$}
+
+Two paths are available, depending on the desired strength of the result.
+
+\paragraph{Path 1: Identify $\mathcal R$ (the sharp constant).}
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Verify Bessel integrals.}  Check
+    $\mathcal J_n\neq\mathcal J_0$ and $5\mathcal J_n\neq\mathcal J_0$
+    for $n=2,3,\ldots,n_*$ by interval arithmetic.  This establishes
+    nondegeneracy at the constant solution.  \emph{Routine numerical
+    computation.}
+
+  \item \textbf{Restrict the search to nonnegative eigenfunctions.}
+    By Lemma~\ref{lem:positive-reduction}, any extremiser can be replaced
+    by a nonnegative extremiser, possibly in a different shape.  Therefore,
+    for the sharp constant, one only needs to retain those candidate
+    values~$\Lambda_j$ for which the nonlinear eigenvalue equation has at
+    least one nonnegative solution.  The positive gauge also removes exact
+    translation ambiguity by Lemma~\ref{lem:positive-gauge}, and
+    Theorem~\ref{thm:positive-values-finite} proves that the retained
+    critical values in any fixed positive window are finite.
+
+  \item \textbf{Show the constant is the unique maximiser.}
+    Theorem~\ref{thm:maximiser} gives existence of a maximiser.
+    If one can prove that the constant function $f_0=(2\pi)^{-1/2}$
+    is the unique maximiser modulo~$G$---e.g., by a rearrangement
+    or symmetrisation argument, or by ruling out non-radial
+    maximisers via the eigenvalue analysis---then
+    $\mathcal R=\norm{Ef_0}_{L^6}$ and the programme is complete.
+    \emph{This bypasses compactness of the full critical set.}
+\end{enumerate}
+
+\paragraph{Path 2: Finiteness of all critical values above
+$\varepsilon$ (the full structural result).}
+\begin{enumerate}[leftmargin=2em]
+  \item Bessel integrals (same as above).
+
+  \item \textbf{Rule out multi-profile splitting
+    (Theorem~\ref{thm:compactness-mod-G}).}
+    The profile decomposition is in place
+    (Theorem~\ref{thm:profile-decomp}), and each profile inherits the
+    Euler--Lagrange equation
+    (Proposition~\ref{prop:profile-critical}).  The open step is to
+    show that no critical sequence admits more than one profile.
+    Section~\ref{sec:compactness} identifies three general strategies:
+    descending induction, Pohozaev--Morawetz monotonicity, and unique
+    continuation for cross terms.  \emph{Requires new analytic input.}
+
+  \item \textbf{Enumerate non-constant shapes (if any).}  Either prove
+    that the constant is the only critical shape, or verify
+    nondegeneracy at all other shapes.
+\end{enumerate}
+
+% =======================================================================
+% PART III: EXTENSIONS AND SUPPLEMENTARY MATERIAL
+% =======================================================================
+
+\part{Extensions and Supplementary Material}
+
+% =======================================================================
+\section{The Higher-Dimensional Transversality Route}
+\label{sec:higher-dim}
+% =======================================================================
+
+For $n\geq 2$ and the equation $\rho=cT(\rho)$ on $L^2(S^{n-1})$,
+Proposition~\ref{prop:support-forcing} forces $\wh u$ onto $S^{n-1}$,
+and the problem reduces to the incidence-fibre equation~\eqref{eq:sphere-eq}.
+The symmetry group is $G=\R^n\rtimes SO(n)$, acting on densities by
+$(x_0,R)\cdot\rho(\omega)=e^{-ix_0\cdot\omega}\rho(R^{-1}\omega)$.
+
+\subsection{The five-step programme}
+
+The route to finiteness of shapes requires five analytic inputs.  We state
+each and assess its status for general~$n$.
+
+\paragraph{Step 1: Smoothing / Fredholm estimate.}  \open\quad
+The target is a multilinear smoothing estimate
+\[
+  A_k:H^s(S^{n-1})^k\to H^{s+\varepsilon}(S^{n-1}),
+  \qquad
+  \norm{A_k(\rho_1,\ldots,\rho_k)}_{H^{s+\varepsilon}}
+  \leq C_s\prod_{j=1}^k\norm{\rho_j}_{H^s},
+\]
+for some $\varepsilon>0$, where $A_k$ is the $k$-linear operator behind
+the incidence-fibre equation.  A weaker but sufficient target is
+compactness of $A_k$ on bounded sets.
+
+For the $S^1$ problem, the truncation argument
+(Theorem~\ref{thm:K-compact}) bypasses this step entirely.  For $n\geq 2$,
+the proof must exploit the curvature of $S^{n-1}$ and the transversality
+of the constraint $\omega_1+\cdots+\omega_k=\omega$.  The key obstruction
+is the existence of \emph{degenerate fibres}; see
+Section~\ref{sec:degenerate-fibres}.
+
+\paragraph{Step 2: Regularity bootstrap.}  \open\quad
+Show that weak $L^2$ solutions are automatically smooth:
+$\rho\in L^2(S^{n-1}),\;\rho=cT(\rho)\implies\rho\in H^s$ for all~$s$.
+If Step~1 gives $T:L^2\to H^\varepsilon$, iteration yields the bootstrap.
+
+\paragraph{Step 3: Local slices for the symmetry action.}  \open\quad
+At a solution $\rho$, construct a complement $S_\rho$ to the orbit tangent
+\[
+  \mathfrak g\cdot\rho
+  = \{-i(a\cdot\omega)\rho-(A\omega)\cdot\nabla_{S^{n-1}}\rho:
+  a\in\R^n,\;A\in\mathfrak{so}(n)\}.
+\]
+This must be done separately on orbit-type strata (radial, zonal, fully
+asymmetric solutions have different stabiliser dimensions).
+
+\paragraph{Step 4: Nondegeneracy modulo symmetry.}  \open\quad
+Verify $\ker L_\rho=\mathfrak g\cdot\rho$ at each solution, where
+$L_\rho=I-ckA_k(\rho,\ldots,\rho,\cdot)$.  For the $S^1$ problem at
+the constant solution, this reduces to Bessel integrals
+(Theorem~\ref{thm:nondeg-criterion}).
+
+\paragraph{Step 5: Compactness modulo~$G$.}  \open\quad
+Prove sequential compactness of the solution set modulo~$G$:
+\[
+  \rho_j=cT(\rho_j)\implies\exists g_j\in G:\;g_j\cdot\rho_j\to\rho_\infty.
+\]
+This requires a priori bounds ($\norm\rho\leq R$), a non-collapse lower
+bound ($\norm\rho\geq r>0$), and a no-escape condition for translations.
+Rotations are compact; translations are the genuine noncompact obstruction.
+
+\subsection{Degenerate fibres}
+\label{sec:degenerate-fibres}
+
+The fibre $V_k(\omega)=\{(\omega_1,\ldots,\omega_k)\in(S^{n-1})^k:
+\sum\omega_j=\omega\}$ is generically a smooth manifold of dimension
+$(n-1)k-(n-1+1)=(n-1)(k-1)-1$... when the differential of
+$\Sigma:\omega_1+\cdots+\omega_k$ has full rank.  Degeneracies occur when
+all tangent lines $T_{\omega_j}S^{n-1}$ are parallel.
+
+\textbf{Example for $k=5$ on $S^1$:}  The configuration
+$(\omega_0,\omega_0,\omega_0,-\omega_0,-\omega_0)$ with output
+$\omega=\omega_0$ is degenerate.  Here
+$d\Sigma=3(\text{tangent at }\omega_0)-2(\text{tangent at }-\omega_0)$
+has rank~$1$ instead of~$2$ (the tangents at $\omega_0$ and $-\omega_0$
+are parallel on $S^1$).  This is a codimension-$1$ degeneracy, producing
+an integrable singularity $\sim|t|^{-1/2}$ in the fibre density.
+
+In higher dimensions, the degenerate locus can have higher codimension
+(tangents at $\omega_0$ and $-\omega_0$ are parallel in $\R^n$ only
+when $n=1$; for $n\geq 2$, anti-parallel tangent \emph{spaces} are
+generically transverse).  This suggests that the smoothing estimate may
+be easier for $n\geq 3$ than for $n=2$.
+
+\subsection{Orbit dimension and radial rigidity}
+
+\begin{proposition}[Orbit dimension, $n=3$]
+  For $G=\R^3\rtimes SO(3)$ ($\dim G=6$), the orbit dimension of a
+  solution~$u$ is $6-\dim\Stab_G(u)$.  Specifically:
+  \begin{itemize}
+    \item Radial: $d=3$ (only translations).
+    \item Zonal (one axis of symmetry): $d=5$.
+    \item Fully asymmetric: $d=6$.
+  \end{itemize}
+\end{proposition}
+
+\begin{conjecture}[Radial rigidity]
+  \label{conj:radial}
+  For the equation $u=c(|u|^{2(k-1)}u\ast\wh\sigma)$ on $\R^3$, every
+  non-trivial solution is rotationally invariant about some point (its
+  ``centre of mass'').  If true, all solutions belong to $3$-dimensional
+  translation orbits, and the shape count reduces to counting radial profiles.
+\end{conjecture}
+
+\begin{warning}
+  Conjecture~\ref{conj:radial} is currently \emph{unproved}.  The
+  preceding sections on the $n=3$ problem treated it as established; it
+  should be regarded as a useful heuristic until proved.
+\end{warning}
+
+% =======================================================================
+\section{Supplementary: Gegenbauer Expansion and Galerkin Models}
+\label{sec:galerkin}
+% =======================================================================
+
+\subsection{Gegenbauer expansion}
+\heuristic
+
+For completeness, we record the formal harmonic decomposition.
+Let $\rho(\omega)=\sum_\ell a_\ell C_\ell^\lambda(\omega\cdot\eta)$ with
+$\lambda=(n-2)/2$.  The product of Gegenbauer polynomials linearises as
+$C_{\ell_1}^\lambda C_{\ell_2}^\lambda
+=\sum_j\gamma_j(\ell_1,\ell_2)C_j^\lambda$.
+If $T$ were a spherical convolution, the Funk--Hecke theorem would give
+$C_\ell^\lambda\ast_S\sigma=\lambda_\ell(\sigma)C_\ell^\lambda$.
+Substituting into $\rho=cT(\rho)$ and equating coefficients would give an
+algebraic system for $\{a_\ell\}$.
+
+\textbf{However}, as noted in Warning~\ref{warn:not-convolution}, the
+incidence-fibre operator is \emph{not} spherical convolution.  The
+Gegenbauer expansion gives a useful \emph{model} but does not rigorously
+reduce to finitely many coefficients without separate justification.
+
+\subsection{Galerkin approximation}
+
+Let $H_L=\operatorname{span}\{Y_{\ell m}:0\leq\ell\leq L\}$ and $P_L$ the
+$L^2(S^{n-1})$ projection.  The projected equation $P_LF(\rho_L)=0$ is a
+polynomial system of degree~$k$ in $N(L)=(L+1)^2$ unknowns (for $n=3$).
+
+\begin{proposition}[Galerkin shape count]
+  After imposing algebraic slice conditions, the number of Galerkin shapes
+  at truncation~$L$ is bounded by the BKK mixed volume of the sliced
+  Newton polytopes, in particular by $k^{N(L)}$ (B\'ezout).
+\end{proposition}
+
+\begin{warning}[Limit caveat]
+  This is a statement about the fixed-$L$ model.  It does not imply
+  finiteness of true shapes as $L\to\infty$ without uniform a priori bounds,
+  no-escape compactness, and stability of roots under high-mode
+  perturbation.
+\end{warning}
+
+\begin{remark}[How Galerkin helps]
+  A Galerkin computation becomes rigorous if paired with a high-mode bound
+  $\norm{(I-P_L)T(\rho)}_X\leq\varepsilon_L\Phi(\norm\rho_X)$ with
+  $\varepsilon_L\to 0$, plus an inverse bound on the sliced Jacobian at each
+  computed root.  A Newton--Kantorovich argument would then validate nearby
+  true solutions and certify completeness.
+\end{remark}
+
+% =======================================================================
+\section{Supplementary: Validated Search Strategy}
+\label{sec:validated-search}
+% =======================================================================
+
+Assuming the transversality route is completed (modulo~$G$ the solution set
+is finite), the next goal is to \emph{find every shape} by a finite,
+checkable search.
+
+\subsection{Constants needed}
+
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{A priori radius:} $\norm\rho_X\leq R(c,k)$.
+  \item \textbf{Non-collapse:} $\norm\rho_X\geq r(c,k)>0$.
+  \item \textbf{Regularity/mesh modulus:} $\norm\rho_{C^m}\leq B_m$.
+  \item \textbf{Validated quadrature:} error $q_h(B_m)\to 0$ for the
+    fibre integral on a mesh of size~$h$.
+  \item \textbf{Slice conditioning:}
+    $\norm{L_\rho\eta}_X\geq\mu(\rho)\norm\eta_X$ on $S_\rho$, with
+    $\mu_*:=\inf_\rho\mu(\rho)>0$.
+  \item \textbf{Lipschitz:}
+    $\norm{DF(\rho)-DF(\tilde\rho)}\leq M\norm{\rho-\tilde\rho}_X$.
+\end{enumerate}
+
+\subsection{Separation and packing}
+
+From the conditioning bound, the quantitative isolation scale is
+$\delta_*\simeq\mu_*/M$: two distinct shapes cannot lie within
+$\delta_*$ of each other in the slice.  A crude packing bound is
+\[
+  \#\{\text{shapes}\}
+  \leq
+  \left(1+\frac{2R_h}{\delta_*-2\eta_h-2q_h}\right)^{N_{\mathrm{mesh}}(h)},
+\]
+provided $\delta_*>2\eta_h+2q_h$.
+
+\subsection{The search pipeline}
+
+\begin{enumerate}[leftmargin=2em]
+  \item Choose a quasi-uniform mesh on $S^{n-1}$ (or directly on $S^1$
+    for the circle problem) and fix gauge conditions.
+  \item Represent candidates by interval boxes for nodal values plus global
+    regularity bounds.
+  \item For each box, enclose the residual $F(\rho)$ at mesh points using
+    validated quadrature.
+  \item Discard boxes with nonzero residual enclosure.
+  \item Apply Krawczyk/interval Newton to surviving boxes.
+  \item Validate uniqueness and lift to the full space.
+  \item Certify completeness: every box discarded or assigned.
+\end{enumerate}
+
+\subsection{Main difficulties}
+
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Translation gauge:} $e^{-ix\cdot\omega}\rho(\omega)$ creates
+    oscillation as $|x|\to\infty$.  A canonical centre must be fixed.
+  \item \textbf{Uniform conditioning:} $\mu_*>0$ may be the hardest
+    constant to obtain without knowing all solutions.
+  \item \textbf{Mesh consistency:} nodal errors must not hide solutions
+    between mesh points.
+  \item \textbf{Dimension:} the effective search dimension grows with
+    mesh size.  Symmetry decomposition and adaptive refinement are essential.
+\end{enumerate}
+
+\subsection{Specialisation to $S^1$}
+
+For the circle problem, the validated search simplifies considerably:
+\begin{itemize}
+  \item The mesh is a grid on $[0,2\pi)$ with $N$ equally spaced points.
+  \item The gauge fixes phase, rotation of $S^1$, and one translation.
+  \item The fibre integral reduces to a trigonometric integral.
+  \item The Jacobian involves the linearised operator~$L$, which decomposes
+    into Fourier modes for radial $u_0$.
+\end{itemize}
+
+The direct certified programme for the sharp constant is:
+\begin{enumerate}[leftmargin=2em]
+  \item Prove a priori bounds:
+    $\norm{f}_{L^2}=1$, $\norm{f}_{C^m}\leq B_m$,
+    $0<\Lambda_{\min}\leq\Lambda\leq C_{\mathrm{ST}}^6$.
+  \item Use Lemma~\ref{lem:positive-reduction} to restrict the extremiser
+    search to boxes containing a nonnegative representative.
+  \item Fix gauges (phase, rotation, translation); in the nonnegative
+    slice, Lemma~\ref{lem:positive-gauge} fixes the translation parameter.
+  \item Mesh $S^1$; represent $f$ by interval boxes plus derivative bounds.
+  \item For each $(f,\Lambda)$ box, enclose the residual
+    $E^*(|Ef|^4Ef)(\omega_i)-\Lambda f(\omega_i)$.
+  \item Discard or validate via interval Newton.
+  \item Sort validated $\Lambda_j$ intervals; certify the ordering.
+\end{enumerate}
+
+% =======================================================================
+\section{Summary: The Logical Dependency Graph}
+\label{sec:dependency}
+% =======================================================================
+
+We summarise the dependencies and status of the full programme.
+
+\bigskip
+\begin{center}
+\fbox{\parbox{0.9\textwidth}{
+\textbf{Proved:}
+\begin{itemize}[leftmargin=1.5em, topsep=2pt, itemsep=1pt]
+  \item Spectral support forcing ($\wh u\subseteq S^1$)
+  \item 1D case complete
+  \item Compactness of linearised operator $K_{u_0}$ on $L^2(S^1)$
+  \item Fredholm index zero for $L=K-\Lambda I$
+  \item Eigenvalue decomposition at the constant solution
+  \item Nondegeneracy $\Leftrightarrow$ Bessel integrals~\eqref{eq:nondeg-cond}
+  \item $\mathcal J_n\to 0$ (finitely many integrals to check)
+  \item Regularity bootstrap for critical points
+  \item Inverse Strichartz inequality for $S^1$ extension
+  \item Profiles of critical sequences are critical points
+  \item Existence of a maximiser (Theorem~\ref{thm:maximiser})
+  \item Positivity reduction for extremisers
+    (Lemma~\ref{lem:positive-reduction})
+  \item Finiteness of nonnegative critical values in compact positive
+    windows (Theorem~\ref{thm:positive-values-finite})
+\end{itemize}
+
+\textbf{Next concrete steps:}
+\begin{itemize}[leftmargin=1.5em, topsep=2pt, itemsep=1pt]
+  \item Compute $\mathcal J_n$ for $n=2,3,\ldots,n_*$ by interval
+    arithmetic; verify~\eqref{eq:nondeg-cond}
+  \item In the extremiser search, work with the finite positive-window
+    list from Theorem~\ref{thm:positive-values-finite}
+  \item Quantify the gap around $\Lambda_0$ by certifying
+    $\nu_0\geq0.4\Lambda_0$ and running the far-region interval search
+  \item Prove the constant is the unique maximiser modulo $G$
+    (this alone gives $\mathcal R$)
+\end{itemize}
+
+\textbf{Open (harder):}
+\begin{itemize}[leftmargin=1.5em, topsep=2pt, itemsep=1pt]
+  \item Rule out multi-profile splitting for non-maximising
+    critical sequences (Theorem~\ref{thm:compactness-mod-G})
+  \item Enumeration / uniqueness of non-constant shapes
+\end{itemize}
+
+\textbf{Conditional conclusion:}
+\begin{itemize}[leftmargin=1.5em, topsep=2pt, itemsep=1pt]
+  \item Compactness + nondegeneracy $\Longrightarrow$ finitely many
+    critical values $\Lambda_j$
+  \item $\mathcal R=\max_j\Lambda_j^{1/6}$
+\end{itemize}
+}}
+\end{center}
+
+\bigskip
+\noindent\rule{\linewidth}{0.4pt}
+\begin{center}
+  \small\itshape
+  Notes compiled from working discussions.  Statements marked \proven{}
+  carry complete proofs; statements marked \conditional{} depend on
+  explicitly stated hypotheses; statements marked \open{} require new
+  analytic input.
+\end{center}
+
+\end{document}

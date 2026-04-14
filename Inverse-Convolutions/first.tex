@@ -1,0 +1,243 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}               
+\geometry{letterpaper}                    
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{amssymb}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\usepackage{verbatim} % this enables the {comment} environment
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\newcommand{\pvector}[1]{
+  \begin{pmatrix}
+    #1
+  \end{pmatrix}} 
+\newcommand{\ddirac}[1]{
+  \,\boldsymbol{\delta}\!\pvector{#1}\!} 
+\renewcommand{\d}{\,{\rm d}} 
+
+\def\R{\mathbb{R}}
+\def\T{\mathbb{T}}
+\def\N{\mathbb{N}}
+\def\Z{\mathbb{Z}}
+\def\Co{\mathbb{C}}
+
+\def\C{\mathcal{C}}
+\def\Q{\mathcal{Q}}
+\def\D{\mathcal{D}}
+\def\E{\mathcal{E}}
+\def\G{\mathcal{G}}
+\def\P{\mathbb{P}}
+\def\H{\mathcal{H}}
+\def\F{\mathcal{F}}
+\def\V{\mathcal{V}}
+\def\X{\mathcal{X}}
+\def\f{\widehat{f}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{estimate}[theorem]{Estimate}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem*{notation}{Notation}
+
+
+\title{An inverse problem for convolution 
+measures with applications}
+
+
+
+
+\author{Diogo Oliveira e Silva}
+\address{
+ Departamento de Matemática \\
+Instituto Superior Técnico \\
+Av. Rovisco Pais \\
+1049-001 Lisboa, Portugal}
+\email{diogo.oliveira.e.silva@tecnico.ulisboa.pt}
+
+\author{João Pedro Ramos}
+\address{
+ EPFL Lausanne -- Institute of Mathematics MA C3 535 \\
+Route Cantonale \\ 
+1015 Lausanne, Switzerland}
+\email{joao.ramos@epfl.ch}
+
+
+\date{\today}      
+\subjclass[2020]{42B10}
+\keywords{Sharp restriction theory, Monge--Ampère equation, stability, inverse problem, convolution measure.} 
+
+\begin{document}
+\begin{abstract}
+\end{abstract}
+
+\maketitle
+
+\section{To-do list}
+\begin{enumerate}
+    \item $d\geq 3$ (JPR)
+    \item spheres (DOS)
+    \item 1st application
+    \item $k\geq 3$ for paraboloids
+    \item $k\geq 3$ for spheres
+    \item 2nd application
+    \item NEW (03/2026): Is the map $T$ from OS--Quilodrán (MPCMS 2020) the gradient of a convex function in the sense of optimal transport? Gromov--Knothe's proof of the isoperimetric inequality as explained in Figalli--Maggi--Pratelli (Invent. Math. 2010) was the inspiration for this question, which may lead to stronger and/or simplified proofs of some of our results. Worth exploring!
+\end{enumerate}
+
+\section{Introduction}
+A classical theorem of Jörgens ($d=2$), Calabi ($d\leq 5$) and Pogorelov ($d\geq 2$) states that any classical convex solution of $\det D^2u=1$ in $\R^d$ must be a quadratic polynomial. As stated in the second paragraph of \cite{CL03}, Caffarelli extended the result for classical solutions to {\it viscosity solutions}. The latter are viscosity subsolutions which are also viscosity supersolutions. We recall the definitions.
+\begin{definition}[\cite{Gu16}]
+    Let $u\in C^0(\Omega)$ be a convex function and $0\leq f\in C^0(\Omega)$. The function $u$ is a viscosity subsolution (resp.\@ supersolution) of the equation $\det D^2 u=f$ in $\Omega$ if whenever convex $\phi\in C^2(\Omega)$ and $x_0\in\Omega$ are such that $(u-\phi)(x)\leq (u-\phi)(x_0)$ (resp.\@ $\geq$) for all $x$ in a neighborhood of $x_0$, then necessarily 
+    \[\det D^2\phi(x_0)\geq f(x_0)\,\,\,(\text{resp.} \leq)\]
+\end{definition}
+\noindent No generality is lost in assuming that $\phi(x_0)=u(x_0)$ (this follows from considering $\psi=\phi+u(x_0)-\phi(x_0)$, it implies $u(x)\leq\phi(x)$ and motivates the choice of terminology {\it sub}solution). See \cite[Remark 1.3.3.]{Gu16} for the claim that $\phi$ can be further restricted to the class of strictly convex quadratic polynomials.\\
+
+Let $U\subset\R^d$ be open.
+Recall that a convex function $f:U\subset\R^d\to\R$ is necessarily continuous.
+By Alexandrov's theorem, $f$ has a second derivative almost everywhere (i.e., $f$ has a second-order Taylor expansion at that point with a local error smaller than any quadratic). This is related to Rademacher's theorem,  which ensures that a Lipschitz continuous function $g:U\subset\R^d\to\R$ is differentiable almost everywhere in $U$. The second derivative $D^2f$ is a nonnegative (matrix-valued) Radon measure which is absolutely continuous with respect to $(d-1)$-dimensional Hausdorff measure \cite{Dud77}.
+
+\section{An inverse result}
+
+
+Our first result is two-dimensional and  phrased for general convex functions $\psi:\R^2\to\R$, without further regularity assumptions.
+\begin{proposition}
+    Let $\psi:\R^2\to\R$ be strictly convex and let $\sigma$ denote the projection measure on the surface %\footnote{Check distinction between $\psi$ and $|\cdot|^2+\psi$; see \cite{OSQ20} instead of \cite{OSQ18} and check that $C^2$ is not needed for what we export.}
+    $\{(y,\psi(y)):y\in\R^2\}$.
+    Assume that the function $(\xi,\tau)\mapsto(\sigma\ast\sigma)(\xi,2\psi(\xi)+\tau)$ is a strictly positive constant. Then  $\psi:\R^2\to\R$ is a (positive definite) quadratic form.
+\end{proposition}
+    
+\begin{proof}
+Via a change of variables as in the proof of \cite[Prop. 2.1.(c)]{OSQ18} or \cite[Prop. 2.1.(c)]{OSQ20}, we may write
+\begin{equation}\label{eq_conv1}
+    (\sigma\ast\sigma)(\xi,2\psi(\xi/2)+\tau)=\int_{\R^2}\ddirac{\tau-\Psi(\xi,y)}\,\d y,
+\end{equation}
+    where $\Psi(\xi,y):=\psi(\xi/2+y)+\psi(\xi/2-y)-2\psi(\xi/2)$ is a nonnegative function in view of the convexity of $\psi$.
+    We are working under the assumption that the function $F_\sigma(\xi,\tau):=(\sigma\ast\sigma)(\xi,2\psi(\xi/2)+\tau)$ equals a strictly positive constant, which we denote by $c_0>0$. For every $\xi\in\R^d$ and $t>0$, via \eqref{eq_conv1} and Fubini's theorem we then have that
+    \begin{multline}\label{eq_sublevel}
+        c_0\cdot t
+    =\int_0^t F_\sigma(\xi,\tau)\,\d\tau
+    =\int_0^t \int_{\R^2}\ddirac{\tau-\Psi(\xi,y)}\,\d y\,\d\tau\\
+    =\int_{\R^2} {\bf 1}_{\{0\leq\Psi(\xi,y)\leq t\}} (y)\,\d y=|\{y\in\R^2: \Psi(\xi,y)\leq t\}|.
+    \end{multline}
+    It follows that $\psi$ is a viscosity solution of $\det D^2\psi=\pi^2c_0^{-2}$.
+    To see why this is the case, let us start by verifying that $\psi$ is a viscosity subsolution. 
+    Fix $\xi_0\in\R^2$ and take $\phi\in C^2$ convex such that $\phi(\xi_0)=\psi(\xi_0)$ and $\phi(\xi)\geq\psi(\xi)$ for all $\xi$ in a neighborhood of $\xi_0$. 
+    We must check  
+    \begin{equation}\label{eq_tocheck}
+        \det D^2\phi(\xi_0)\stackrel{?}{\geq} \pi^2c_0^{-2}.
+    \end{equation}
+    If $t>0$ is small enough, we then have that
+    \[c_0\cdot t=|\{y\in\R^2: \Psi(2\xi_0,y)\leq t\}| \geq 
+    |\{y\in\R^2:\phi(\xi_0+y)+\phi(\xi_0-y)-2\phi(\xi_0)\leq t\}|,\]
+    which implies 
+    \begin{equation}\label{eq_sublevel}
+        \frac1t |\{y\in\R^2:\phi(\xi_0+y)+\phi(\xi_0-y)-2\phi(\xi_0)\leq t\}|\leq c_0.
+    \end{equation}
+    We can reverse engineer \eqref{eq_sublevel}, this time for the function $\phi$ instead of $\psi$, and let  $t\to 0^+$ to check, as in the proof of \cite[Prop.\@ 2.1(d)]{OSQ18},
+    that
+    \[\frac{\pi}{\sqrt{\det D^2\phi(\xi_0)}}\leq c_0,\]
+ which is equivalent to \eqref{eq_tocheck}, as desired.
+    We now check that $\psi$ is a viscosity supersolution. (Same -- CHECK)
+
+    Thus $\psi$ is a viscosity solution of $\det D^2\psi=c_0$, as claimed. The proposition now follows from \cite[Theorem 1.1]{CL03} (which in  \cite{CL03} is attributed to earlier work of Caffarelli).
+\end{proof} 
+
+\subsection{The case $d=1$}
+In this case, we have that 
+\begin{equation}\label{eq_1dgoal}
+    |\{y\in\R:\Psi(\xi,y)\leq t\}|\gtrsim t^{1/2},
+\end{equation}
+which in light of \eqref{eq_sublevel} leads to a contradiction.
+To verify  \eqref{eq_1dgoal}, start by noting that 
+\begin{equation}\label{eq_2ndorder}
+    \Psi(\xi,y)=\psi(\xi/2+y)+\psi(\xi/2-y)-2\psi(\xi/2)
+=\psi''(\xi/2)y^2+o(y^2),
+\end{equation}
+whenever $\psi$ is twice differentiable.
+If there exists $\xi_0\in\R$ such that $\psi''(\xi_0/2)$ exists and is nonzero, then we finish by noting that \eqref{eq_2ndorder} implies that the sublevel set in \eqref{eq_1dgoal} contains a subset of the form $\{y\in\R: y^2\lesssim_{\xi_0} t\}$, which has measure comparable to $t^{1/2}$.
+Otherwise, $\psi''=0$ a.e., and we reason as follows:
+\begin{align*}
+  0\leq \Psi(\xi,y)
+   &=\psi(\xi/2+y)-\psi(\xi/2) -(\psi(\xi/2)-\psi(\xi/2-y))\\
+   &=\int_{\xi/2}^{\xi/2+y}\psi'(t)\,\d t-\int_{\xi/2-y}^{\xi/2}\psi'(t)\,\d t\\
+   &=\int_{\xi/2}^{\xi/2+y} (\psi'(t)-\psi'(t-y))\,\d t\\
+   &=\int_{\xi/2}^{\xi/2+y} \int_{t-y}^t \psi''(s)\d s\,\d t\\
+   &=\int_{\xi/2-y}^{\xi/2+y} (y-|s-\xi/2|)\psi''(s)\,\d s\\
+   &\leq |y| \int_{\xi/2-y}^{\xi/2+y} \psi''(s)\,\d s,
+\end{align*}
+where the penultimate line follows from Fubini's theorem. We would like to verify that the last integral is $O(|y|)$, which  follows from \cite[Theorem 3.22]{Fo99} as long as the Radon--Nikodym derivative $\frac{\d\mu}{\d m}$ is finite, where $\mu:=\psi''$ and $m$ denotes the one-dimensional Lebesgue measure. But note that Alexandrov's theorem implies  $\mu\ll m$ a.e. (not nec. -- see Remark below, use instead $\psi''=0$ a.e. to conclude from Theorem 3.22), and so $\frac{\d\mu}{\d m}\in L^1(...)$.
+
+\begin{remark}
+    An example of a strictly convex function $\psi:\R\to\R$ for which $\psi''=0$ a.e. is as follows. Consider the probability measure
+    \[\mu=\sum_{x\in\mathbb Q}\frac{\delta_x}{2^{\sharp x}}\]
+    where $\{x_n\}_{n\in\N}$ is a numbering of the rationals $\mathbb Q\subset\R$, and $\sharp x=n$ if $x=x_n$. Let $f(x):=\int_{-\infty}^x\d\mu$ and define 
+    \[\psi(x):=\int_0^x f(t)\,\d t.\]
+    We have that $\psi'(x)=f(x)>0$ for all $x\in\R$ and $\psi''=\mu$ is a nonnegative measure. So $\psi$ is a strictly increasing convex function. If it were not strictly convex, then $\psi'=f$ would not change on a whole interval, which is a contradiction in view of the density of $\mathbb Q$ in $\R$.
+\end{remark}
+\subsection{The case $d\geq 3$}
+\subsection{On spheres}
+ If convolution is constant on the support of the boundary, then it is a sphere.
+\section{An application to sharp restriction theory  }
+
+
+\section*{Acknowledgements}
+DOS  is partially partially funded by Fundação para a Ciência e Tecnologia (FCT), Portugal, through  grant No.\@ UID/4459/2025 and  by the Deutsche Forschungsgemeinschaft 
+ (DFG, German Research Foundation) under Germany's Excellence Strategy – EXC-2047/1 – 390685813.
+JPR ...
+
+\begin{thebibliography}{03}
+
+\bibitem{CL03} L. Caffarelli, Y. Li,
+\newblock {\it An extension to a theorem of Jörgens, Calabi, and Pogorelov.}
+\newblock Comm. Pure Appl. Math. {\bf 56} (2003), no.~5, 549--583.
+
+\bibitem{Caf90} L. Caffarelli,
+\newblock {\it A localization property of viscosity solutions to the Monge--Ampère equation and their strict convexity.}
+\newblock Ann. of Math. (2) {\bf 131} (1990), no.~1, 129--134.
+
+\bibitem{Dud77} R. M. Dudley, 
+\newblock {\it On second derivatives of convex functions.}
+\newblock Math. Scand. {\bf 41} (1977), no.~1, 159--174.
+
+\bibitem{Fo99} G. B. Folland, 
+\newblock Real Analysis.
+Modern Techniques and Their Applications. Second edition
+\newblock Pure Appl. Math. (N. Y.)
+Wiley-Intersci. Publ.
+John Wiley \& Sons, Inc., New York, 1999.
+
+
+\bibitem{Gu16} C. Gutiérrez,
+\newblock The Monge-Ampère equation.
+Second edition. 
+\newblock Progr. Nonlinear Differential Equations Appl., {\bf 89}
+Birkhäuser/Springer, [Cham], 2016. 
+
+\bibitem{OSQ18} D. Oliveira e Silva, R. Quilodrán, 
+\newblock {\it On extremizers for Strichartz estimates for higher order Schrödinger equations.}
+\newblock Trans. Amer. Math. Soc. {\bf 370} (2018), no.~10, 6871--6907.
+
+\bibitem{OSQ20} D. Oliveira e Silva, R. Quilodrán, 
+\newblock {\it A comparison principle for convolution measures with applications..}
+\newblock Math. Proc. Cambridge Philos. Soc.   {\bf 169} (2020), no.~2, 307--322.
+
+
+
+
+\bibitem{St93} E. M. Stein,
+\newblock Harmonic Analysis: Real-Variable Methods, Orthogonality, and Oscillatory Integrals.
+\newblock Princeton Univ. Press, Princeton, NJ, 1993.
+\end{thebibliography}
+
+
+\end{document}  

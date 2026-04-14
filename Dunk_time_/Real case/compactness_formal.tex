@@ -1,0 +1,1286 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\N}{\mathbb N}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\supp}{\operatorname{supp}}
+
+\title{A Compactness Proof of Stable Phase Retrieval}
+\author{Pedro Abdalla Teixeira\textsuperscript{1}}
+
+\author{Jaume de Dios Pont\textsuperscript{2}}
+
+\author{Jo\~ao Pedro Ramos\textsuperscript{3}}
+
+\author{Mitchell Taylor\textsuperscript{4}}
+
+\begin{document}
+\begin{abstract}
+We prove a stable phase retrieval result for spans of independent real-valued
+random variables in $L^2$ under a uniform two-sided $L^1$ bound, allowing one
+exceptional coordinate with no such hypothesis. After relabeling and
+normalizing, this gives the sufficiency direction of the Calderbank,
+Daubechies, Freeman, and Freeman conjecture up to one exceptional variable. The
+argument is based on a compactness scheme: after the orthogonal reduction, a
+counterexample sequence is decomposed into a convergent head and a
+diffuse tail. The head is recovered from the quadratic observable
+$|X|^2-|Y|^2$ by bounded probe functions, while the tail is controlled through
+weak-limit rigidity and a uniform lower $L^1$-$L^2$ estimate for independent
+sums.
+\end{abstract}
+\maketitle
+\markboth{ABDALLA TEIXEIRA, DE DIOS PONT, RAMOS, AND TAYLOR}{A COMPACTNESS PROOF OF STABLE PHASE RETRIEVAL}
+\begingroup
+\renewcommand{\thefootnote}{\arabic{footnote}}
+\footnotetext[1]{Department of Mathematics, University of California, Irvine, Irvine, California 92697, USA}
+\footnotetext[2]{Center for Data Science, New York University, New York, New York 10011, USA}
+\footnotetext[3]{Instituto de Matem\'atica Pura e Aplicada (IMPA), Rio de Janeiro, RJ, Brazil}
+\footnotetext[4]{Department of Mathematics, ETH Z\"urich, Z\"urich, Switzerland}
+\endgroup
+\setcounter{footnote}{0}
+
+\section{Introduction}
+
+The phase retrieval problem is concerned with recovering a vector or function
+from phaseless measurements. In the real setting, this means recovery up to
+sign. The finite-dimensional theory is by now extensive; see, for instance,
+\cite{bandeira2014saving,eldar2014stability} and the survey
+\cite{grohs2020survey}. In infinite dimensions the situation is much more
+delicate. Phase retrieval itself can hold in infinite-dimensional Hilbert
+spaces \cite{cahill2016infinite}, but uniform stability fails in the general
+setting of continuous frames \cite{alaifari2017continuous}, and natural
+measurement models may be severely ill-posed \cite{alaifari2021gabor}.
+
+We adopt the function-space point of view from \cite{FOTP}. If $X$ is a real
+function space and $E \subset X$ is a subspace, we say that $E$ does stable
+phase retrieval if there exists a constant $C < \infty$ such that
+\[
+\min_{\sigma \in \{\pm 1\}} \|f-\sigma g\|_X
+\leq C \, \bigl\||f|-|g|\bigr\|_X
+\qquad
+\text{for all } f,g \in E.
+\]
+This formulation makes it natural to ask which subspaces of a given function
+space can do stable phase retrieval. The main results of \cite{FOTP} show that
+many order-continuous Banach lattices admit no infinite-dimensional closed subspaces
+with this property, while \cite{christ2022examples,FOTP} provide positive
+examples in $L^2$-spaces. The paper \cite{FOTP} also proves the orthogonal reduction
+in real Hilbert spaces: to verify stable phase retrieval on a subspace, it is
+enough to check it on orthogonal pairs. That reduction is the starting point of the present
+compactness argument.
+
+In \cite{calderbank2022stable}, Calderbank, Daubechies, Freeman, and Freeman
+proved the following theorem.
+
+\begin{theorem}
+Let $(X_n)_{n=1}^\infty$ be an orthonormal sequence of independent mean-zero
+random variables in $L^2([0,1])$. The following statements are equivalent.
+\begin{enumerate}[label=\rm(\arabic*)]
+\item The closed span of $(X_n+1_{(n,n+1]})_{n=1}^\infty$ does stable phase
+retrieval in $L^2(\R)$.
+\item The $L^1$ and $L^2$ norms of $(X_n)$ are uniformly comparable; that is,
+there exists $A>0$ such that
+\[
+A\|X_n\|_{L^2([0,1])}\leq \|X_n\|_{L^1([0,1])}\leq \|X_n\|_{L^2([0,1])}
+\qquad
+\text{for all } n\in \N.
+\]
+\end{enumerate}
+\end{theorem}
+
+Following that work, the authors proposed the following conjecture.
+
+\begin{conjecture}\label{conj:cdff}
+If $(X_n)$ is an orthonormal sequence of independent mean-zero random
+variables in $L^2$, then $\overline{\Span}(X_n)$ does stable phase retrieval in $L^2$ if
+and only if there exist constants $0<A\leq B<1$ such that
+\[
+A\leq \|X_n\|_{L^1}\leq B
+\]
+for all but at most one $n\in \N$.
+\end{conjecture}
+
+The necessity of the conditions in Conjecture \ref{conj:cdff} is well
+known.
+By \cite{FOTP}, if a subspace of $L^p(\mu)$
+does stable phase retrieval, then the $L^1$ and $L^p$ norms are equivalent on
+that subspace, so the lower bound $A>0$ is necessary. The upper bound $B<1$
+reflects the constraint that a centered random variable with
+$\|f\|_{L^2}=1$ satisfies
+$\|f\|_{L^1}=\|f\|_{L^2}$ if and only if it is Rademacher-valued, and the
+closed span of the Rademacher functions does not do phase retrieval,
+ because all Rademacher variables have equal absolute value.
+Since at most one coordinate can be Rademacher, a uniform gap $B<1$ is needed
+for all remaining coordinates if one requires stable phase retrieval. 
+
+Theorem \ref{thm:main} proves the sufficiency direction with
+one exceptional coordinate. After relabeling the coordinates and normalizing
+each variable in $L^2$, this is exactly the case in which all but at most one
+variable satisfy uniform two-sided $L^1$ bounds. Our purpose here is not to
+optimize constants, but to isolate a compactness mechanism behind the proof.
+After the orthogonal reduction, a counterexample sequence of pairs is split
+into a convergent head and a diffuse tail whose maximal coefficient tends to
+zero. The head is identified from the relation $|X_n|^2-|Y_n|^2 \to 0$ by
+means of bounded probes, while the tail is controlled through a weak-limit
+rigidity argument and a uniform lower $L^1$-$L^2$ estimate for independent
+sums. Together these ingredients force the two coefficient vectors to agree up
+to sign, contradicting the orthogonal normalization. We now turn to the precise
+formulation of the theorem and the contradiction setup. The next section
+reduces the proof to a normalized counterexample array; the following two
+sections develop the corresponding profile decomposition and auxiliary
+estimates; and the final sections identify the limiting head and tail and
+derive the contradiction.
+
+\section{Main result and contradiction setup}
+
+We begin by stating the precise one-exception theorem proved in this note. We
+then reformulate its failure in terms of a normalized orthogonal
+counterexample sequence, which is the object analyzed in the rest of the
+paper.
+
+\begin{theorem}\label{thm:main}
+Let $\eta,\xi_2,\xi_3,\dots$ be independent real-valued random variables and
+let $\delta > 0$ be such that
+\[
+\|\eta\|_{L^2} = 1,
+\qquad
+\E[\eta] = 0,
+\]
+and, for every $i \ge 2$,
+\[
+\|\xi_i\|_{L^2} = 1,
+\qquad
+\E[\xi_i] = 0,
+\qquad
+\delta \le \|\xi_i\|_{L^1} \le 1-\delta.
+\]
+Then there exists $C_{\delta,\eta} \ge 1$ such that, for every
+$X,Y \in \overline{\Span}(\eta,\xi_i : i \ge 2)$,
+\[
+\min_{\sigma \in \{\pm 1\}} \|X-\sigma Y\|_{L^2}
+\le
+C_{\delta,\eta} \, \bigl\| |X|-|Y| \bigr\|_{L^2}.
+\]
+\end{theorem}
+
+\begin{remark}
+After relabeling the coordinates and normalizing each variable in $L^2$, this
+is exactly the sufficiency direction of the formulation in which
+\[
+\delta \le \|\xi_i\|_{L^1} \le 1-\delta
+\]
+holds for all but at most one index.
+\end{remark}
+
+The rest of the proof is by contradiction. After the standard orthogonality
+reduction, a failure of Theorem \ref{thm:main} produces a sequence of
+orthogonal pairs with almost identical moduli. The remaining sections show
+that no such sequence can exist.
+
+\begin{proposition}\label{prop:counterexample-array}
+If Theorem \ref{thm:main} fails, then there exist:
+\begin{enumerate}[label=\rm(\roman*)]
+\item a triangular array $(\xi_{n,i})_{n \ge 1,\ i \ge 2}$ such that for each
+fixed $n$ the family $(\eta,\xi_{n,i})_{i \ge 2}$ is independent and every
+$\xi_{n,i}$ satisfies
+\[
+\|\xi_{n,i}\|_{L^2} = 1,
+\qquad
+\E[\xi_{n,i}] = 0,
+\qquad
+\delta \le \|\xi_{n,i}\|_{L^1} \le 1-\delta;
+\]
+\item vectors $a^{(n)}, b^{(n)} \in \ell^2(\N)$ such that
+\[
+\|a^{(n)}\|_2 = \|b^{(n)}\|_2 = 1,
+\qquad
+\langle a^{(n)}, b^{(n)} \rangle = 0,
+\]
+and, writing
+\[
+X_n := a_1^{(n)}\eta + \sum_{i \ge 2} a_i^{(n)} \xi_{n,i},
+\qquad
+Y_n := b_1^{(n)}\eta + \sum_{i \ge 2} b_i^{(n)} \xi_{n,i},
+\]
+one has
+\[
+\bigl\| |X_n|-|Y_n| \bigr\|_{L^2} \longrightarrow 0.
+\]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Because the variables are centered, independent, and $L^2$-normalized, each
+family $(\eta,\xi_i)_{i \ge 2}$ is orthonormal in $L^2$; hence the sums
+converge in $L^2$ and their $L^2$ norms equal the corresponding coefficient
+$\ell^2$ norms.
+
+If the uniform stable phase retrieval estimate fails, then for each $n$ one
+may choose a violating pair $(X_n,Y_n)$. By the orthogonal reduction
+\cite[Theorem~3.9]{FOTP}, this pair can be replaced by an orthogonal pair
+in the same two-dimensional span without increasing the quantity
+$\bigl\| |X|-|Y| \bigr\|_{L^2}$. After normalizing both functions to have
+$L^2$ norm one, orthogonality gives
+$\min_{\sigma=\pm 1}\|X_n-\sigma Y_n\|_{L^2}=\sqrt{2}$, so the right-hand
+side must tend to zero along a suitable sequence. After relabeling the good
+variables row by row, we may write
+\[
+X_n = a_1^{(n)}\eta + \sum_{i \ge 2} a_i^{(n)} \xi_{n,i},
+\qquad
+Y_n = b_1^{(n)}\eta + \sum_{i \ge 2} b_i^{(n)} \xi_{n,i},
+\]
+where the exceptional coordinate $\eta$ is the same for every row.
+\end{proof}
+
+\section{Profile decomposition}
+
+Starting from the counterexample array, we next reorder the good coordinates so
+that the large coefficients are moved to small indices. This yields the
+head-tail decomposition that governs the rest of the argument.
+
+\begin{lemma}[Reordered profile decomposition]\label{lem:profile}
+After passing to a subsequence in $n$ and, for each row $n$, applying the same
+permutation of $\{2,3,\dots\}$ to the coefficients and to the family
+$(\xi_{n,i})_{i \ge 2}$, one may find vectors $a,b \in \ell^2(\N)$ and
+integers $m_n \to \infty$ such that, with
+\[
+a^{(n)}_{\mathrm{head}} := a^{(n)} \mathbf{1}_{\{1,\dots,m_n\}},
+\quad
+a^{(n)}_{\mathrm{tail}} := a^{(n)} \mathbf{1}_{\{m_n+1,m_n+2,\dots\}},
+\]
+and likewise for $b^{(n)}$, the following hold:
+\begin{enumerate}[label=\rm(\arabic*)]
+\item $a^{(n)}_{\mathrm{head}} \to a$ and
+$b^{(n)}_{\mathrm{head}} \to b$ strongly in $\ell^2$;
+\item
+\[
+\max_{i > m_n} \max\bigl( |a_i^{(n)}|, |b_i^{(n)}| \bigr) \longrightarrow 0;
+\]
+\item
+\[
+\|a^{(n)}_{\mathrm{tail}}\|_2^2 \longrightarrow 1-\|a\|_2^2,
+\qquad
+\|b^{(n)}_{\mathrm{tail}}\|_2^2 \longrightarrow 1-\|b\|_2^2,
+\]
+and
+\[
+\langle a^{(n)}_{\mathrm{tail}}, b^{(n)}_{\mathrm{tail}} \rangle
+\longrightarrow
+- \langle a,b \rangle.
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+After passing to a subsequence, we may first assume that
+\[
+\bigl(a_1^{(n)},b_1^{(n)}\bigr) \longrightarrow (a_1,b_1)
+\]
+for some scalars $a_1,b_1 \in \R$.
+
+For each $n$ and each $i \ge 2$, define
+\[
+s_i^{(n)} := \max\bigl( |a_i^{(n)}|, |b_i^{(n)}| \bigr),
+\]
+and permute the coordinates $\{2,3,\dots\}$ so that $(s_i^{(n)})_{i \ge 2}$ is
+nonincreasing. Because
+\[
+\sum_{i \ge 2} \bigl(s_i^{(n)}\bigr)^2
+\le
+\sum_{i \ge 2} \bigl( |a_i^{(n)}|^2 + |b_i^{(n)}|^2 \bigr)
+\le 2,
+\]
+we have the uniform bound
+\[
+s_i^{(n)} \le \sqrt{\frac{2}{i-1}}
+\qquad
+\text{for every } n \ge 1,\ i \ge 2.
+\]
+By a diagonal extraction we may therefore assume that, for every fixed
+$i \ge 2$,
+\[
+a_i^{(n)} \longrightarrow a_i,
+\qquad
+b_i^{(n)} \longrightarrow b_i.
+\]
+Let
+\[
+a := (a_1,a_2,a_3,\dots),
+\qquad
+b := (b_1,b_2,b_3,\dots).
+\]
+Because
+\[
+\sum_{i \ge 1} |a_i|^2
+\le
+\liminf_{n \to \infty} \sum_{i \ge 1} |a_i^{(n)}|^2
+= 1,
+\]
+and similarly for $b$, Fatou's lemma gives $a,b \in \ell^2(\N)$.
+
+Choose an increasing sequence of integers $(m_k)_{k \ge 1}$ with $m_k \ge 1$
+such that
+\[
+\sum_{i > m_k} |a_i|^2 + \sum_{i > m_k} |b_i|^2 \le 2^{-k}
+\qquad
+\text{for every } k \ge 1.
+\]
+For each fixed $k$, we have
+\[
+\sum_{i=1}^{m_k} |a_i^{(n)}-a_i|^2
++ \sum_{i=1}^{m_k} |b_i^{(n)}-b_i|^2
+\longrightarrow 0
+\qquad
+\text{as } n \to \infty.
+\]
+Passing to a further subsequence in $n$, we may therefore assume that
+\[
+\sum_{i=1}^{m_n} |a_i^{(n)}-a_i|^2
++ \sum_{i=1}^{m_n} |b_i^{(n)}-b_i|^2
+\le 2^{-n}
+\qquad
+\text{for every } n \ge 1.
+\]
+Then
+\[
+\|a^{(n)}_{\mathrm{head}}-a\|_2^2
+\le
+|a_1^{(n)}-a_1|^2
++ \sum_{i=2}^{m_n} |a_i^{(n)}-a_i|^2 + \sum_{i > m_n} |a_i|^2
+\longrightarrow 0,
+\]
+and the same argument gives
+$b^{(n)}_{\mathrm{head}} \to b$ in $\ell^2$.
+
+Moreover, since $m_n \to \infty$ and
+$s_i^{(n)} \le \sqrt{2/(i-1)}$ for $i \ge 2$, we obtain
+\[
+\max_{i > m_n} \max\bigl( |a_i^{(n)}|, |b_i^{(n)}| \bigr)
+\le
+\sqrt{\frac{2}{m_n}}
+\longrightarrow 0.
+\]
+
+Finally,
+\[
+\|a^{(n)}_{\mathrm{tail}}\|_2^2
+=
+1-\|a^{(n)}_{\mathrm{head}}\|_2^2
+\longrightarrow
+1-\|a\|_2^2,
+\]
+and similarly for $b^{(n)}_{\mathrm{tail}}$. Since
+\[
+0 = \langle a^{(n)}, b^{(n)} \rangle
+=
+\langle a^{(n)}_{\mathrm{head}}, b^{(n)}_{\mathrm{head}} \rangle
++
+\langle a^{(n)}_{\mathrm{tail}}, b^{(n)}_{\mathrm{tail}} \rangle,
+\]
+we also get
+\[
+\langle a^{(n)}_{\mathrm{tail}}, b^{(n)}_{\mathrm{tail}} \rangle
+\longrightarrow
+- \langle a,b \rangle.
+\]
+\end{proof}
+
+\begin{remark}
+The permutation in Lemma \ref{lem:profile} is applied only to the good
+coordinates
+\[
+(\xi_{n,i},a_i^{(n)},b_i^{(n)})_{i \ge 2}.
+\]
+The exceptional coordinate $\eta$ is kept fixed at index $1$.
+\end{remark}
+
+\section{Auxiliary lemmas}
+
+We now collect the three auxiliary ingredients used later to analyze the head
+and the tail: bounded probes for recovering coefficients from the quadratic
+observable, a uniform lower $L^1$-$L^2$ estimate for independent sums, and a
+rigidity statement for diffuse tails.
+
+\begin{proposition}[Bounded coefficient probes]
+\label{prop:bounded-probes}
+There exists $C_\delta \ge 1$ with the following property. If $\xi$ is a real
+random variable satisfying
+\[
+\|\xi\|_{L^2}=1,
+\qquad
+\E[\xi] = 0,
+\qquad
+\delta \le \|\xi\|_{L^1} \le 1-\delta,
+\]
+then there exist bounded measurable functions $S,T$ such that
+\[
+\E[S] = \E[T] = 0,
+\qquad
+\E[\xi S] = 1,
+\qquad
+\E[(\xi^2-1)T] = 1,
+\]
+and
+\[
+\|S\|_{L^\infty}
++ \|T\|_{L^\infty}
+\le C_\delta.
+\]
+\end{proposition}
+
+\begin{proof}
+Let
+\[
+S_0 := \operatorname{sign}(\xi).
+\]
+Then
+\[
+\E[\xi S_0] = \E[|\xi|] \ge \delta.
+\]
+Since $\E[\xi] = 0$, the centered function
+\[
+S := \frac{S_0 - \E[S_0]}{\E[\xi S_0]}
+\]
+satisfies $\E[S]=0$ and $\E[\xi S]=1$. Moreover
+\[
+\|S\|_{L^\infty}
+\le
+\frac{2}{\E[|\xi|]}
+\le
+\frac{2}{\delta}.
+\]
+
+Next let
+\[
+T_0 := \operatorname{sign}(\xi^2-1).
+\]
+Then
+\[
+\E[(\xi^2-1)T_0] = \E[|\xi^2-1|].
+\]
+Also,
+\[
+|\xi^2-1|
+=
+\bigl||\xi|-1\bigr| (|\xi|+1)
+\ge
+\bigl||\xi|-1\bigr|,
+\]
+so
+\[
+\E[|\xi^2-1|]
+\ge
+\E[\bigl||\xi|-1\bigr|]
+\ge
+\bigl| \E[|\xi|] - 1 \bigr|
+=
+1-\E[|\xi|]
+\ge
+\delta.
+\]
+Since $\E[\xi^2-1]=0$, the centered function
+\[
+T := \frac{T_0 - \E[T_0]}{\E[(\xi^2-1)T_0]}
+\]
+satisfies $\E[T]=0$ and $\E[(\xi^2-1)T]=1$. Finally,
+\[
+\|T\|_{L^\infty}
+\le
+\frac{2}{\E[|\xi^2-1|]}
+\le
+\frac{2}{\delta}.
+\]
+\end{proof}
+
+\begin{remark}
+For the compactness argument, Proposition \ref{prop:bounded-probes} is exactly
+what is needed in order to recover the coefficients $a_i^2$ and $a_i a_j$ from
+the quadratic observable $|X|^2$.
+\end{remark}
+
+\begin{proposition}[Probes for the exceptional coordinate]
+\label{prop:exceptional-probes}
+Let $\eta$ be a centered real-valued random variable with
+\[
+\|\eta\|_{L^2}=1.
+\]
+Then there exists a bounded measurable function $S_\eta$ such that
+\[
+\E[S_\eta]=0,
+\qquad
+\E[\eta S_\eta]=1.
+\]
+If $\eta^2 \not\equiv 1$ almost surely, then there exists a bounded measurable
+function $T_\eta$ such that
+\[
+\E[T_\eta]=0,
+\qquad
+\E[(\eta^2-1)T_\eta]=1.
+\]
+\end{proposition}
+
+\begin{proof}
+Let
+\[
+S_0 := \operatorname{sign}(\eta).
+\]
+Since $\|\eta\|_{L^2}=1$, one has $\E[|\eta|]>0$. Thus
+\[
+S_\eta := \frac{S_0-\E[S_0]}{\E[\eta S_0]}
+\]
+is bounded and satisfies
+\[
+\E[S_\eta]=0,
+\qquad
+\E[\eta S_\eta]=1.
+\]
+
+Assume now that $\eta^2 \not\equiv 1$ almost surely. Let
+\[
+T_0 := \operatorname{sign}(\eta^2-1).
+\]
+Since $\E[|\,\eta^2-1\,|]>0$, the bounded function
+\[
+T_\eta := \frac{T_0-\E[T_0]}{\E[(\eta^2-1)T_0]}
+\]
+satisfies
+\[
+\E[T_\eta]=0,
+\qquad
+\E[(\eta^2-1)T_\eta]=1.
+\]
+\end{proof}
+
+\begin{lemma}[Lower $L^1$-$L^2$ comparability is stable under independent sums]
+\label{lem:l1l2-linear-combinations}
+Let $(\zeta_i)_{i=1}^N$ be independent centered real-valued random variables and
+assume that
+\[
+\|\zeta_i\|_{L^1} \ge \delta \|\zeta_i\|_{L^2}
+\qquad
+\text{for every } i=1,\dots,N.
+\]
+Then for every scalar family $(c_i)_{i=1}^N$ one has
+\[
+\left\|\sum_{i=1}^N c_i \zeta_i \right\|_{L^1}
+\ge
+\frac{\delta}{2\sqrt 2}
+\left(\sum_{i=1}^N c_i^2 \|\zeta_i\|_{L^2}^2 \right)^{1/2}.
+\]
+In particular, if $\|\zeta_i\|_{L^2}=1$ for all $i$, then
+\[
+\left\|\sum_{i=1}^N c_i \zeta_i \right\|_{L^1}
+\ge
+\frac{\delta}{2\sqrt 2}\|(c_i)_{i=1}^N\|_{\ell^2}.
+\]
+\end{lemma}
+
+\begin{proof}
+By homogeneity, it is enough to treat the case
+\[
+\sum_{i=1}^N c_i^2 \|\zeta_i\|_{L^2}^2 = 1.
+\]
+Replacing $\zeta_i$ by $\zeta_i/\|\zeta_i\|_{L^2}$, we may therefore assume
+that $\|\zeta_i\|_{L^2}=1$ and $\sum_i c_i^2=1$.
+
+Set
+\[
+S := \sum_{i=1}^N c_i \zeta_i,
+\]
+and let
+\[
+S' := \sum_{i=1}^N c_i \zeta_i'
+\]
+be an independent copy. Then
+\[
+2\|S\|_{L^1}
+\ge
+\|S-S'\|_{L^1}
+=
+\left\|\sum_{i=1}^N c_i(\zeta_i-\zeta_i')\right\|_{L^1}.
+\]
+The differences $\zeta_i-\zeta_i'$ are independent and symmetric. Hence,
+conditioning on their absolute values and applying the Khintchine inequality,
+we obtain
+\[
+\left\|\sum_{i=1}^N c_i(\zeta_i-\zeta_i')\right\|_{L^1}
+\ge
+\frac{1}{\sqrt 2}
+\E\left[\left(\sum_{i=1}^N c_i^2(\zeta_i-\zeta_i')^2\right)^{1/2}\right].
+\]
+Since $\sum_i c_i^2=1$, Cauchy--Schwarz yields the pointwise bound
+\[
+\sum_{i=1}^N c_i^2 |\zeta_i-\zeta_i'|
+\le
+\left(\sum_{i=1}^N c_i^2(\zeta_i-\zeta_i')^2\right)^{1/2},
+\]
+and therefore
+\[
+\|S\|_{L^1}
+\ge
+\frac{1}{2\sqrt 2}
+\sum_{i=1}^N c_i^2 \|\zeta_i-\zeta_i'\|_{L^1}.
+\]
+Finally,
+\[
+\|\zeta_i-\zeta_i'\|_{L^1}
+\ge
+\left\|\E[\zeta_i-\zeta_i' \mid \zeta_i]\right\|_{L^1}
+=
+\|\zeta_i\|_{L^1}
+\ge
+\delta,
+\]
+because $\E[\zeta_i']=0$. Hence
+\[
+\|S\|_{L^1}
+\ge
+\frac{\delta}{2\sqrt 2}\sum_{i=1}^N c_i^2
+=
+\frac{\delta}{2\sqrt 2},
+\]
+which is exactly the normalized claim.
+\end{proof}
+
+\begin{proposition}[Rigidity of one-dimensional tail limits]
+\label{prop:tail-rigidity}
+Let $(\xi_{n,i})_{n \ge 1,\ i \ge 2}$ be a triangular array as in
+Proposition \ref{prop:counterexample-array}, and let $c^{(n)} \in \ell^2(\N)$
+be such that
+\[
+\sup_n \|c^{(n)}\|_2 < \infty
+\]
+and
+\[
+\max_{i \ge 2} |c_i^{(n)}| \longrightarrow 0,
+\qquad
+c_1^{(n)} = 0 \text{ for every } n.
+\]
+Set
+\[
+Z_n := \sum_{i \ge 2} c_i^{(n)} \xi_{n,i}.
+\]
+If $Z_n \to 0$ in distribution, then $\|c^{(n)}\|_2 \to 0$.
+
+Equivalently, if along a subsequence the weak limit of
+\[
+\left(
+\sum_{i \ge 2} a_i^{(n)} \xi_{n,i},
+\sum_{i \ge 2} b_i^{(n)} \xi_{n,i}
+\right)
+\]
+is supported on the line $\alpha u + \beta v = 0$ for some
+$(\alpha,\beta) \ne (0,0)$, then along that same subsequence,
+\[
+\|\alpha a^{(n)} + \beta b^{(n)}\|_2 \longrightarrow 0.
+\]
+\end{proposition}
+
+\begin{proof}
+Since $Z_n \to 0$ in distribution and the limit is the constant $0$,
+convergence in distribution implies $Z_n \to 0$ in probability. On the
+other hand,
+\[
+\|Z_n\|_{L^2} = \|c^{(n)}\|_2
+\]
+is uniformly bounded by assumption. Thus the family $(|Z_n|)_n$ is uniformly
+integrable, and therefore
+\[
+\|Z_n\|_{L^1} \longrightarrow 0.
+\]
+Applying Lemma \ref{lem:l1l2-linear-combinations} row by row to the family
+$(\xi_{n,i})_{i \ge 2}$ gives
+\[
+\|Z_n\|_{L^1}
+\ge
+\frac{\delta}{2\sqrt2}\|c^{(n)}\|_2.
+\]
+Hence $\|c^{(n)}\|_2 \to 0$.
+
+For the equivalent formulation, apply the first part to
+\[
+c_i^{(n)} := \alpha a_i^{(n)} + \beta b_i^{(n)}.
+\]
+The $\ell^2$ boundedness is automatic because
+\[
+\|c^{(n)}\|_2
+\le
+|\alpha|\|a^{(n)}\|_2 + |\beta|\|b^{(n)}\|_2
+=
+|\alpha|+|\beta|.
+\]
+\end{proof}
+
+\section{Identification of the limit}
+
+With the head-tail decomposition and the auxiliary estimates in hand, we first
+identify the limiting head profile from the quadratic information
+$|X_n|^2-|Y_n|^2 \to 0$, and then pass to a weak limit of the full head-tail
+decomposition.
+
+\begin{lemma}[Identification of the head profile]\label{lem:head-sign}
+Either there exists $\tau \in \{\pm 1\}$ such that
+\[
+a = \tau b
+\qquad
+\text{and}
+\qquad
+\|a^{(n)}_{\mathrm{head}} - \tau b^{(n)}_{\mathrm{head}}\|_2 \longrightarrow 0,
+\]
+or else $\eta$ is a Rademacher variable and
+\[
+a_i=b_i=0
+\qquad
+\text{for every } i \ge 2.
+\]
+\end{lemma}
+
+\begin{proof}
+Since
+\[
+\bigl\| |X_n|^2 - |Y_n|^2 \bigr\|_{L^1}
+\le
+\|\, |X_n|-|Y_n| \,\|_{L^2}
+\cdot
+\|\, |X_n|+|Y_n| \,\|_{L^2}
+\le
+2 \|\, |X_n|-|Y_n| \,\|_{L^2}
+\longrightarrow 0,
+\]
+fix $i \ge 2$. Apply Proposition \ref{prop:bounded-probes} to $\xi_{n,i}$ and
+let $T_{n,i}$ be the corresponding probe. Note that $T_{n,i}$ is a bounded
+measurable function of $\xi_{n,i}$ alone, so it is independent of
+$(\eta,\xi_{n,j})_{j \ne i}$. Since $\|T_{n,i}\|_{L^\infty} \le
+C_\delta$, we obtain
+\[
+\E\bigl[(|X_n|^2-|Y_n|^2) T_{n,i}\bigr] \longrightarrow 0.
+\]
+Expanding $|X_n|^2 = X_n^2$ and pairing with $T_{n,i}$, all mixed terms
+vanish because the probes are centered and independent of the other
+coordinates. By the defining property of $T_{n,i}$,
+\[
+\E\bigl[(|X_n|^2-|Y_n|^2) T_{n,i}\bigr]
+=
+(a_i^{(n)})^2 - (b_i^{(n)})^2,
+\]
+hence
+\[
+(a_i^{(n)})^2 - (b_i^{(n)})^2 \longrightarrow 0.
+\]
+Passing to the limit gives
+\[
+a_i^2 = b_i^2
+\qquad
+\text{for every } i \ge 2.
+\]
+
+Now fix $i,j \ge 2$ with $i \ne j$. Let $S_{n,i},S_{n,j}$ be the probes given by
+Proposition \ref{prop:bounded-probes} for $\xi_{n,i}$ and $\xi_{n,j}$.
+Again using boundedness and $L^1$ convergence,
+\[
+\E\bigl[(|X_n|^2-|Y_n|^2) S_{n,i} S_{n,j}\bigr] \longrightarrow 0.
+\]
+Expanding the square and using that $S_{n,i}$, $S_{n,j}$ are centered functions
+of $\xi_{n,i}$ and $\xi_{n,j}$ respectively,
+\[
+\E\bigl[(|X_n|^2-|Y_n|^2) S_{n,i} S_{n,j}\bigr]
+=
+2\bigl(a_i^{(n)} a_j^{(n)} - b_i^{(n)} b_j^{(n)}\bigr),
+\]
+therefore
+\[
+a_i a_j = b_i b_j
+\qquad
+\text{for every } i,j \ge 2,\ i \ne j.
+\]
+
+Let $S_\eta$ be given by Proposition \ref{prop:exceptional-probes}. For every
+$j \ge 2$, let $S_{n,j}$ be the probe given by Proposition
+\ref{prop:bounded-probes} for $\xi_{n,j}$. Again using boundedness and
+$L^1$ convergence,
+\[
+\E\bigl[(|X_n|^2-|Y_n|^2) S_\eta S_{n,j}\bigr] \longrightarrow 0.
+\]
+Independence gives
+\[
+\E\bigl[(|X_n|^2-|Y_n|^2) S_\eta S_{n,j}\bigr]
+=
+2\bigl(a_1^{(n)} a_j^{(n)} - b_1^{(n)} b_j^{(n)}\bigr),
+\]
+hence
+\[
+a_1 a_j = b_1 b_j
+\qquad
+\text{for every } j \ge 2.
+\]
+
+Assume first that there exists $i_0 \ge 2$ with $a_{i_0} \ne 0$. Since
+$a_{i_0}^2=b_{i_0}^2$, we have $b_{i_0} = \tau a_{i_0}$ for some
+$\tau \in \{\pm 1\}$. For every $j \ge 2$,
+\[
+a_{i_0} a_j = b_{i_0} b_j = \tau a_{i_0} b_j,
+\]
+so $a_j = \tau b_j$. Taking $j=i_0$ in the exceptional-good identity gives
+\[
+a_1 a_{i_0} = b_1 b_{i_0} = \tau a_{i_0} b_1,
+\]
+hence $a_1 = \tau b_1$. Thus $a=\tau b$.
+
+Assume now that
+\[
+a_i = 0
+\qquad
+\text{for every } i \ge 2.
+\]
+Then $b_i=0$ for every $i \ge 2$ as well. If $\eta^2 \not\equiv 1$ almost
+surely, let $T_\eta$ be given by Proposition
+\ref{prop:exceptional-probes}. Again using boundedness and $L^1$ convergence,
+\[
+\E\bigl[(|X_n|^2-|Y_n|^2) T_\eta\bigr] \longrightarrow 0.
+\]
+By independence,
+\[
+\E\bigl[(|X_n|^2-|Y_n|^2) T_\eta\bigr]
+=
+(a_1^{(n)})^2-(b_1^{(n)})^2,
+\]
+so $a_1^2=b_1^2$ and therefore $a=\tau b$ for some $\tau \in \{\pm 1\}$.
+
+Since $\E[\eta]=0$ and $\|\eta\|_{L^2}=1$, the remaining case
+$\eta^2 \equiv 1$ almost surely means that $\eta$ is a Rademacher variable.
+This is exactly the second alternative.
+
+If we are in the first alternative, then
+\[
+\|a^{(n)}_{\mathrm{head}} - \tau b^{(n)}_{\mathrm{head}}\|_2
+\le
+\|a^{(n)}_{\mathrm{head}}-a\|_2
++
+\|b^{(n)}_{\mathrm{head}}-b\|_2
+\longrightarrow 0.
+\]
+\end{proof}
+
+\begin{lemma}[Limit law for the head-tail decomposition]
+\label{lem:limit-law}
+After passing to a further subsequence, the quadruple
+\[
+\bigl(
+X_n^{\mathrm{head}},
+Y_n^{\mathrm{head}},
+X_n^{\mathrm{tail}},
+Y_n^{\mathrm{tail}}
+\bigr)
+\]
+converges in distribution to a random vector
+\[
+\bigl(
+H_X,H_Y,R_X,R_Y
+\bigr)
+\in \R^4,
+\]
+where:
+\begin{enumerate}[label=\rm(\arabic*)]
+\item $(H_X,H_Y)$ is independent of $(R_X,R_Y)$;
+\item $(R_X,R_Y)$ is infinitely divisible;
+\item either $H_X = \tau H_Y$ almost surely for some $\tau \in \{\pm 1\}$, or
+else $\eta$ is a Rademacher variable and
+\[
+H_X = a_1 \eta,
+\qquad
+H_Y = b_1 \eta
+\qquad
+\text{almost surely;}
+\]
+\item
+\[
+|H_X + R_X| = |H_Y + R_Y|
+\qquad
+\text{almost surely.}
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Set
+\[
+X_n^{\mathrm{head}} := a_1^{(n)}\eta + \sum_{2 \le i \le m_n} a_i^{(n)} \xi_{n,i},
+\qquad
+X_n^{\mathrm{tail}} := \sum_{i > m_n} a_i^{(n)} \xi_{n,i},
+\]
+and define $Y_n^{\mathrm{head}}$, $Y_n^{\mathrm{tail}}$ analogously.
+Each of these random variables is bounded in $L^2$ by $1$, so the family of
+quadruples is tight. After passing to a subsequence we therefore get a weak
+limit $(H_X,H_Y,R_X,R_Y)$.
+
+For each $n$, the pair
+$(X_n^{\mathrm{head}},Y_n^{\mathrm{head}})$ depends only on $\eta$ and on
+$(\xi_{n,i})_{2 \le i \le m_n}$, while
+$(X_n^{\mathrm{tail}},Y_n^{\mathrm{tail}})$ depends only on
+$(\xi_{n,i})_{i > m_n}$. The two pairs are independent. The factorization of
+characteristic functions is preserved under weak convergence, hence
+$(H_X,H_Y)$ is independent of $(R_X,R_Y)$.
+
+To see that $(R_X,R_Y)$ is infinitely divisible, consider the row-wise array of
+summands
+\[
+Z_{n,i}
+:=
+\bigl(a_i^{(n)} \xi_{n,i},\, b_i^{(n)} \xi_{n,i}\bigr)\mathbf{1}_{\{i>m_n\}}.
+\]
+The array is infinitesimal because, for every $\varepsilon>0$,
+\[
+\sup_{i>m_n}
+\mathbb P\bigl(|Z_{n,i}|>\varepsilon\bigr)
+\le
+\frac{1}{\varepsilon^2}
+\sup_{i>m_n}\bigl((a_i^{(n)})^2+(b_i^{(n)})^2\bigr)
+\longrightarrow 0.
+\]
+For each fixed $n$, the summands $(Z_{n,i})_{i > m_n}$ are independent since
+the $\xi_{n,i}$ are independent. By the classical theorem on limits of
+row-wise independent infinitesimal triangular arrays
+\cite[Chapter~4]{gnedenko-kolmogorov}, every subsequential weak limit of the
+sums $\sum_i Z_{n,i}$ is infinitely divisible.
+This gives (2).
+
+If we are in the first alternative of Lemma \ref{lem:head-sign}, then
+\[
+\|X_n^{\mathrm{head}} - \tau Y_n^{\mathrm{head}}\|_{L^2}
+=
+\|a^{(n)}_{\mathrm{head}} - \tau b^{(n)}_{\mathrm{head}}\|_2
+\longrightarrow 0,
+\]
+hence $H_X = \tau H_Y$ almost surely.
+
+If we are in the second alternative of Lemma \ref{lem:head-sign}, then
+\[
+\sum_{2 \le i \le m_n} (a_i^{(n)})^2
+\longrightarrow 0,
+\qquad
+\sum_{2 \le i \le m_n} (b_i^{(n)})^2
+\longrightarrow 0,
+\]
+and therefore
+\[
+\|X_n^{\mathrm{head}} - a_1 \eta\|_{L^2}
+\le
+|a_1^{(n)}-a_1|
++
+\left(\sum_{2 \le i \le m_n} (a_i^{(n)})^2\right)^{1/2}
+\longrightarrow 0,
+\]
+with the same argument for $Y_n^{\mathrm{head}}$. Thus
+\[
+H_X = a_1 \eta,
+\qquad
+H_Y = b_1 \eta
+\qquad
+\text{almost surely.}
+\]
+
+Finally,
+\[
+\bigl|X_n^{\mathrm{head}} + X_n^{\mathrm{tail}}\bigr|
+-
+\bigl|Y_n^{\mathrm{head}} + Y_n^{\mathrm{tail}}\bigr|
+=
+|X_n|-|Y_n|
+\longrightarrow 0
+\]
+in $L^2$, hence in probability. On the other hand, by the continuous mapping
+theorem this difference converges in distribution to
+$|H_X+R_X|-|H_Y+R_Y|$. Therefore the limit must vanish almost surely.
+\end{proof}
+
+\begin{lemma}[A geometric two-line support lemma]
+\label{lem:two-line}
+Let $\mu$ be an infinitely divisible probability measure on $\R^2$. If
+$\supp \mu$ is contained in the union of two affine lines, then
+$\supp \mu$ is contained in a single affine line.
+\end{lemma}
+
+\begin{proof}
+Because $\mu$ is infinitely divisible, it is in particular $2$-divisible:
+there exists a probability measure $\nu$ such that $\mu=\nu * \nu$.
+Let $A := \supp \nu$. Then
+\[
+\supp \mu = \overline{A+A}.
+\]
+
+Assume for contradiction that $A$ is not contained in an affine line. Choose
+three non-collinear points $x,y,z \in A$. Let $L_1 \cup L_2$ be the union of
+two affine lines containing $\supp \mu$. Since $A+A \subset \supp \mu$, the six
+points
+\[
+2x,\ 2y,\ 2z,\ x+y,\ x+z,\ y+z
+\]
+belong to $L_1 \cup L_2$. Among the three points $2x,2y,2z$, two must belong
+to the same line; after relabeling, assume $2x,2y \in L_1$.
+
+Then $L_1$ is the line through $2x$ and $2y$. If $x+z \in L_1$, then $x,y,z$
+would be collinear, which is impossible. The same argument shows that
+$y+z \notin L_1$ and $2z \notin L_1$. Consequently,
+\[
+2z,\ x+z,\ y+z \in L_2.
+\]
+But $x+z$ and $y+z$ lie on the line $z+\R(y-x)$, whereas $2z$ belongs to that
+line only if $z,x,y$ are collinear. This contradiction proves that $A$ is
+contained in an affine line, and therefore so is
+$\supp \mu = \overline{A+A}$.
+\end{proof}
+
+\section{Proof of Theorem \ref{thm:main}}
+
+We can now complete the contradiction argument by combining the structural
+information obtained for the head with the rigidity of the tail limit.
+
+\begin{proof}
+Assume that Theorem \ref{thm:main} fails, and let the counterexample array be
+given by Proposition \ref{prop:counterexample-array}. Apply
+Lemma \ref{lem:profile}, then Lemma \ref{lem:head-sign}, and finally
+Lemma \ref{lem:limit-law}. We use the notation introduced there.
+
+Since $(H_X,H_Y)$ is independent of $(R_X,R_Y)$, we may realize the joint law
+on a product space. By Fubini's theorem, there exists a set $\Omega_0$ of full
+probability for the head variables such that, for every $\omega \in \Omega_0$,
+\[
+|H_X(\omega)+R_X| = |H_Y(\omega)+R_Y|
+\qquad
+\text{holds almost surely in the tail variables.}
+\]
+Assume first that we are in the second alternative of Lemma
+\ref{lem:head-sign}. Then $\eta$ is a Rademacher variable and, by Lemma
+\ref{lem:limit-law},
+\[
+H_X = a_1 \eta,
+\qquad
+H_Y = b_1 \eta
+\qquad
+\text{almost surely.}
+\]
+Choose $\omega_+,\omega_- \in \Omega_0$ such that
+\[
+\bigl(H_X(\omega_+),H_Y(\omega_+)\bigr)=(a_1,b_1),
+\qquad
+\bigl(H_X(\omega_-),H_Y(\omega_-)\bigr)=(-a_1,-b_1).
+\]
+Then the support of the law of $(R_X,R_Y)$ is contained in both
+\[
+\Gamma_+
+:=
+\{(u,v)\in\R^2 : u-v=b_1-a_1\}
+\cup
+\{(u,v)\in\R^2 : u+v=-(a_1+b_1)\}
+\]
+and
+\[
+\Gamma_-
+:=
+\{(u,v)\in\R^2 : u-v=a_1-b_1\}
+\cup
+\{(u,v)\in\R^2 : u+v=a_1+b_1\}.
+\]
+By Lemma \ref{lem:two-line}, the support of the law of $(R_X,R_Y)$ is
+contained in a single affine line. Since $(R_X,R_Y)$ is centered (as a weak
+limit of centered random vectors), the barycenter of the law lies at the
+origin, so the line must pass through the origin.
+
+If $(R_X,R_Y)=(0,0)$ almost surely, then Proposition
+\ref{prop:tail-rigidity} applied separately to
+\[
+\sum_{i > m_n} a_i^{(n)} \xi_{n,i}
+\qquad
+\text{and}
+\qquad
+\sum_{i > m_n} b_i^{(n)} \xi_{n,i}
+\]
+gives
+\[
+\|a^{(n)}_{\mathrm{tail}}\|_2 + \|b^{(n)}_{\mathrm{tail}}\|_2 \longrightarrow 0.
+\]
+Since $a_i=b_i=0$ for every $i \ge 2$, Lemma \ref{lem:profile} yields
+\[
+\|a^{(n)}_{\mathrm{head}}\|_2 \longrightarrow |a_1|,
+\qquad
+\|b^{(n)}_{\mathrm{head}}\|_2 \longrightarrow |b_1|.
+\]
+The norm identities therefore force $|a_1|=|b_1|=1$. On the other hand,
+\[
+0
+=
+\langle a^{(n)},b^{(n)}\rangle
+=
+\langle a^{(n)}_{\mathrm{head}},b^{(n)}_{\mathrm{head}}\rangle
++
+\langle a^{(n)}_{\mathrm{tail}},b^{(n)}_{\mathrm{tail}}\rangle,
+\]
+and the second term tends to $0$. Passing to the limit gives
+$a_1 b_1 = 0$, contradicting $|a_1|=|b_1|=1$.
+
+Otherwise choose a nonzero point in the support of $(R_X,R_Y)$. Since the
+support is contained in a line through the origin and in both $\Gamma_+$ and
+$\Gamma_-$, that line must be one of $u=v$ or $u=-v$.
+
+If the support is contained in $u=v$, choose a nonzero point $(u,u)$ in the
+support. Since $(u,u) \in \Gamma_+ \cap \Gamma_-$, one must have $a_1=b_1$.
+If the support is contained in $u=-v$, choose a nonzero point $(u,-u)$ in the
+support. Since $(u,-u) \in \Gamma_+ \cap \Gamma_-$, one must have $a_1=-b_1$.
+
+Thus there exists $\sigma \in \{\pm 1\}$ such that
+\[
+R_X=\sigma R_Y \text{ almost surely}
+\qquad
+\text{and}
+\qquad
+a_1=\sigma b_1.
+\]
+Proposition \ref{prop:tail-rigidity} yields
+\[
+\|a^{(n)}_{\mathrm{tail}} - \sigma b^{(n)}_{\mathrm{tail}}\|_2 \longrightarrow 0.
+\]
+Since $a=(a_1,0,0,\dots)$ and $b=(b_1,0,0,\dots)$ with $a_1=\sigma b_1$,
+Lemma \ref{lem:profile} gives
+\[
+\|a^{(n)}_{\mathrm{head}} - \sigma b^{(n)}_{\mathrm{head}}\|_2 \longrightarrow 0.
+\]
+Hence
+\[
+\|a^{(n)}-\sigma b^{(n)}\|_2 \longrightarrow 0,
+\]
+again contradicting
+\[
+\|a^{(n)}-\sigma b^{(n)}\|_2^2 = 2.
+\]
+
+We are left with the first alternative of Lemma \ref{lem:head-sign}. Fix
+$\tau \in \{\pm 1\}$ such that
+\[
+H_X=\tau H_Y \text{ almost surely.}
+\]
+Then for every $\omega \in \Omega_0$ the support of the law of $(R_X,R_Y)$ is
+contained in
+\[
+\Gamma_\omega :=
+\begin{cases}
+\{(u,v)\in\R^2 : u-v=0\} \cup \{(u,v)\in\R^2 : u+v=-2H_X(\omega)\},
+& \tau=1, \\[2mm]
+\{(u,v)\in\R^2 : u+v=0\} \cup \{(u,v)\in\R^2 : u-v=-2H_X(\omega)\},
+& \tau=-1.
+\end{cases}
+\]
+By Lemma \ref{lem:two-line}, the support of the law of $(R_X,R_Y)$ is
+contained in a single affine line. Since $(R_X,R_Y)$ is centered, that line
+must pass through the origin.
+
+We now distinguish two cases.
+
+\medskip
+\noindent
+\textbf{Case 1: $H_X \not\equiv 0$.}
+Choose $\omega \in \Omega_0$ with $H_X(\omega)\ne 0$. Then among the two lines
+forming $\Gamma_\omega$, the only one passing through the origin is
+\[
+\{u-v=0\} \quad \text{if } \tau=1,
+\qquad
+\{u+v=0\} \quad \text{if } \tau=-1.
+\]
+Therefore the law of $(R_X,R_Y)$ is supported on the line $u=\tau v$. By
+Proposition \ref{prop:tail-rigidity},
+\[
+\|a^{(n)}_{\mathrm{tail}} - \tau b^{(n)}_{\mathrm{tail}}\|_2 \longrightarrow 0.
+\]
+Combining this with
+\[
+\|a^{(n)}_{\mathrm{head}} - \tau b^{(n)}_{\mathrm{head}}\|_2 \longrightarrow 0
+\]
+from Lemma \ref{lem:head-sign}, we obtain
+\[
+\|a^{(n)}-\tau b^{(n)}\|_2 \longrightarrow 0.
+\]
+This is impossible because
+\[
+\|a^{(n)}-\tau b^{(n)}\|_2^2
+=
+\|a^{(n)}\|_2^2 + \|b^{(n)}\|_2^2 - 2\tau \langle a^{(n)},b^{(n)}\rangle
+= 2.
+\]
+
+\medskip
+\noindent
+\textbf{Case 2: $H_X \equiv 0$.}
+Since $X_n^{\mathrm{head}} \to H_X = 0$ in distribution and
+$\|X_n^{\mathrm{head}}\|_{L^2} \le 1$, uniform integrability gives
+$\|X_n^{\mathrm{head}}\|_{L^1} \to 0$.
+
+Let $S_\eta$ be given by Proposition \ref{prop:exceptional-probes}. Then
+\[
+a_1^{(n)}
+=
+\E[X_n^{\mathrm{head}} S_\eta]
+\longrightarrow 0,
+\]
+because $\|S_\eta\|_{L^\infty} < \infty$ and
+$|\E[X_n^{\mathrm{head}} S_\eta]| \le \|S_\eta\|_{L^\infty}
+\|X_n^{\mathrm{head}}\|_{L^1} \to 0$.
+For every fixed $i \ge 2$, one has $i \le m_n$ for all sufficiently large $n$.
+Let $S_{n,i}$ be the probe given by Proposition \ref{prop:bounded-probes} for
+$\xi_{n,i}$. Then
+\[
+a_i^{(n)}
+=
+\E[X_n^{\mathrm{head}} S_{n,i}]
+\longrightarrow 0,
+\]
+because $\|S_{n,i}\|_{L^\infty} \le C_\delta$ and
+$|\E[X_n^{\mathrm{head}} S_{n,i}]| \le C_\delta
+\|X_n^{\mathrm{head}}\|_{L^1} \to 0$. Passing to
+the limit gives $a_i=0$ for every $i \ge 1$, hence $a=0$.
+
+The same argument gives $b=0$, so Lemma \ref{lem:profile} yields
+\[
+\|a^{(n)}_{\mathrm{head}}\|_2 + \|b^{(n)}_{\mathrm{head}}\|_2 \longrightarrow 0.
+\]
+Since $H_X = \tau H_Y = 0$, the set $\Gamma_\omega$ reduces to
+$\{u=v\} \cup \{u=-v\}$ for every $\omega$. By Lemma \ref{lem:two-line}, the
+support of the law of $(R_X,R_Y)$ is contained in one of the two lines $u=v$
+or $u=-v$. Thus there exists $\sigma \in \{\pm 1\}$ such that
+$R_X=\sigma R_Y$ almost surely, and Proposition
+\ref{prop:tail-rigidity} yields
+\[
+\|a^{(n)}_{\mathrm{tail}} - \sigma b^{(n)}_{\mathrm{tail}}\|_2 \longrightarrow 0.
+\]
+Therefore
+\[
+\|a^{(n)}-\sigma b^{(n)}\|_2
+\le
+\|a^{(n)}_{\mathrm{head}}\|_2
++
+\|b^{(n)}_{\mathrm{head}}\|_2
++
+\|a^{(n)}_{\mathrm{tail}}-\sigma b^{(n)}_{\mathrm{tail}}\|_2
+\longrightarrow 0,
+\]
+again contradicting
+\[
+\|a^{(n)}-\sigma b^{(n)}\|_2^2 = 2.
+\]
+
+The contradiction completes the proof.
+\end{proof}
+
+\bibliographystyle{plain}
+\bibliography{refs.bib}
+
+\end{document}

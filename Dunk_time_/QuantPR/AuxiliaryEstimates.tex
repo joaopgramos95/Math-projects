@@ -1,0 +1,148 @@
+\section{Auxiliary estimates}\label{sec:auxiliary}
+
+Before entering the two branches of the proof, we collect the three main
+tools: bounded probe functions for reading off coefficients from the
+quadratic observable $X_a^2 - X_b^2$; an $L^1$ lower bound for independent
+sums; and a gluing estimate showing that if $a$ and $\tau b$ nearly agree
+\emph{everywhere} (head and tail), then $\eps$ is already large.
+
+\subsection{Probe functions}\label{sec:probes}
+
+Given a centered random variable $\xi$ with $\E[\abs{\xi}] > 0$, one can
+always find a bounded function of $\xi$ that acts as a dual to $\xi$ itself.
+If additionally $\xi$ is not Rademacher-valued (i.e., $\E[\abs{\xi}] < 1$),
+the same construction works for $\xi^2 - 1$. These are the probes that let
+us read off individual entries of $D_H$ from $\eps$.
+
+\begin{lemma}[Linear probe]\label{lem:linear-probe}
+\leanname{Imported\.ElementaryBounds\.exists\_linear\_probe}
+Let $\xi$ be a real random variable with $\E[\xi] = 0$ and
+$\E[\abs{\xi}] \ge A > 0$. Then there exists a measurable
+$g : \R \to \R$ with $\abs{g} \le 2/A$,\, $\E[g(\xi)] = 0$, and
+$\E[\xi \, g(\xi)] = 1$.
+\end{lemma}
+
+\begin{proof}
+Let $D = \E[\abs{\xi}]$ and $c = \E[\sign(\xi)]$, and set
+$g(x) = (\sign(x) - c)/D$.
+Then $\E[g(\xi)] = 0$ and
+$\E[\xi \, g(\xi)] = \E[\abs{\xi}]/D = 1$. The bound $\abs{g} \le 2/D$
+follows from $\abs{\sign(x) - c} \le 2$.
+\end{proof}
+
+\begin{lemma}[Quadratic probe]\label{lem:quadratic-probe}
+\leanname{Imported\.ElementaryBounds\.exists\_quadratic\_probe}
+Let $\xi$ be a real random variable with $\E[\xi] = 0$,
+$\E[\xi^2] = 1$, and $\E[\abs{\xi}] \le B < 1$. Then there exists a
+measurable $g : \R \to \R$ with $\abs{g} \le 2/(1-B)$,\,
+$\E[g(\xi)] = 0$, and $\E[(\xi^2 - 1) \, g(\xi)] = 1$.
+\end{lemma}
+
+\begin{proof}
+Apply the linear-probe construction to $\eta = \xi^2 - 1$, whose $L^1$ norm
+satisfies
+$\E[\abs{\xi^2 - 1}] \ge 1 - \E[\abs{\xi}] \ge 1 - B > 0$.
+\end{proof}
+
+\begin{remark}\label{rem:probe-extraction}
+The linear probe recovers $c_i$ from $X_c = \sum_k c_k \xi_k$ via the
+identity $\E[X_c \cdot g(\xi_i)] = c_i$: the centering $\E[g(\xi_i)] = 0$
+kills the contribution of every $\xi_k$ with $k \ne i$, and the
+normalization $\E[\xi_i g(\xi_i)] = 1$ picks out $c_i$. Likewise, the
+quadratic probe gives $\E[X_c^2 \cdot g(\xi_i)] = c_i^2$.
+\end{remark}
+
+\subsection{The $L^1$ lower bound}\label{sec:l1-lower}
+
+Independent sums of variables with positive $L^1$ norms cannot concentrate
+near zero. This is the engine behind both the gluing estimate and the
+diffuse branch: it converts $\ell^2$ energy of the coefficients into $L^1$
+mass of the random sum.
+
+\begin{theorem}[$L^1$ lower bound for independent sums]%
+\label{thm:l1-lower}
+\leanname{Imported\.ElementaryBounds\.finite\_indep\_sum\_l1\_lower}
+Let $\zeta_1, \dots, \zeta_n$ be independent, mean-zero, unit-variance
+random variables with $\E[\abs{\zeta_i}] \ge A > 0$ for all $i$. Then
+for every $(c_1, \dots, c_n) \in \R^n$,
+\[
+\E\Bigl[\Bigl\lvert \sum_{i=1}^n c_i \zeta_i
+\Bigr\rvert\Bigr]
+\ge \frac{A}{4}
+\sqrt{\sum_{i=1}^n c_i^2}\,.
+\]
+\end{theorem}
+
+\subsection{The four-term gluing estimate}\label{sec:gluing}
+
+Orthogonality forces $\norm{a + \tau b}_2 = \norm{a - \tau b}_2 = \sqrt{2}$.
+If for some $\tau$ both the head of $a - \tau b$ and the tail of
+$a + \tau b$ are small, then the complementary pieces---the tail of
+$a - \tau b$ and the head of $a + \tau b$---must be close to $\sqrt{2}$.
+The product $X_{a+\tau b} \cdot X_{a-\tau b} = X_a^2 - X_b^2$ then has a
+large main term and small errors, yielding a lower bound on $\eps$.
+
+\begin{lemma}[Four-term bound]\label{lem:four-term}
+\privateleanname{Tail\.SignMismatch\.fin\_sign\_mismatch\_measure\_bound}
+Let $a, b \in \R^n$ be unit vectors with $\ip{a}{b} = 0$, let
+$H \subseteq \{1, \dots, n\}$, and let $\tau \in \{+1, -1\}$. Write
+$c^+ = a + \tau b$ and $c^- = a - \tau b$. Then
+\begin{align*}
+\eps(a,b) \;\ge\;
+&\bigl(\tfrac{A}{4}\bigr)^2\,
+  \norm{\restr_H c^+}_2 \, \norm{\tail_H c^-}_2 \\
+&{}- \norm{\restr_H c^+}_2 \, \norm{\restr_H c^-}_2
+ - \norm{\tail_H c^+}_2 \, \norm{\tail_H c^-}_2 \\
+&{}- \norm{\tail_H c^+}_2 \, \norm{\restr_H c^-}_2.
+\end{align*}
+\end{lemma}
+
+\begin{proof}
+The identity $X_a^2 - X_b^2 = X_{c^+} \cdot X_{c^-}$ holds since
+$\tau^2 = 1$. Set $P = X_{\restr_H c^+}$, $X' = X_{\tail_H c^+}$,
+$W = X_{\restr_H c^-}$, $V = X_{\tail_H c^-}$. Expanding
+$(P + X')(W + V)$ and rearranging:
+\[
+\abs{PV}
+\le \abs{X_{c^+} X_{c^-}} + \abs{PW} + \abs{X'V} + \abs{X'W}.
+\]
+Taking expectations, the left-hand side factors as
+$\E[\abs{P}] \cdot \E[\abs{V}]$ by independence of disjoint supports
+(\leanref{Imported\.L2Theory\.indepFun\_finLinComb\_disjoint}).
+Each factor is at least $(A/4)$ times the $\ell^2$ norm of the
+corresponding coefficient vector, by Theorem~\ref{thm:l1-lower}. The
+three error terms are each bounded by the product of the relevant $L^2$
+norms via Cauchy--Schwarz.
+\end{proof}
+
+\begin{proposition}[Gluing]\label{thm:gluing}
+\leanname{Tail\.SignMismatch\.fin\_sign\_mismatch\_gluing}
+Let $a, b \in \R^n$ be unit vectors with $\ip{a}{b} = 0$, let
+$H \subseteq \{1, \dots, n\}$, and let $\tau \in \{+1, -1\}$.
+If
+\[
+\norm{\restr_H(a - \tau b)}_2 \le \theta(A)/16
+\quad \text{and} \quad
+\norm{\tail_H(a + \tau b)}_2 \le \theta(A)/32,
+\]
+then $\eps(a,b) \ge \theta(A)/2$.
+\end{proposition}
+
+\begin{proof}
+Write $c^+ = a + \tau b$ and $c^- = a - \tau b$. Set
+$\alpha = \norm{\restr_H c^-}_2$ and $\beta = \norm{\tail_H c^+}_2$;
+by hypothesis $\alpha \le \theta/16$ and $\beta \le \theta/32$.
+From $\norm{c^\pm}_2^2 = 2$ we get
+\[
+\norm{\restr_H c^+}_2
+= \sqrt{2 - \beta^2} \ge 1,
+\qquad
+\norm{\tail_H c^-}_2
+= \sqrt{2 - \alpha^2} \ge 1.
+\]
+The main term in the four-term bound (Lemma~\ref{lem:four-term}) is
+therefore at least
+$(A/4)^2 \cdot 1 \cdot 1 = \theta/2$, while the three error terms sum to
+at most $\alpha \sqrt{2} + \beta \sqrt{2} + \alpha\beta < \theta/4$.
+The conclusion $\eps \ge \theta/2$ follows.
+\end{proof}

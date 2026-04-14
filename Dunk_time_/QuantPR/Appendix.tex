@@ -1,0 +1,183 @@
+\section{Toolbox: Statements Used in the Main Proof}\label{app:toolbox}
+
+This appendix collects the statements from the ``imported'' layer that are
+invoked by the core proof (Sections~\ref{sec:head}--\ref{sec:main}). All
+statements refer to a probability space $(\Omega, \mu)$ with independent
+random variables $\xi_1, \dots, \xi_n$, and use the notation
+$X_c = \sum_{i=1}^n c_i \xi_i$ for coefficient vectors $c \in \R^n$.
+Proofs are available in the Lean formalisation.
+
+\subsection{Symmetrization}
+
+\begin{theorem}[Unsymmetrization]\label{thm:unsymmetrization-app}
+\leanname{Imported\.Symmetrization\.unsymmetrization\_product\_space}
+Let $W : \Omega \to \R$ be a square-integrable random variable on a
+probability space $(\Omega, \mu)$. Then for every $r > 0$ and every
+$t \in \R$,
+\[
+\mu\bigl(\abs{W - t} \le r\bigr)^2
+\le
+(\mu \otimes \mu)\bigl(\abs{W(\omega_1) - W(\omega_2)} \le 2r\bigr).
+\]
+\end{theorem}
+
+\begin{theorem}[Differences preserve independence]%
+\label{thm:iIndepFun-differences-app}
+\leanname{Imported\.Symmetrization\.iIndepFun\_differences}
+If $\zeta_1, \dots, \zeta_n$ are independent random variables on
+$(\Omega, \mu)$, then the differences
+$D_i(\omega_1, \omega_2) = \zeta_i(\omega_1) - \zeta_i(\omega_2)$ are
+independent on $\Omega \times \Omega$.
+\end{theorem}
+
+\begin{theorem}[Desymmetrization $L^1$ bound]\label{thm:desymm-l1-app}
+\leanname{Imported\.Symmetrization\.desymmetrization\_l1\_bound}
+For any integrable random variable $W : \Omega \to \R$,
+\[
+\E_{\mu \otimes \mu}\bigl[\abs{W(\omega_1) - W(\omega_2)}\bigr]
+\le
+2 \, \E_\mu\bigl[\abs{W}\bigr].
+\]
+\end{theorem}
+
+\subsection{$L^2$ Theory}
+
+\begin{theorem}[Concentration drops under independent addition]%
+\label{thm:concFn-add-app}
+\leanname{Imported\.L2Theory\.concFn\_add\_indep\_le}
+Let $U$ and $R$ be independent random variables on $(\Omega, \mu)$, and let
+$r > 0$. Then
+$\concFn_\mu(U + R, r) \le \concFn_\mu(U, r)$,
+where $\concFn_\mu(W, r) = \sup_{t \in \R} \mu(\abs{W - t} \le r)$.
+\end{theorem}
+
+\begin{theorem}[$L^2$ norm of finite linear combinations]%
+\label{thm:L2-finLinComb-app}
+\leanname{Imported\.L2Theory\.randL2Sq\_finLinComb\_eq}
+Let $\xi_1, \dots, \xi_n$ be independent, centered, unit-variance random
+variables, and let $c = (c_1, \dots, c_n) \in \R^n$. Then
+$\E\bigl[\abs{X_c}^2\bigr] = \sum_{i=1}^n c_i^2$.
+\end{theorem}
+
+\begin{theorem}[Epsilon--modulus inequality]\label{thm:eps-le-modulus-app}
+\leanname{Imported\.L2Theory\.finEps\_le\_two\_mul\_finModulusGap}
+Let $a, b \in \R^n$ with $\norm{a}_2 = \norm{b}_2 = 1$. Then
+$\eps(a,b) \le 2 \, \delta(a,b)$.
+\end{theorem}
+
+\begin{theorem}[Jensen's inequality]\label{thm:jensen-app}
+\leanname{Imported\.L2Theory\.sq\_integral\_le\_integral\_sq}
+For any square-integrable random variable $W$ on $(\Omega, \mu)$,
+$\bigl(\E[\abs{W}]\bigr)^2 \le \E[W^2]$.
+\end{theorem}
+
+\begin{theorem}[Independence of disjoint supports]%
+\label{thm:indep-disjoint-app}
+\leanname{Imported\.L2Theory\.indepFun\_finLinComb\_disjoint}
+Let $c, d \in \R^n$ be coefficient vectors with
+$\supp(c) \cap \supp(d) = \emptyset$, where
+$\supp(c) = \{i : c_i \ne 0\}$. Then $X_c$ and $X_d$ are independent.
+\end{theorem}
+
+\subsection{Indicator Tails}
+
+\begin{theorem}[Chebyshev indicator tail]\label{thm:chebyshev-indicator-app}
+\leanname{Imported\.IndicatorTails\.chebyshev\_indicator\_tail}
+Let $Z_1, \dots, Z_m$ be independent $\{0,1\}$-valued random variables with
+$\sum_{j=1}^m \E[Z_j] \ge 1024$.
+Then $\Prob\bigl(\sum_{j=1}^m Z_j < 256\bigr) \le 1/16$.
+\end{theorem}
+
+\begin{theorem}[Chebyshev active count]\label{thm:chebyshev-active-app}
+\leanname{Imported\.IndicatorTails\.chebyshev\_active\_count}
+Let $Y_1, \dots, Y_m$ be independent random variables, and let $\alpha > 0$.
+If $\sum_{j=1}^m \Prob(\abs{Y_j} \ge \alpha) \ge 1024$, then
+$\Prob\bigl(\#\{j : \abs{Y_j} \ge \alpha\} < 256\bigr) \le 1/16$.
+\end{theorem}
+
+\subsection{Elementary Bounds}
+
+\begin{theorem}[Finite independent sum $L^1$ lower bound]%
+\label{thm:finite-indep-l1-app}
+\leanname{Imported\.ElementaryBounds\.finite\_indep\_sum\_l1\_lower}
+Let $\zeta_1, \dots, \zeta_n$ be independent, mean-zero, unit-variance random
+variables with $\E[\abs{\zeta_i}] \ge A > 0$ for all $i$. Then for every
+$(c_1, \dots, c_n) \in \R^n$,
+\[
+\frac{A}{4} \sqrt{\sum_{i=1}^n c_i^2}
+\;\le\;
+\E\Bigl[\Bigl\lvert \sum_{i=1}^n c_i \zeta_i \Bigr\rvert\Bigr].
+\]
+\end{theorem}
+
+\begin{theorem}[Two-sided mass of mean-zero sum]%
+\label{thm:two-sided-mass-app}
+\leanname{Imported\.ElementaryBounds\.two\_sided\_mass\_of\_mean\_zero}
+Let $\zeta_1, \dots, \zeta_n$ be independent, mean-zero, unit-variance random
+variables with $\E[\abs{\zeta_i}] \ge A > 0$ for all $i$, and let
+$(c_1, \dots, c_n) \in \R^n$ with $\sigma = \sqrt{\sum c_i^2} > 0$. Then
+\[
+\Prob\Bigl(\tfrac{A}{16} \, \sigma
+  \le \sum_{i=1}^n c_i \zeta_i\Bigr)
+\ge A^2/256.
+\]
+\end{theorem}
+
+\subsection{Rademacher: Sign Invariance}
+
+\begin{theorem}[Sign-flip integral equality]\label{thm:sign-flip-app}
+\leanname{Imported\.Rademacher\.SignInvariance\.sign\_flip\_integral\_eq}
+Let $Z_1, \dots, Z_n$ be independent and symmetric random variables, and let
+$(c_1, \dots, c_n) \in \R^n$. Then for any fixed sign pattern
+$\varepsilon \in \{+1, -1\}^n$,
+\[
+\E\Bigl[\Bigl\lvert \sum_{i=1}^n c_i \varepsilon_i Z_i \Bigr\rvert\Bigr]
+=
+\E\Bigl[\Bigl\lvert \sum_{i=1}^n c_i Z_i \Bigr\rvert\Bigr].
+\]
+\end{theorem}
+
+\subsection{Rademacher: Symmetric Sums}
+
+\begin{theorem}[Symmetric Khintchine]\label{thm:sym-khintchine-app}
+\leanname{Imported\.Rademacher\.SymmetricSums\.symmetric\_khintchine\_l1\_l2}
+Let $Z_1, \dots, Z_n$ be independent and symmetric random variables with
+$\E[Z_i^2] = 1$ and $\E[\abs{Z_i}] \ge A > 0$ for all $i$. Then for every
+$(c_1, \dots, c_n) \in \R^n$,
+\[
+\frac{A}{2} \sqrt{\sum_{i=1}^n c_i^2}
+\;\le\;
+\E\Bigl[\Bigl\lvert \sum_{i=1}^n c_i Z_i \Bigr\rvert\Bigr].
+\]
+\end{theorem}
+
+\subsection{Rademacher: Sperner}
+
+\begin{theorem}[Sperner antichain bound]\label{thm:sperner-antichain-app}
+\leanname{Imported\.Rademacher\.Sperner\.weighted\_sign\_interval\_antichain}
+Let $w_1, \dots, w_n > 0$ with $w_i \ge \alpha > 0$ for all $i$, and let $I$
+be an interval of diameter less than $2\alpha$. Then
+\[
+\#\Bigl\{\varepsilon \in \{+1,-1\}^n :
+  \sum_{i=1}^n \varepsilon_i w_i \in I\Bigr\}
+\;\le\;
+\binom{n}{\lfloor n/2 \rfloor}.
+\]
+\end{theorem}
+
+\subsection{Rademacher: Random Sperner}
+
+\begin{theorem}[Sperner sign-flip]\label{thm:sperner-app}
+\leanname{Imported\.Rademacher\.RandomSperner\.sperner\_sign\_flip\_bound}
+Let $Y_1, \dots, Y_m$ be independent and symmetric random variables, let
+$\alpha > 0$, $r > 0$ with $r < \alpha$, and let $m \ge 256$. Then for every
+$t \in \R$,
+\[
+\mu\Bigl(
+  \Bigl\{\abs{\textstyle\sum_{j=1}^m Y_j - t} \le r\Bigr\}
+  \cap
+  \Bigl\{\#\{j : \abs{Y_j} \ge \alpha\} \ge 256\Bigr\}
+\Bigr)
+\le 1/16.
+\]
+\end{theorem}
