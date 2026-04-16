@@ -1,0 +1,298 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.7cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\dd}{\,d}
+\newcommand{\pbar}{\partial_{\bar z}}
+\newcommand{\Log}{\operatorname{Log}}
+
+\title{A Parametric Asymptotic Route for the One-Boundary Hermite Rigidity Problem}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Boundary moments}
+
+This note isolates the boundary-parametrization route for the simply connected
+Hermite rigidity theorem.  It deliberately does not use the holomorphic auxiliary
+function argument from Section~4 of \texttt{main.tex}.  The input is only the
+moment identity coming from the Hermite eigenfunction equation and the standard
+free-boundary consequence that the one boundary component is real analytic.
+
+Let \(U\subset\C\) be bounded and simply connected, with real-analytic boundary
+\(\Gamma=\partial U\), positively oriented.  Assume the Hermite eigenfunction
+identity gives
+\begin{equation}\label{eq:bulk-moments}
+  \int_U z^n |z|^{2k}e^{-\pi |z|^2}\dd A(z)=0,
+  \qquad n\ge1 .
+\end{equation}
+Set
+\begin{equation}\label{eq:Phi-def}
+  \Phi_k(s):=\int_0^s t^k e^{-\pi t}\dd t .
+\end{equation}
+Then
+\[
+  \pbar\!\left(z^{n-1}\Phi_k(|z|^2)\right)
+  =
+  z^n|z|^{2k}e^{-\pi|z|^2},
+\]
+and Cauchy--Green gives
+\begin{equation}\label{eq:boundary-moments}
+  M_n:=\int_{\Gamma}z^{n-1}\Phi_k(|z|^2)\dd z=0,
+  \qquad n\ge1 .
+\end{equation}
+
+Let
+\[
+  \gamma:\R/2\pi\Z\to\Gamma
+\]
+be a real-analytic parametrization.  It extends holomorphically to a strip
+\[
+  \mathcal S_\epsilon=\{t\in\C/2\pi\Z:|\Im t|<\epsilon\}.
+\]
+Define the reflected analytic continuation
+\[
+  \gamma^*(t):=\overline{\gamma(\bar t)}.
+\]
+On the real axis, \(\gamma^*(t)=\overline{\gamma(t)}\).  Thus
+\begin{equation}\label{eq:param-moment}
+  M_n=\int_0^{2\pi}
+  \gamma(t)^{n-1}
+  E(t)\gamma'(t)\dd t,
+  \qquad
+  E(t):=\Phi_k(\gamma(t)\gamma^*(t)).
+\end{equation}
+
+The useful normalization is obtained by integrating by parts:
+\begin{equation}\label{eq:ibp}
+  M_n
+  =
+  -\frac1n\int_0^{2\pi}\gamma(t)^n E'(t)\dd t .
+\end{equation}
+This is the right starting point for asymptotics.  The older real-maximum
+heuristic misses this cancellation: the amplitude
+\(E(t)\gamma'(t)/\gamma(t)\) has a built-in derivative structure.
+
+\begin{lemma}\label{lem:constant-radius}
+If \(E'\equiv0\) on the real axis, then \(\Gamma\) is a circle centered at the
+origin.
+\end{lemma}
+
+\begin{proof}
+Since \(\Phi_k'(s)=s^k e^{-\pi s}>0\) for \(s>0\), the identity
+\[
+  E'(t)=\Phi_k'(|\gamma(t)|^2)\frac{\dd}{\dd t}|\gamma(t)|^2
+\]
+on the real axis implies \(\frac{\dd}{\dd t}|\gamma(t)|^2=0\).  Hence
+\(|\gamma|\) is constant on \(\Gamma\), so \(\Gamma\) is a circle centered at
+the origin.
+\end{proof}
+
+\section{Explicit saddle asymptotics}
+
+Assume from now on that \(\Gamma\) is not a centered circle.  Then
+\(E'\not\equiv0\).  Choose a branch
+\[
+  \Psi(t):=\Log \gamma(t)
+\]
+on the relevant lifted strip.  Equation~\eqref{eq:ibp} becomes
+\begin{equation}\label{eq:saddle-integral}
+  M_n=-\frac1n\int e^{n\Psi(t)}E'(t)\dd t .
+\end{equation}
+
+\begin{proposition}[Dominant saddle contribution]\label{prop:saddle}
+Suppose the real cycle can be deformed, in the analytic continuation domain of
+\(\gamma,\gamma^*,E\), to steepest-descent arcs through finitely many dominant
+saddles \(\tau_1,\dots,\tau_L\).  At each \(\tau_j\), assume
+\[
+  \Psi(t)=\Psi(\tau_j)+\lambda_j(t-\tau_j)^{p_j}
+  +O((t-\tau_j)^{p_j+1}),
+  \qquad p_j\ge2,\quad \lambda_j\ne0,
+\]
+and
+\[
+  E'(t)=b_j(t-\tau_j)^{r_j}+O((t-\tau_j)^{r_j+1}),
+  \qquad b_j\ne0,\quad r_j\ge0.
+\]
+Assume also that the corresponding exponential scales dominate all remaining
+parts of the deformed contour.  Let
+\[
+  \rho:=\max_j |\gamma(\tau_j)|.
+\]
+Among the saddles with \(|\gamma(\tau_j)|=\rho\), keep only those for which the
+power
+\[
+  \alpha_j:=1+\frac{r_j+1}{p_j}
+\]
+is minimal; call this set \(J_*\).  Then
+\begin{equation}\label{eq:saddle-asymptotic}
+  M_n
+  =
+  \rho^n n^{-\alpha_*}
+  \left(
+    \sum_{j\in J_*} C_j e^{in\theta_j}
+  \right)
+  +o(\rho^n n^{-\alpha_*}),
+\end{equation}
+where
+\[
+  \gamma(\tau_j)=\rho e^{i\theta_j},
+  \qquad
+  \alpha_*=\min_{|\gamma(\tau_j)|=\rho}\alpha_j .
+\]
+The constants are explicitly
+\begin{equation}\label{eq:Cj}
+  C_j
+  =
+  -b_j\,\sigma_j\,
+  \Gamma\!\left(\frac{r_j+1}{p_j}\right)
+  \lambda_j^{-(r_j+1)/p_j},
+\end{equation}
+where \(\sigma_j\ne0\) is the difference of the two steepest-ray phase factors
+chosen by the deformed oriented contour.
+\end{proposition}
+
+\begin{proof}
+Near \(\tau_j\), put \(s=t-\tau_j\).  The local contribution to
+\eqref{eq:saddle-integral} is
+\[
+  -\frac1n e^{n\Psi(\tau_j)}
+  \int e^{n\lambda_j s^{p_j}}
+  \bigl(b_js^{r_j}+O(s^{r_j+1})\bigr)\dd s .
+\]
+On a steepest ray, set \(u=n^{1/p_j}\lambda_j^{1/p_j}s\), with the branch fixed
+by that ray.  This gives
+\[
+  -e^{n\Psi(\tau_j)}
+  n^{-1-(r_j+1)/p_j}
+  b_j\lambda_j^{-(r_j+1)/p_j}
+  \int_{\mathcal R_j} e^{u^{p_j}}u^{r_j}\dd u
+\]
+plus lower powers of \(n^{-1/p_j}\).  The steepest-ray integral is the nonzero
+phase factor
+\[
+  \sigma_j\,\Gamma\!\left(\frac{r_j+1}{p_j}\right),
+\]
+unless the oriented contour misses the local saddle contribution, which is
+excluded by the dominance/accessibility hypothesis.  Summing the dominant
+saddles and absorbing lower-order saddles and the deformed remainder gives
+\eqref{eq:saddle-asymptotic}.
+\end{proof}
+
+\begin{lemma}\label{lem:exp-sum}
+Let \(\lambda_1,\dots,\lambda_N\) be distinct complex numbers of modulus one.
+If
+\[
+  \sum_{j=1}^N c_j\lambda_j^n\to0,
+\]
+then \(c_1=\cdots=c_N=0\).
+\end{lemma}
+
+\begin{proof}
+Multiply by \(\overline{\lambda_m}^{\,n}\), average from \(1\) to \(N\), and let
+\(N\to\infty\).  The Cesaro averages of
+\((\lambda_j\overline{\lambda_m})^n\) vanish for \(j\ne m\), while the averaged
+left-hand side still tends to zero.
+\end{proof}
+
+\begin{theorem}[Conditional asymptotic closure]\label{thm:conditional-saddle}
+Assume the saddle hypotheses of Proposition~\ref{prop:saddle}, and assume that
+the dominant phases in \(J_*\) have been grouped so that the resulting finite
+exponential sum in \eqref{eq:saddle-asymptotic} is not identically zero.  Then
+the moment identities \eqref{eq:boundary-moments} force \(\Gamma\) to be a
+circle centered at the origin.
+\end{theorem}
+
+\begin{proof}
+If \(\Gamma\) is not a centered circle, then \(E'\not\equiv0\) by
+Lemma~\ref{lem:constant-radius}.  Proposition~\ref{prop:saddle} gives a nonzero
+asymptotic for \(M_n\):
+\[
+  \rho^{-n}n^{\alpha_*}M_n
+  \to
+  \sum_{j\in J_*} C_j e^{in\theta_j}
+  \quad\text{up to }o(1).
+\]
+Since \(M_n=0\) for every \(n\), the finite exponential sum must tend to zero.
+By Lemma~\ref{lem:exp-sum}, all grouped coefficients vanish, contradicting the
+nonzero dominant-sum hypothesis.  Hence \(\Gamma\) must be a centered circle.
+\end{proof}
+
+\section{Darboux singularity version}
+
+The same computation can be made in the \(z\)-plane.  Let \(S\) denote the local
+Schwarz function of the analytic boundary, and define in a collar of \(\Gamma\)
+\[
+  Q(z):=\Phi_k(zS(z)).
+\]
+Then \(Q(z)=\Phi_k(|z|^2)\) on \(\Gamma\), and
+\[
+  M_n=\int_\Gamma z^{n-1}Q(z)\dd z .
+\]
+
+\begin{proposition}[Pole contribution]\label{prop:pole}
+Suppose the contour \(\Gamma\) can be pushed into \(U\) until it crosses finitely
+many dominant pole singularities \(\alpha\) of \(Q\), and suppose the remaining
+contour has exponentially smaller \(|z|\).  If near such a pole
+\[
+  Q(z)=\sum_{\ell=1}^{q_\alpha}
+  a_{\alpha,-\ell}(z-\alpha)^{-\ell}+O(1),
+\]
+then its contribution to \(M_n\) is exactly
+\begin{equation}\label{eq:pole-contribution}
+  2\pi i
+  \sum_{\ell=1}^{q_\alpha}
+  a_{\alpha,-\ell}
+  \binom{n-1}{\ell-1}
+  \alpha^{\,n-\ell}.
+\end{equation}
+Thus the dominant pole set gives
+\[
+  M_n
+  =
+  \rho^n n^{q_*-1}
+  \left(\sum_{|\alpha|=\rho}D_\alpha e^{in\arg\alpha}\right)
+  +o(\rho^n n^{q_*-1}),
+\]
+after retaining the maximal pole order \(q_*\) among poles with
+\(|\alpha|=\rho\).
+\end{proposition}
+
+\begin{proof}
+This is the residue theorem applied to \(z^{n-1}Q(z)\).  For a pole term
+\((z-\alpha)^{-\ell}\), the residue is
+\[
+  \frac{1}{(\ell-1)!}
+  \frac{\dd^{\ell-1}}{\dd z^{\ell-1}}z^{n-1}\bigg|_{z=\alpha}
+  =
+  \binom{n-1}{\ell-1}\alpha^{n-\ell}.
+\]
+The stated asymptotic follows by keeping the largest \(|\alpha|\) and the
+largest pole order at that modulus.
+\end{proof}
+
+\begin{remark}[What remains to make this unconditional]
+The computation above is fully explicit once the dominant complex obstruction is
+known: either accessible saddles of \(\Log\gamma\), or Darboux singularities of
+the continued weighted Schwarz primitive \(Q\).  The missing theorem is not an
+asymptotic calculation; it is a continuation theorem saying that every noncircular
+free boundary arising from the Hermite moment problem has such a finite dominant
+obstruction with nonzero grouped leading coefficient.  Real analyticity alone
+does not provide that statement.  It gives a complex collar, but not a finite
+singularity structure or a global meromorphic Schwarz function.
+\end{remark}
+
+\end{document}

@@ -1,0 +1,274 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.7cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\1}{\mathbf 1}
+\newcommand{\dd}{\,d}
+\newcommand{\pbar}{\partial_{\bar z}}
+\newcommand{\pz}{\partial_z}
+\newcommand{\calC}{\mathcal C}
+\newcommand{\calN}{\mathcal N}
+
+\title{Two One-Boundary Proofs of the Section 4 Rigidity Theorem}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Setup}
+
+This note gives two self-contained ways to close the simply connected case in
+Section~4 of \texttt{main.tex}.  The point is to use the fact that a simply
+connected bounded domain has only one boundary component.  That removes the
+inner-boundary cancellation obstruction which appears in the annular notes.
+
+Let \(U\subset\C\) be bounded and simply connected.  Suppose that the Hermite
+function \(h_k\) is an eigenfunction of the Gaussian localization operator with
+symbol \(\1_U\).  As in Section~4 of \texttt{main.tex}, the Bargmann-side
+identity implies
+\begin{equation}\label{eq:moment-generating}
+  \int_U e^{\pi\bar z w}|z|^{2k}e^{-\pi |z|^2}\dd A(z)=c
+  \qquad(w\in\C)
+\end{equation}
+for a real constant \(c\).  Equivalently,
+\begin{equation}\label{eq:bulk-moments}
+  \int_U z^n |z|^{2k}e^{-\pi |z|^2}\dd A(z)=0,
+  \qquad n\ge1,
+\end{equation}
+after conjugating the coefficients of \eqref{eq:moment-generating}.
+
+The same divisibility argument used in Section~4 gives a compactly supported
+potential \(u\) such that
+\begin{equation}\label{eq:pde}
+  \Delta u=|z|^{2k}e^{-\pi |z|^2}\1_U-c\,\delta_0
+  \qquad\text{in }\mathcal D'(\C),
+\end{equation}
+and \(u\equiv0\) in the unbounded component of \(\C\setminus\overline U\).
+Since \(U\) is simply connected, this is the whole exterior.  The singularity
+forces \(0\in U\): if \(0\notin U\), then \(u\) would vanish near \(0\), which is
+incompatible with the point mass in \eqref{eq:pde}; if \(0\in\partial U\), the
+explicit logarithmic term contradicts \(u=0\) along exterior points tending to
+\(0\).
+
+We use the standard free-boundary regularity consequence of
+\eqref{eq:pde}: because the exterior phase is identically zero and the forcing
+\(|z|^{2k}e^{-\pi |z|^2}\) is real analytic and strictly positive near
+\(\partial U\), the boundary \(\Gamma:=\partial U\) is a real-analytic Jordan
+curve.  This is the usual Kinderlehrer--Nirenberg one-phase regularity input.
+Consequently \(\Gamma\) has a Schwarz function \(S\) in a collar of the boundary:
+\[
+  S(z)=\bar z,\qquad z\in\Gamma .
+\]
+
+Set
+\begin{equation}\label{eq:Phi-def}
+  \Phi_k(t):=\int_0^t s^k e^{-\pi s}\dd s .
+\end{equation}
+Then \(\Phi_k\) is entire and strictly increasing on \([0,\infty)\).
+
+\section{First Proof: The One-Boundary Moment Closure}
+
+This proof is the clean version of the asymptotic route.  In the one-boundary
+case one does not need a delicate saddle expansion: the vanishing of all
+moments says exactly that the exterior Cauchy transform has zero expansion at
+infinity.  The jump formula then produces a holomorphic interior function with
+real boundary values.
+
+\begin{proof}[One-boundary Cauchy-transform proof]
+For \(n\ge1\),
+\[
+  \pbar\!\left(z^{n-1}\Phi_k(|z|^2)\right)
+  =
+  z^n |z|^{2k}e^{-\pi |z|^2}.
+\]
+Using \eqref{eq:bulk-moments} and Cauchy--Green,
+\begin{equation}\label{eq:boundary-moments}
+  \int_\Gamma z^{n-1}\Phi_k(|z|^2)\dd z=0,
+  \qquad n\ge1.
+\end{equation}
+Equivalently,
+\begin{equation}\label{eq:all-boundary-moments}
+  \int_\Gamma z^m\Phi_k(|z|^2)\dd z=0,
+  \qquad m\ge0.
+\end{equation}
+
+On the analytic collar of \(\Gamma\), define
+\[
+  Q(z):=\Phi_k(zS(z)).
+\]
+Then \(Q|_\Gamma=\Phi_k(|z|^2)\).  Consider the Cauchy transform
+\[
+  \calC_Q(\zeta):=\frac{1}{2\pi i}\int_\Gamma
+  \frac{Q(z)}{z-\zeta}\dd z ,
+  \qquad \zeta\notin\Gamma,
+\]
+where \(\Gamma\) is positively oriented.  For large \(|\zeta|\) in the exterior
+component,
+\[
+  \calC_Q(\zeta)
+  =
+  -\sum_{m=0}^{\infty}
+  \frac{1}{\zeta^{m+1}}
+  \frac{1}{2\pi i}\int_\Gamma z^m Q(z)\dd z
+  =0
+\]
+by \eqref{eq:all-boundary-moments}.  Since the exterior component is connected,
+the identity theorem gives
+\[
+  \calC_Q\equiv0
+  \qquad\text{in }\C\setminus\overline U .
+\]
+
+By the Plemelj jump relation,
+\[
+  \calC_Q^{\mathrm{int}}-\calC_Q^{\mathrm{ext}}=Q
+  \qquad\text{on }\Gamma .
+\]
+Hence \(Q|_\Gamma\) is the boundary trace of the holomorphic function
+\(\calC_Q^{\mathrm{int}}\) in \(U\).  But \(Q|_\Gamma=\Phi_k(|z|^2)\) is real-valued.
+Therefore the imaginary part of \(\calC_Q^{\mathrm{int}}\) is harmonic in \(U\),
+continuous up to \(\Gamma\), and zero on \(\Gamma\).  The maximum principle gives
+\[
+  \Im \calC_Q^{\mathrm{int}}\equiv0.
+\]
+Thus \(\calC_Q^{\mathrm{int}}\) is both holomorphic and real-valued, so it is
+constant.  Restricting back to \(\Gamma\),
+\[
+  \Phi_k(|z|^2)=\kappa
+  \qquad(z\in\Gamma)
+\]
+for some real constant \(\kappa\).  Since \(\Phi_k\) is strictly increasing on
+\([0,\infty)\), \(|z|\) is constant on \(\Gamma\).  Hence \(\Gamma\) is a circle
+centered at the origin, and the bounded simply connected domain \(U\) is the disk
+bounded by that circle.
+\end{proof}
+
+\begin{remark}
+This is the precise sense in which the ``asymptotic'' strategy becomes harmless
+when there is only one boundary component.  The large-\(\zeta\) expansion of
+\(\calC_Q\) is an exact asymptotic expansion at infinity, and all of its
+coefficients vanish by \eqref{eq:all-boundary-moments}.  In a multiply connected
+domain one instead gets a sum of component integrals, and different components
+can in principle cancel.  That is the obstruction encountered in the annulus
+notes.
+\end{remark}
+
+\section{Second Proof: The DtN Boundary Equation}
+
+The second route packages the same rigidity as an overdetermined Dirichlet
+problem.  It also gives the requested boundary parametrization equation.
+
+Let \(\rho_k(r):=r^{2k}e^{-\pi r^2}\).  We keep the sign convention of
+Section~4, namely \(\Delta u=\rho_k\1_U-c\delta_0\); replacing \(u\) by
+\(-u\) gives the equivalent convention \(-\Delta u=\rho_k\1_U-c\delta_0\).
+For boundary data \(\varphi\), let \(u_\varphi\) solve
+\[
+  \Delta u_\varphi=\rho_k(|z|)-c\,\delta_0
+  \qquad\text{in }U,
+  \qquad
+  u_\varphi|_{\Gamma}=\varphi .
+\]
+The associated Dirichlet-to-Neumann map is
+\[
+  \calN_U(\varphi):=\partial_\nu u_\varphi|_{\Gamma}.
+\]
+The localization/free-boundary condition gives precisely
+\[
+  \calN_U(0)=0.
+\]
+Indeed, \(u\equiv0\) in the exterior and \(u\in C^1(\C\setminus\{0\})\), so on
+\(\Gamma\) both \(u=0\) and \(\partial_\nu u=0\).  Since the tangential derivative
+of a zero Dirichlet trace is also zero, this is the full condition
+\[
+  \nabla u=0
+  \qquad\text{on }\Gamma .
+\]
+
+\begin{proof}[DtN proof and boundary ODE]
+Define, for \(z\neq0\),
+\[
+  \Psi_k(z):=\frac{\Phi_k(|z|^2)}{z}.
+\]
+Since \(\Phi_k'(t)=t^k e^{-\pi t}\),
+\[
+  \pbar\Psi_k(z)=|z|^{2k}e^{-\pi |z|^2}
+  \qquad(z\neq0),
+\]
+and the identity holds distributionally in \(U\) because \(\Phi_k(0)=0\).  Set
+\[
+  F(z):=4\pz u(z)-\Psi_k(z)+\frac{c}{\pi z},
+  \qquad z\in U\setminus\{0\}.
+\]
+Using \(\Delta=4\pz\pbar\), \(\pbar(1/z)=\pi\delta_0\), and \eqref{eq:pde}, we get
+\[
+  \pbar F
+  =
+  \Delta u-\rho_k(|z|)+c\delta_0
+  =0
+  \qquad\text{in }\mathcal D'(U).
+\]
+Thus \(F\) is holomorphic in \(U\); the singularity at \(0\) is removable by the
+same cancellation.
+
+Now define
+\[
+  W(z):=\pi zF(z).
+\]
+Then \(W\) is holomorphic in \(U\).  Since \(\nabla u=0\) on \(\Gamma\), we have
+\[
+  W|_\Gamma
+  =
+  c-\pi\Phi_k(|z|^2),
+\]
+which is real-valued.  Hence \(\Im W\) is harmonic in \(U\), continuous up to
+\(\Gamma\), and zero on \(\Gamma\).  By the maximum principle \(W\) is constant:
+\[
+  W\equiv\kappa .
+\]
+Therefore every real-analytic parametrization \(\gamma:\R/2\pi\Z\to\Gamma\)
+satisfies the boundary equation
+\begin{equation}\label{eq:param-equation}
+  c-\pi\Phi_k(|\gamma(t)|^2)=\kappa .
+\end{equation}
+Differentiating gives
+\[
+  0
+  =
+  \frac{\dd}{\dd t}\Phi_k(|\gamma(t)|^2)
+  =
+  |\gamma(t)|^{2k}e^{-\pi|\gamma(t)|^2}
+  \frac{\dd}{\dd t}|\gamma(t)|^2 .
+\]
+Since \(0\notin\Gamma\), the prefactor is strictly positive.  Hence
+\begin{equation}\label{eq:param-ode}
+  \frac{\dd}{\dd t}|\gamma(t)|^2=0,
+  \qquad\text{equivalently}\qquad
+  \Re\bigl(\overline{\gamma(t)}\,\gamma'(t)\bigr)=0.
+\end{equation}
+Thus \(\gamma'(t)=i a(t)\gamma(t)\) for a real function \(a(t)\), and
+\(|\gamma(t)|\) is constant.  The boundary is a circle centered at the origin,
+and simple connectivity gives that \(U\) is the disk it bounds.
+\end{proof}
+
+\begin{remark}
+The DtN formulation also identifies the exact place where simple connectivity is
+used.  With one boundary component, real boundary values of the holomorphic
+function \(W\) force \(W\) to be constant.  In a multiply connected problem, one
+would need the same real trace information on every boundary component, together
+with the correct exterior/free-boundary interpretation on those components.  This
+is precisely what the failed disk-annulus argument did not validly supply.
+\end{remark}
+
+\end{document}

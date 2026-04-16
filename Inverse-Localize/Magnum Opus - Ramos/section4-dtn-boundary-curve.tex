@@ -1,0 +1,209 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.7cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\dd}{\,d}
+\newcommand{\1}{\mathbf 1}
+
+\title{The DtN Zero Condition as a Boundary-Curve Equation}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{The affine DtN map}
+
+Let \(U\subset\C\simeq\R^2\) be a bounded domain with real-analytic boundary, and
+let \(\rho:[0,\infty)\to\R\) be real analytic.  For boundary data
+\(\varphi\), let \(w_\varphi\) solve
+\begin{equation}\label{eq:dirichlet-problem}
+  -\Delta w_\varphi=\rho(|z|)
+  \qquad\text{in }U,\qquad
+  w_\varphi|_{\partial U}=\varphi .
+\end{equation}
+The corresponding inhomogeneous Dirichlet-to-Neumann map is the affine map
+\[
+  \mathcal N_U^\rho(\varphi):=\partial_\nu w_\varphi|_{\partial U},
+\]
+where \(\nu\) is the outward unit normal.
+
+Thus
+\[
+  \mathcal N_U^\rho(0)=0
+\]
+means exactly that the zero-Dirichlet solution \(u:=w_0\) satisfies the
+overdetermined boundary conditions
+\begin{equation}\label{eq:overdetermined}
+  -\Delta u=\rho(|z|)\quad\text{in }U,\qquad
+  u=0,\quad \partial_\nu u=0\quad\text{on }\partial U .
+\end{equation}
+Equivalently,
+\[
+  \nabla u=0\qquad\text{on }\partial U,
+\]
+because the tangential derivative of the zero trace also vanishes.
+
+\begin{remark}[Flux compatibility]
+For the nonsingular problem \eqref{eq:dirichlet-problem}, the condition
+\(\mathcal N_U^\rho(0)=0\) implies
+\[
+  \int_U \rho(|z|)\dd A=0
+\]
+by integrating the equation.  In particular, if \(\rho>0\) in \(U\), this
+condition is impossible.  In localization applications one often has either a
+sign-changing \(\rho\), or an additional radial point-mass term at the origin.
+The boundary-curve calculation below is unchanged by a radial point mass,
+because the angular derivative annihilates it.
+\end{remark}
+
+\section{Boundary jets}
+
+Let \(\gamma(s)\) be an arclength parametrization of a boundary component
+\(\Gamma\subset\partial U\), and let
+\[
+  T(s):=\gamma'(s)
+\]
+be the unit tangent.  Let \(\nu(s)\) be the outward unit normal.  The condition
+\(\nabla u=0\) on \(\Gamma\) implies the following second-jet identities.
+
+\begin{lemma}\label{lem:hessian}
+On \(\Gamma\),
+\[
+  D^2u(T,T)=0,\qquad D^2u(T,\nu)=0,\qquad D^2u(\nu,\nu)=-\rho(|\gamma|).
+\]
+Consequently,
+\begin{equation}\label{eq:hessian-normal}
+  D^2u=-\rho(|\gamma|)\,\nu\otimes\nu
+  \qquad\text{on }\Gamma .
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Since \(u(\gamma(s))=0\), differentiating once gives
+\[
+  \nabla u(\gamma(s))\cdot T(s)=0.
+\]
+This is already contained in \(\nabla u=0\).  Differentiating again,
+\[
+  D^2u(T,T)+\nabla u\cdot T'=0.
+\]
+The second term vanishes on \(\Gamma\), hence \(D^2u(T,T)=0\).
+
+Similarly, differentiating \(\partial_\nu u=\nabla u\cdot\nu=0\) tangentially gives
+\[
+  D^2u(T,\nu)+\nabla u\cdot\nu'=0,
+\]
+so \(D^2u(T,\nu)=0\).  Finally,
+\[
+  -\Delta u
+  =
+  -D^2u(T,T)-D^2u(\nu,\nu)
+  =
+  \rho(|\gamma|),
+\]
+and therefore \(D^2u(\nu,\nu)=-\rho(|\gamma|)\).
+\end{proof}
+
+\section{Angular derivative and the boundary ODE}
+
+Let
+\[
+  L:=x\partial_y-y\partial_x
+\]
+be the angular derivative, and set
+\[
+  v:=Lu.
+\]
+Since \(L\) commutes with \(\Delta\) and annihilates every radial function,
+\[
+  -\Delta v=L(-\Delta u)=L(\rho(|z|))=0
+  \qquad\text{in }U .
+\]
+Moreover \(v=0\) on \(\partial U\), because \(\nabla u=0\) there.  Hence, by
+uniqueness for the Dirichlet problem,
+\[
+  v\equiv0\qquad\text{in }U,
+\]
+and therefore
+\[
+  \partial_\nu v=0\qquad\text{on }\partial U .
+\]
+
+Now compute \(\partial_\nu v\) directly on \(\Gamma\).  Write
+\[
+  X(z):=(-y,x)
+\]
+so that \(Lu=X\cdot\nabla u\).  Since \(\nabla u=0\) on \(\Gamma\),
+\[
+  \partial_\nu v
+  =
+  D^2u(\nu,X)
+  =
+  -\rho(|\gamma|)(\nu\cdot X(\gamma))
+\]
+by \eqref{eq:hessian-normal}.  Since \(\nu\cdot X(\gamma)=\pm\gamma\cdot T\),
+depending only on the orientation convention for \(T\), we obtain the intrinsic
+boundary equation
+\begin{equation}\label{eq:boundary-ode}
+  \rho(|\gamma(s)|)\,\gamma(s)\cdot\gamma'(s)=0 .
+\end{equation}
+Equivalently,
+\begin{equation}\label{eq:radius-ode}
+  \rho(|\gamma(s)|)\frac{\dd}{\dd s}|\gamma(s)|^2=0 .
+\end{equation}
+
+\begin{theorem}\label{thm:dtn-to-circle}
+Assume \(\rho\) is real analytic and not identically zero.  If
+\(\mathcal N_U^\rho(0)=0\), then every boundary component of \(U\) is a circle
+centered at the origin, except possibly components lying entirely on a zero
+circle of \(\rho\); those are also centered circles.  In particular, if
+\(U\) is bounded and simply connected, then \(U\) is a disk centered at the
+origin.
+\end{theorem}
+
+\begin{proof}
+Equation~\eqref{eq:radius-ode} says that the product of the two real-analytic
+functions
+\[
+  s\mapsto \rho(|\gamma(s)|),
+  \qquad
+  s\mapsto \frac{\dd}{\dd s}|\gamma(s)|^2
+\]
+vanishes identically on the connected parameter circle.
+
+If \(\rho(|\gamma(s)|)\) is not identically zero, then its nonzero set is open
+and dense.  On that set, \(\frac{\dd}{\dd s}|\gamma(s)|^2=0\), and by analyticity
+this derivative vanishes for all \(s\).  Hence \(|\gamma|\) is constant.
+
+If instead \(\rho(|\gamma(s)|)\equiv0\), then the connected set
+\(\{|\gamma(s)|:s\in\R/2\pi\mathbb Z\}\) is contained in the zero set of the
+real-analytic function \(\rho\).  Since \(\rho\not\equiv0\), its zero set has no
+intervals.  Therefore \(|\gamma|\) is again constant.
+
+Thus each boundary component is a level set \(|z|=R\), hence a circle centered
+at the origin.  A bounded simply connected domain with one centered circular
+boundary component is the disk bounded by that circle.
+\end{proof}
+
+\begin{remark}[Radial singularities]
+If the interior equation is instead
+\[
+  -\Delta u=\rho(|z|)-c\,\delta_0,
+\]
+with \(0\in U\), the same argument applies on \(U\setminus\{0\}\) and
+distributionally across \(0\), because \(L\delta_0=0\).  Thus \(v=Lu\) is still
+harmonic with zero boundary values, and the same boundary equation
+\eqref{eq:boundary-ode} follows.
+\end{remark}
+
+\end{document}
