@@ -1,8 +1,0 @@
-\contentsline {section}{\numberline {1}Setup and Notation}{1}{section.1}%
-\contentsline {section}{\numberline {2}The Compact Convolution Equation}{2}{section.2}%
-\contentsline {subsection}{\numberline {2.1}The equation $u=c\,(u^k\ast f)$: compact fixed-point structure}{2}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Fredholm structure and local manifold theorem}{2}{subsection.2.2}%
-\contentsline {section}{\numberline {3}Spectral Support Forcing}{3}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Reduction to a density equation on the sphere}{3}{subsection.3.1}%
-\contentsline {section}{\numberline {4}The One-Dimensional Case: Complete Solution}{3}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Algebraic reduction}{4}{subsection.4.1}%
