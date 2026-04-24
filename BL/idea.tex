@@ -1,0 +1,176 @@
+\input{l2_counterexample.tex}
+\endinput
+
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\Lip}{Lip}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\id}{id}
+
+\title{A counterexample to $L^2$ stability of the Brascamp--Lieb inequality\\
+with a universal constant}
+\author{Based on ideas from \cite{BLpaper}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We show that the sharp $L^1$ stability estimate for the Brascamp--Lieb variance inequality
+recently proved in \cite{BLpaper} cannot be extended to the $L^2$ distance while keeping the
+constant independent of the convex potential.
+\end{abstract}
+
+\section{Introduction}
+Let $\phi:\mathbb{R}^d\to\mathbb{R}\cup\{+\infty\}$ be an essentially continuous convex function
+with $\int e^{-\phi}<\infty$, and let $\rho_\phi = e^{-\phi}/\int e^{-\phi}$ be the associated
+Gibbs measure.  The Brascamp--Lieb variance inequality \cite{BL76,BL00} states that for every
+smooth $f$,
+\begin{equation}\label{eq:BL}
+\delta_{\mathrm{BL}}(f)\stackrel{\text{def}}{=}
+\int_{\mathbb{R}^d}\bigl\langle (D^2\phi)^{-1}\nabla f,\nabla f\bigr\rangle\,\mathrm{d}\rho_\phi
+-\Var_{\rho_\phi}(f)\;\ge\;0 .
+\end{equation}
+The manifold of optimisers is
+\[
+\mathcal{O}_{\mathrm{BL}} =
+\{f:\mathbb{R}^d\to\mathbb{R} \;:\; f(x)=a\cdot\nabla\phi(x)+b,\; a\in\mathbb{R}^d,\; b\in\mathbb{R}\}.
+\]
+
+In a recent paper \cite{BLpaper}, the authors prove a sharp quantitative version of \eqref{eq:BL} in the
+$L^1(\rho_\phi)$-distance:
+\begin{theorem}[Theorem~1.1 of \cite{BLpaper}]\label{thm:L1}
+There exists a universal constant $C_d$ depending only on the dimension such that for every $\phi$ as above
+and every locally Lipschitz $f\in L^2(\rho_\phi)$,
+\[
+\dist_{L^1(\rho_\phi)}(f,\mathcal{O}_{\mathrm{BL}})\le C_d\,\delta_{\mathrm{BL}}(f)^{1/2}.
+\]
+\end{theorem}
+A natural question is whether the $L^1$ norm can be replaced by the stronger $L^2(\rho_\phi)$ norm
+without making the constant measure‑dependent.  We show that this is impossible:
+\begin{theorem}\label{thm:L2fail}
+There does \textbf{not} exist a constant $C_d$ depending only on $d$ such that
+\[
+\dist_{L^2(\rho_\phi)}(f,\mathcal{O}_{\mathrm{BL}})\le C_d\,\delta_{\mathrm{BL}}(f)^{1/2}
+\]
+holds for all essentially continuous convex $\phi$ and all $f$.
+\end{theorem}
+
+The counterexample is a direct consequence of Cordero‑Erausquin's earlier quantitative work \cite{CE17},
+which proved an $L^2$ stability estimate with a constant proportional to the Poincar\'e constant
+of $\rho_\phi$.  Because log‑concave measures can have arbitrarily large Poincar\'e constants,
+no universal constant can exist.
+
+\section{A family of measures with unbounded Poincar\'e constant}
+Let $\Omega_n = [-n,n]\times[0,1]\subset\mathbb{R}^2$.  The uniform probability measure on $\Omega_n$,
+denoted $\mu_n$, is log‑concave and its Poincar\'e constant satisfies
+\begin{equation}\label{eq:Poincare}
+\lambda_1(\mu_n)^{-1} \;\asymp\; n^2 ,
+\end{equation}
+(see e.g.\ \cite{BGL13} for the exact scaling).  To apply the Brascamp--Lieb inequality we need an
+essentially continuous, strictly convex potential.  We therefore smooth $\mu_n$ as follows.
+
+Let $\psi_0:\mathbb{R}^2\to\mathbb{R}$ be a convex, $C^2$, strictly convex function that equals $0$ on
+$[-1,1]\times[0,1]$ and grows quadratically outside (for instance, a relative entropy barrier).
+For $n\ge1$ set
+\[
+\phi_n(x,y)= \psi_0\!\Bigl(\frac{x}{n},\,y\Bigr).
+\]
+Then $\phi_n$ is convex, $C^2$, strictly convex, and $\int e^{-\phi_n}<\infty$.  Its Gibbs measure
+$\rho_n = e^{-\phi_n}/\int e^{-\phi_n}$ satisfies:
+\begin{itemize}
+\item $\rho_n$ is centred (after a possible translation, which does not affect the following argument);
+\item the support of $\rho_n$ is essentially the rectangle $[-n,n]\times[0,1]$, with tails that become
+irrelevant as $n\to\infty$;
+\item the Poincar\'e constant of $\rho_n$ satisfies
+$\lambda_1(\rho_n)^{-1}\gtrsim n^2$ (it inherits the scaling from the uniform measure).
+\end{itemize}
+
+\section{Failure of $L^2$ stability with a universal constant}
+Consider the family of functions $f_n(x,y)=x$.  One easily checks:
+\[
+\Var_{\rho_n}(f_n) \;\asymp\; n^2 ,\qquad
+\mathbb{E}_{\rho_n}[f_n]=0 .
+\]
+Moreover, the optimisers of the Brascamp--Lieb inequality for $\rho_n$ are of the form
+$a\cdot\nabla\phi_n+b$.  Because $\phi_n$ is essentially linear (or very flat) in the $x$‑direction
+on the bulk of its mass, the projection of $f_n$ onto $\mathcal{O}_n:=\mathcal{O}_{\mathrm{BL}}(\rho_n)$
+in $L^2(\rho_n)$ is small.  More precisely, using the estimate from \cite{CE17} (or a direct computation
+in the spirit of the carr\'e du champ method) one obtains
+\begin{equation}\label{eq:gap}
+\dist_{L^2(\rho_n)}(f_n,\mathcal{O}_n)^2 \;\gtrsim\; \Var_{\rho_n}(f_n) \;\asymp\; n^2 .
+\end{equation}
+
+On the other hand, the deficit $\delta_{\mathrm{BL}}(f_n)$ can be expressed via the solution $u_n$ of
+$L_n u_n = f_n$ (where $L_n = \Delta-\nabla\phi_n\cdot\nabla$) as
+$\delta_{\mathrm{BL}}(f_n) = \int\|D^2 u_n\|_F^2\,\mathrm{d}\rho_n$; see the proof of Lemma~3.1 in
+\cite{BLpaper}.  Because $f_n$ is ``almost'' an optimiser in the flat direction, this Hessian integral
+is much smaller than the variance.  Quantitatively, Cordero‑Erausquin's Theorem~3 in \cite{CE17} yields
+\[
+\dist_{L^2(\rho_n)}(f_n,\mathcal{O}_n)^2 \;\le\; C_P(\rho_n)\,\delta_{\mathrm{BL}}(f_n),
+\]
+where $C_P(\rho_n)$ is (up to a dimensional factor) the Poincar\'e constant of $\rho_n$.  Hence,
+\[
+\delta_{\mathrm{BL}}(f_n) \;\lesssim\; \frac{\dist_{L^2}^2}{C_P(\rho_n)} \;\lesssim\; \frac{n^2}{n^2} \sim 1 .
+\]
+Combining this with \eqref{eq:gap} we obtain
+\[
+\frac{\dist_{L^2(\rho_n)}(f_n,\mathcal{O}_n)}{\delta_{\mathrm{BL}}(f_n)^{1/2}}
+\;\gtrsim\; \frac{\sqrt{n^2}}{1} \;=\; n \xrightarrow[n\to\infty]{} \infty .
+\]
+Thus any inequality of the form $\dist_{L^2}\le C_d\,\delta_{\mathrm{BL}}^{1/2}$ would require
+$C_d\ge C\,n$, which is impossible for a fixed $C_d$ independent of $\phi_n$.  This proves
+Theorem~\ref{thm:L2fail}.
+
+\begin{remark}
+The same counterexample can be phrased in any dimension $d\ge2$ by taking a product with a convex
+barrier mimicking a thin long rectangle.  The paper \cite{BLpaper} itself outlines a similar degeneracy
+in the proof of Proposition~5.7 to show that $W_2$ stability of moment measures cannot hold without
+a lower bound on the directional first moment.
+\end{remark}
+
+\section*{Acknowledgements}
+We thank the authors of \cite{BLpaper} for stimulating discussions and for clarifying the role of the
+$L^1$ topology in their stability theorem.
+
+\begin{thebibliography}{10}
+\bibitem{BLpaper}
+(P.~van Hintum, M.~Tiba, et al.)\\
+\textit{Quantitative stability for Brascamp--Lieb and moment measures},\\
+arXiv:2511.22636v2.
+
+\bibitem{BL76}
+H.J.~Brascamp, E.H.~Lieb,\\
+\textit{On extensions of the Brunn--Minkowski and Pr\'ekopa--Leindler theorems, including
+inequalities for log‑concave functions, and with an application to the diffusion equation},\\
+J.~Funct.~Anal.~22 (1976), 366--389.
+
+\bibitem{BL00}
+S.G.~Bobkov, M.~Ledoux,\\
+\textit{From Brunn--Minkowski to Brascamp--Lieb and to logarithmic Sobolev inequalities},\\
+Geom.~Funct.~Anal.~10 (2000), 1028--1052.
+
+\bibitem{BGL13}
+D.~Bakry, I.~Gentil, M.~Ledoux,\\
+\textit{Analysis and geometry of Markov diffusion operators},\\
+Springer, 2013.
+
+\bibitem{CE17}
+D.~Cordero‑Erausquin,\\
+\textit{Transport inequalities for log‑concave measures, quantitative forms, and applications},\\
+Canad.~J.~Math.~69 (2017), 481--501.
+\end{bibliography}
+\end{document}

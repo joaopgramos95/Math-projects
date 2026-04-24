@@ -1,0 +1,35 @@
+Ideas for Serrapilheira presentation: 
+
+0.(General Rule) Include pictures: waves live in the imaginary of people. If we manage to connect to their imagination, we are winning on a fundamental level. Try to be specific with some of the images - images which relate to many areas of science/math would be great, but also 'pop culture' ones. 
+
+1. 'My path so far'. Highlight the institutions where I have been. Include pictures. 
+
+2.  'My work so far'. Highlight the main fields where I worked (Analysis in the broad sense: harmonic analysis, partial differential equations, probability theory), as well as notable achievements: Concentration for STFT (Inventiones), Interpolation formulas and Fourier uniqueness (JEMS, Analysis and PDE, Annals of PDE), Stability for sphere packings in dimensions 8 and 24 (Crelle). 
+
+3. 'Big question: How much information to reconstruct a wave?' 
+ - Include pictures of waves fitting our bill here; 
+ - Explain such waves and their importance;
+ 
+4. 'Motivation': 
+- Heisenberg's UP says: a function it determined by its time-frequency behaviour at infinity. 
+- Connection to Schrodinger: linear Schrodinger eq is morally Fourier \Rightarrow same principle applies. 
+- What happens for non-Fourier models? 
+
+5. 'Going deeper'
+- Recent results in metric geometry: Viazovska solved sphere packing by discrete Fourier interpolation; several subsequent ones. 
+- Track record: several important results in PDE recently translate Fourier intuition to PDE results. 
+- How much of that is true for discrete interpolation? 
+
+6. 'Main conjecture' 
+- Formulate main conjecture in non-technical terms; 
+- Frame algorithmic reconstruction as a consequence; 
+- Include pictures/diagrams to illustrate. 
+
+7. 'What sets this project apart' 
+- Main Conjecture: shifts how we interpret physical phenomena; 
+- Algorithmically reconstruction: breakthrough on numerics and simulations for physical systems; 
+- Having worked on both fields (fourier analysis and dispersive PDE) puts me in the perfect spot. 
+
+
+
+Use slides that resemble Braga's. Try to match the calm, clear, concise and light vibe it gives off. Do not include the pictures just yet - maybe include suggestions of diagrams and pictures to be included. Maybe something slightly wave-themed would be appropriate? S

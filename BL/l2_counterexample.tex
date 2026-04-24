@@ -1,0 +1,263 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\dist}{dist}
+
+\title{A counterexample to uniform $L^2$ stability in the Brascamp--Lieb variance inequality}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We show that the sharp uniform $L^1$ stability estimate for the Brascamp--Lieb
+variance inequality cannot be strengthened to an $L^2$ estimate with a constant
+depending only on the dimension.
+\end{abstract}
+
+\section{Statement}
+
+Let $\phi:\mathbb{R}^d\to\mathbb{R}\cup\{+\infty\}$ be an essentially continuous
+convex function with $0<\int e^{-\phi}<\infty$, and put
+\[
+  d\rho_\phi = Z_\phi^{-1}e^{-\phi}\,dx .
+\]
+For smooth strictly convex $\phi$, the Brascamp--Lieb deficit is
+\[
+  \delta_{\mathrm{BL},\phi}(f)
+  =
+  \int_{\mathbb{R}^d}
+  \bigl\langle (D^2\phi)^{-1}\nabla f,\nabla f\bigr\rangle\,d\rho_\phi
+  - \Var_{\rho_\phi}(f).
+\]
+The equality cases are
+\[
+  \mathcal O_{\mathrm{BL},\phi}
+  =
+  \{a\cdot \nabla \phi+b:\ a\in\mathbb R^d,\ b\in\mathbb R\}.
+\]
+
+\begin{theorem}\label{thm:l2-fails}
+Already in dimension one, there is no finite constant $C$ such that
+\[
+  \dist_{L^2(\rho_\phi)}(f,\mathcal O_{\mathrm{BL},\phi})
+  \le C\,\delta_{\mathrm{BL},\phi}(f)^{1/2}
+\]
+for every smooth strictly convex $\phi:\mathbb R\to\mathbb R$ with
+$\int e^{-\phi}<\infty$ and every locally Lipschitz $f\in L^2(\rho_\phi)$.
+Consequently no dimension-only constant can exist in any dimension $d\ge 1$.
+\end{theorem}
+
+The point is spectral.  In one dimension the BL Dirichlet form is
+\[
+  \mathcal E_\phi(f)=\int_{\mathbb R}\frac{|f'|^2}{\phi''}\,d\rho_\phi .
+\]
+The function $\phi'$ is always an eigenfunction with eigenvalue $1$.  We construct
+potentials for which there is a second, even, almost-eigenfunction with Rayleigh
+quotient arbitrarily close to $1$.  Since this even mode is orthogonal to the
+constants and to the odd function $\phi'$, it is far from the optimizer space
+compared with its deficit.
+
+\section{The construction}
+
+Fix a non-negative even $C^\infty$ bump $\kappa$ supported in $[-1,1]$ with
+$\int_{\mathbb R}\kappa=1$.  For parameters $S\gg1$, $\varepsilon>0$, and
+$\eta>0$, define a smooth even strictly convex potential by prescribing
+\[
+  \phi''_{S,\varepsilon,\eta}(x)
+  =
+  \eta
+  + \frac S\varepsilon\kappa\!\left(\frac{x-1}{\varepsilon}\right)
+  + \frac S\varepsilon\kappa\!\left(\frac{x+1}{\varepsilon}\right),
+  \qquad
+  \phi_{S,\varepsilon,\eta}(0)=\phi'_{S,\varepsilon,\eta}(0)=0.
+\]
+We choose $\varepsilon=\varepsilon(S)$ and $\eta=\eta(S)$ so small that
+\[
+  S\varepsilon\to0,\qquad \eta S^{-2}\to0,\qquad \eta\to0.
+\]
+For instance $\varepsilon=S^{-3}$ and $\eta=S^{-4}$ are enough.  Write
+\[
+  \phi_S:=\phi_{S,S^{-3},S^{-4}},
+  \qquad
+  \rho_S:=\rho_{\phi_S},
+  \qquad
+  Z_S:=\int_{\mathbb R}e^{-\phi_S}.
+\]
+
+The potential is almost flat on $[-1,1]$, while its derivative jumps from nearly
+$0$ to nearly $S$ across each of the two small layers near $\pm1$.  After the
+right layer, $\phi'_S=S+o(S)$ throughout the part of the right tail carrying
+essentially all of the tail mass.  Hence
+\begin{equation}\label{eq:normalization}
+  Z_S = 2+\frac{2}{S}+o(S^{-1}),
+  \qquad
+  \rho_S((1+\varepsilon,\infty))
+  =
+  \frac{1+o(1)}{Z_S S}.
+\end{equation}
+The same estimate holds on the left by symmetry.
+
+Now define an even Lipschitz test function $g_S$ as follows.  Let
+\[
+  I_S^+=(1-\varepsilon,1+\varepsilon),\qquad
+  I_S^-=(-1-\varepsilon,-1+\varepsilon).
+\]
+Set $g_S=0$ on $[-1+\varepsilon,1-\varepsilon]$ and $g_S=1$ on
+$(-\infty,-1-\varepsilon]\cup[1+\varepsilon,\infty)$.  Inside each transition
+layer choose the energy-minimising interpolation for the Dirichlet form
+$\mathcal E_{\phi_S}$ with these boundary values.  Equivalently, on $I_S^+$,
+\[
+  g_S'(x)
+  =
+  \frac{\phi_S''(x)e^{\phi_S(x)}}{\int_{I_S^+}\phi_S''(t)e^{\phi_S(t)}\,dt},
+\]
+and on $I_S^-$ we take the symmetric interpolation.
+
+\begin{lemma}\label{lem:energy}
+With the above choice,
+\[
+  \mathcal E_{\phi_S}(g_S)
+  =
+  \frac{2}{Z_S\int_{I_S^+}\phi_S''(t)e^{\phi_S(t)}\,dt}
+  =
+  \frac{2+o(1)}{Z_S S}.
+\]
+\end{lemma}
+
+\begin{proof}
+For a single interval $I$ and boundary jump $\Delta$, the minimum of
+\[
+  Z_S^{-1}\int_I \frac{|h'|^2}{\phi_S''}e^{-\phi_S}\,dx
+\]
+among all interpolants with jump $\Delta$ is
+\[
+  \frac{\Delta^2}{Z_S\int_I \phi_S''e^{\phi_S}}.
+\]
+This is the elementary one-dimensional resistance formula, obtained from the
+Euler--Lagrange equation
+$h'(\phi_S'')^{-1}e^{-\phi_S}=\text{constant}$.  Here $\Delta=1$ on both layers.
+Moreover $\phi_S=o(1)$ uniformly on $I_S^+$ because the layer width satisfies
+$S\varepsilon\to0$, while
+\[
+  \int_{I_S^+}\phi_S''=S+O(\eta\varepsilon)=S+o(S).
+\]
+Thus $\int_{I_S^+}\phi_S''e^{\phi_S}=S+o(S)$.
+\end{proof}
+
+\begin{lemma}\label{lem:variance}
+The variance of $g_S$ satisfies
+\[
+  \Var_{\rho_S}(g_S)=\frac{2+o(1)}{Z_S S}.
+\]
+\end{lemma}
+
+\begin{proof}
+The two exterior tails have total $\rho_S$-mass
+\[
+  q_S=\rho_S((-\infty,-1-\varepsilon]\cup[1+\varepsilon,\infty))
+      =\frac{2+o(1)}{Z_S S}
+\]
+by \eqref{eq:normalization}.  The transition layers have mass $o(S^{-1})$, since
+their length is $O(\varepsilon)$ and $e^{-\phi_S}=1+o(1)$ there.  Hence
+$g_S$ differs in $L^2(\rho_S)$ by $o(S^{-1/2})$ from the indicator of the two
+exterior tails.  Therefore
+\[
+  \Var_{\rho_S}(g_S)=q_S(1-q_S)+o(S^{-1})
+  =\frac{2+o(1)}{Z_S S}.
+\]
+\end{proof}
+
+\section{Conclusion}
+
+Let
+\[
+  f_S=g_S-\int g_S\,d\rho_S .
+\]
+Subtracting a constant does not change the BL energy or the variance, so
+\[
+  \delta_{\mathrm{BL},\phi_S}(f_S)
+  =
+  \mathcal E_{\phi_S}(g_S)-\Var_{\rho_S}(g_S).
+\]
+By the Brascamp--Lieb inequality this quantity is non-negative, and Lemmas
+\ref{lem:energy}--\ref{lem:variance} give
+\[
+  \frac{\mathcal E_{\phi_S}(g_S)}{\Var_{\rho_S}(g_S)}\longrightarrow 1.
+\]
+Equivalently,
+\[
+  \frac{\delta_{\mathrm{BL},\phi_S}(f_S)}
+       {\Var_{\rho_S}(f_S)}
+  =
+  \frac{\mathcal E_{\phi_S}(g_S)}{\Var_{\rho_S}(g_S)}-1
+  \longrightarrow 0.
+\]
+
+Since $\phi_S$ is even, $\phi_S'$ is odd.  The function $f_S$ is even and has
+mean zero.  Therefore $f_S$ is orthogonal in $L^2(\rho_S)$ both to constants and
+to $\phi_S'$, i.e. to the whole one-dimensional optimizer space
+$\mathcal O_{\mathrm{BL},\phi_S}=\{a\phi_S'+b\}$.  Thus
+\[
+  \dist_{L^2(\rho_S)}(f_S,\mathcal O_{\mathrm{BL},\phi_S})^2
+  =
+  \|f_S\|_{L^2(\rho_S)}^2
+  =
+  \Var_{\rho_S}(g_S).
+\]
+Consequently
+\[
+  \frac{
+  \dist_{L^2(\rho_S)}(f_S,\mathcal O_{\mathrm{BL},\phi_S})^2}
+  {\delta_{\mathrm{BL},\phi_S}(f_S)}
+  =
+  \frac{\Var_{\rho_S}(g_S)}
+       {\mathcal E_{\phi_S}(g_S)-\Var_{\rho_S}(g_S)}
+  \longrightarrow+\infty .
+\]
+No universal $L^2$ stability constant can therefore exist.  This proves
+Theorem~\ref{thm:l2-fails} in dimension one.
+
+For dimension $d>1$, take the product potential
+\[
+  \Phi_S(x,y)=\phi_S(x)+\frac{|y|^2}{2},
+  \qquad (x,y)\in\mathbb R\times\mathbb R^{d-1},
+\]
+and the test function $F_S(x,y)=f_S(x)$.  The product structure leaves the
+variance and BL energy unchanged.  Moreover $F_S$ is orthogonal to constants,
+to the odd function $\phi_S'(x)$, and to all Gaussian coordinate functions
+$y_1,\ldots,y_{d-1}$.  Hence its $L^2$ distance to the full optimizer space for
+$\Phi_S$ is still its $L^2$ norm, and the same divergent ratio proves the claim
+in every fixed dimension.
+
+\begin{remark}
+The earlier idea of using only an unbounded ordinary Poincare constant is not
+sufficient: the Brascamp--Lieb form is affinely invariant, while the Euclidean
+Poincare constant is not.  The construction above instead creates an actual
+near-equality mode for the BL Rayleigh quotient outside the optimizer space.
+\end{remark}
+
+\begin{thebibliography}{10}
+\bibitem{BLpaper}
+J.~M. Machado and J.~P. G. Ramos,
+\textit{Quantitative stability for Brascamp--Lieb and moment measures},
+arXiv:2511.22636v2.
+
+\bibitem{BL76}
+H.~J. Brascamp and E.~H. Lieb,
+\textit{On extensions of the Brunn--Minkowski and Pr\'ekopa--Leindler theorems,
+including inequalities for log-concave functions, and with an application to the
+diffusion equation},
+J. Funct. Anal. 22 (1976), 366--389.
+\end{thebibliography}
+
+\end{document}
