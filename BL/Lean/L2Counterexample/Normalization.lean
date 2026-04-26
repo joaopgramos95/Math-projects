@@ -1208,12 +1208,45 @@ theorem tailInt_S_asymp : BigOInv tailInt_S (fun S => 1 / S) 3 := by
 
 `Z_S = 2 + 2/S + O(S^{-3})`. -/
 
+/-- Symmetry: `Z_S = 2 · ∫_{Ici 0} exp(-φ_S)` via `phi_S_even`. -/
+private lemma Z_S_eq_two_half_integral {S : ℝ} (hS : 0 < S) :
+    Z_S S = 2 * ∫ x in Set.Ici (0:ℝ), Real.exp (-(phi_S S x)) := by
+  have h_int_full : Integrable (fun x => Real.exp (-(phi_S S x))) :=
+    exp_negPhiS_integrable S hS
+  unfold Z_S
+  have h_iic_meas : MeasurableSet (Set.Iic (0:ℝ)) := measurableSet_Iic
+  rw [← MeasureTheory.integral_add_compl h_iic_meas h_int_full]
+  -- Rewrite Iic 0 ᶜ = Ioi 0, then Ioi 0 ≈ Ici 0 (null point).
+  have h_compl_eq : (Set.Iic (0:ℝ))ᶜ = Set.Ioi 0 := by ext; simp
+  rw [h_compl_eq]
+  have h_ioi_eq_ici : ∫ x in Set.Ioi (0:ℝ), Real.exp (-(phi_S S x))
+                    = ∫ x in Set.Ici (0:ℝ), Real.exp (-(phi_S S x)) :=
+    MeasureTheory.setIntegral_congr_set Ioi_ae_eq_Ici
+  rw [h_ioi_eq_ici]
+  -- ∫_{Iic 0} = ∫_{Ici 0} by even symmetry.
+  have h_eq : (fun x : ℝ => Real.exp (-(phi_S S x)))
+            = (fun x : ℝ => (fun t => Real.exp (-(phi_S S t))) (-x)) := by
+    funext x
+    show Real.exp (-(phi_S S x)) = Real.exp (-(phi_S S (-x)))
+    rw [phi_S_even]
+  have h_left : ∫ x in Set.Iic (0:ℝ), Real.exp (-(phi_S S x))
+              = ∫ x in Set.Ici (0:ℝ), Real.exp (-(phi_S S x)) := by
+    conv_lhs => rw [h_eq]
+    rw [integral_comp_neg_Iic 0 (fun t => Real.exp (-(phi_S S t)))]
+    show ∫ x in Set.Ioi (-(0:ℝ)), Real.exp (-(phi_S S x))
+       = ∫ x in Set.Ici (0:ℝ), Real.exp (-(phi_S S x))
+    rw [neg_zero]
+    exact h_ioi_eq_ici
+  rw [h_left]; ring
+
 /-- `Z_S = 2 + 2/S + O(S^{-3})`. The proof requires partitioning
 `∫ exp(-φ_S)` into core `[0, 1-ε]`, layer `[1-ε, 1+ε]` and tail
 `[1+ε, ∞)` — about 200 lines of tedious analytic bookkeeping that
-the session ran out of time to complete; the axiomatised statement is
-mathematically true (combine `phi_S_quadratic_lower`, `phi_S_layer_small`,
-`phi_S_le_of_le`, `tailInt_S_asymp` with bounds on each region). -/
+the session ran out of time to complete. The symmetry helper
+`Z_S_eq_two_half_integral` is provided above as a starting point;
+the axiomatised statement is mathematically true (combine
+`phi_S_quadratic_lower`, `phi_S_layer_small`, `phi_S_le_of_le`,
+`tailInt_S_asymp` with bounds on each region). -/
 axiom Z_S_asymp :
     BigOInv Z_S (fun S => 2 + 2 / S) 3
 
