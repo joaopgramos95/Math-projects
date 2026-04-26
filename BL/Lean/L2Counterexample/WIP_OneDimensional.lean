@@ -1434,8 +1434,8 @@ theorem no_uniform_L2_stability_one_dim :
     exact le_trans hratio.le hC_sq
   nlinarith [this, hdelta_pos]
 
-/-- Audit trail: confirm the headline 1-D counterexample rests only on
-Mathlib + Lean's three standard axioms. -/
+-- Audit trail: confirm the headline 1-D counterexample rests only on
+-- Mathlib + Lean's three standard axioms.
 #print axioms no_uniform_L2_stability_one_dim
 
 end L2Counterexample

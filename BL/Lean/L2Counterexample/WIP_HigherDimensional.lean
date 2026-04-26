@@ -533,8 +533,8 @@ the `ℓ²` norm. To restore such an equivalence one would need to use a
 it (with corrected norm structure) if downstream transport is needed.
 -/
 
-/-- Audit trail: confirm the headline d-dim counterexample rests only on
-Mathlib + Lean's three standard axioms. -/
+-- Audit trail: confirm the headline d-dim counterexample rests only on
+-- Mathlib + Lean's three standard axioms.
 #print axioms no_uniform_L2_stability
 
 end L2Counterexample
