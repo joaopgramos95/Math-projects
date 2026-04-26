@@ -72,54 +72,101 @@ filled in. See `big_tasks.md` items #1–#13 for the construction.
 
 /-! `phi_S, phiDer_S, phiDer2_S, eps_S, eta_S` come from `Potential.lean`.
 `Z_S, q_S, t_S` come from `Normalization.lean`. `rho_S, A_S, g_S` come
-from `TestFunction.lean`. `delta_phi_S` and the related 1D theorems come
-from `OneDimensional.lean`. -/
+from `TestFunction.lean`. `ff_S, EE_phi_S, Var_f_S, delta_phi_S` and
+the 1D theorems come from `OneDimensional.lean`. The HigherDim-local
+quantities below are *aliases* for the OneDim symbols, so every
+HigherDim "fact" reduces to a previously proven OneDim theorem. -/
 
-/-- HigherDim-local 1D test function (kept as an opaque axiom; in the
-final consolidation it will be unified with `OneDimensional.ff_S`). -/
-axiom f_S : ℝ → ℝ → ℝ
+/-- HigherDim-local 1D test function: alias for `OneDimensional.ff_S`. -/
+noncomputable def f_S : ℝ → ℝ → ℝ := ff_S
 
-/-- HigherDim-local 1D Brascamp–Lieb energy. -/
-axiom E_phi_S : ℝ → ℝ
+/-- HigherDim-local 1D Brascamp–Lieb energy: alias for
+`OneDimensional.EE_phi_S`. -/
+noncomputable def E_phi_S : ℝ → ℝ := EE_phi_S
 
-/-- HigherDim-local 1D variance. -/
-axiom Var_phi_S : ℝ → ℝ
+/-- HigherDim-local 1D variance: alias for `OneDimensional.Var_f_S`. -/
+noncomputable def Var_phi_S : ℝ → ℝ := Var_f_S
 
-/-- HigherDim-local 1D squared distance from `f_S` to the optimizer
-span `{1, φ'_S}`. -/
-axiom distSq_phi_S : ℝ → ℝ
+/-- HigherDim-local 1D squared distance to the optimizer span. By
+`OneDimensional.dist_ffLp_optSubspace_sq_eq_var` this equals `Var_f_S`,
+so we use that as the definition. -/
+noncomputable def distSq_phi_S : ℝ → ℝ := Var_f_S
 
-/-- The HigherDim-local 1D deficit `δ = E − Var`. Distinct symbol from
-`OneDimensional.delta_phi_S` because the underlying `E_phi_S, Var_phi_S`
-above are distinct from `OneDimensional.EE_phi_S, Var_f_S`. -/
+/-- The HigherDim-local 1D deficit `δ = E − Var`. With the aliases
+above, this coincides with `OneDimensional.delta_phi_S`. -/
 noncomputable def delta_phi_S_HD (S : ℝ) : ℝ := E_phi_S S - Var_phi_S S
 
 @[simp] lemma delta_phi_S_HD_def (S : ℝ) :
     delta_phi_S_HD S = E_phi_S S - Var_phi_S S := rfl
 
-/-- Eventually the HigherDim-local deficit is strictly positive
-(downstream of `big_tasks.md` #13). -/
-axiom delta_phi_S_HD_eventually_pos :
-    ∃ S₀ : ℝ, ∀ S : ℝ, S₀ ≤ S → 0 < delta_phi_S_HD S
+@[simp] lemma delta_phi_S_HD_eq_delta_phi_S (S : ℝ) :
+    delta_phi_S_HD S = delta_phi_S S := by
+  show E_phi_S S - Var_phi_S S = EE_phi_S S - Var_f_S S
+  rfl
 
-/-- One-dimensional divergence of the ratio: `distSq / δ → ∞`. -/
-axiom distSq_phi_S_over_delta_unbounded :
+/-- Eventually the HigherDim-local deficit is strictly positive,
+derived from `OneDimensional.delta_phi_S_eventually_pos`. -/
+theorem delta_phi_S_HD_eventually_pos :
+    ∃ S₀ : ℝ, ∀ S : ℝ, S₀ ≤ S → 0 < delta_phi_S_HD S := by
+  obtain ⟨S₀, _, h⟩ := delta_phi_S_eventually_pos
+  refine ⟨S₀, fun S hS => ?_⟩
+  rw [delta_phi_S_HD_eq_delta_phi_S]
+  exact h S hS
+
+/-- One-dimensional divergence of the ratio: `distSq / δ → ∞`. Direct
+consequence of `OneDimensional.var_over_delta_unbounded` with
+`distSq = Var`. -/
+theorem distSq_phi_S_over_delta_unbounded :
     ∀ K : ℝ, ∃ S₀ : ℝ, ∀ S : ℝ, S₀ ≤ S →
-      0 < delta_phi_S_HD S → K * delta_phi_S_HD S < distSq_phi_S S
+      0 < delta_phi_S_HD S → K * delta_phi_S_HD S < distSq_phi_S S := by
+  intro K
+  obtain ⟨S₀, _hS₀_pos, h⟩ := var_over_delta_unbounded K
+  refine ⟨S₀, fun S hS _hpos => ?_⟩
+  show K * delta_phi_S_HD S < Var_f_S S
+  rw [delta_phi_S_HD_eq_delta_phi_S]
+  exact h S hS
 
-/-- Final 1D no-uniform-stability statement, packaged as an axiom for use
-in the `d = 1` branch of the umbrella theorem. -/
-axiom no_uniform_L2_stability_1D :
+/-- Final 1D no-uniform-stability statement, derived from
+`OneDimensional.var_over_delta_unbounded`. -/
+theorem no_uniform_L2_stability_1D :
     ¬ ∃ C : ℝ, ∀ S : ℝ,
-        0 < delta_phi_S_HD S → distSq_phi_S S ≤ C ^ 2 * delta_phi_S_HD S
+        0 < delta_phi_S_HD S → distSq_phi_S S ≤ C ^ 2 * delta_phi_S_HD S := by
+  rintro ⟨C, hC⟩
+  -- Pick S large enough that 0 < δ and Var > (C²+1) · δ.
+  obtain ⟨S₀_pos, _hS₀_pos_pos, hpos⟩ := delta_phi_S_eventually_pos
+  obtain ⟨S₀_rat, _hS₀_rat_pos, hrat⟩ := var_over_delta_unbounded (C ^ 2 + 1)
+  set S := max S₀_pos S₀_rat + 1 with hS_def
+  have hS_ge1 : S₀_pos ≤ S := by
+    rw [hS_def]; linarith [le_max_left S₀_pos S₀_rat]
+  have hS_ge2 : S₀_rat ≤ S := by
+    rw [hS_def]; linarith [le_max_right S₀_pos S₀_rat]
+  have hdelta_pos : 0 < delta_phi_S S := hpos S hS_ge1
+  have hdelta_HD_pos : 0 < delta_phi_S_HD S := by
+    rw [delta_phi_S_HD_eq_delta_phi_S]; exact hdelta_pos
+  have hratio : (C ^ 2 + 1) * delta_phi_S S < Var_f_S S := hrat S hS_ge2
+  -- Apply hypothesis at S.
+  have hbound := hC S hdelta_HD_pos
+  -- Unfold distSq, delta_phi_S_HD via their defs.
+  have hbound' : Var_f_S S ≤ C ^ 2 * delta_phi_S S := by
+    have hdist : distSq_phi_S S = Var_f_S S := rfl
+    rw [hdist, delta_phi_S_HD_eq_delta_phi_S] at hbound
+    exact hbound
+  linarith
 
-/-- `f_S` integrates to zero against `ρ_S` (centred test function). -/
-axiom f_S_integral_zero (S : ℝ) :
-    ∫ x, f_S S x ∂(rho_S S) = 0
+/-- `f_S` integrates to zero against `ρ_S`, from
+`OneDimensional.integral_ff_S`. -/
+theorem f_S_integral_zero (S : ℝ) :
+    ∫ x, f_S S x ∂(rho_S S) = 0 :=
+  integral_ff_S S
 
-/-- `f_S` is orthogonal to `φ'_S` in `L²(ρ_S)` (parity package). -/
-axiom f_S_orth_phiDer_S (S : ℝ) :
-    ∫ x, phiDer_S S x * f_S S x ∂(rho_S S) = 0
+/-- `f_S` is orthogonal to `φ'_S` in `L²(ρ_S)`, from
+`OneDimensional.integral_ff_phiDer_zero` (with the multiplication
+order swapped). -/
+theorem f_S_orth_phiDer_S (S : ℝ) :
+    ∫ x, phiDer_S S x * f_S S x ∂(rho_S S) = 0 := by
+  have h := integral_ff_phiDer_zero S
+  show ∫ x, phiDer_S S x * ff_S S x ∂(rho_S S) = 0
+  simpa [mul_comm] using h
 
 /-! ## §2. Standard Gaussian on `Fin (d-1) → ℝ`
 

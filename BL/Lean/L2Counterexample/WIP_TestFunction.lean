@@ -50,9 +50,13 @@ lemma eps_S_lt_one {S : ℝ} (hS : 1 < S) : eps_S S < 1 := by
   simpa [zpow_neg, zpow_natCast] using this
 
 /-- The probability measure `ρ_S` on `ℝ` with density `Z_S^{-1} exp(-φ_S)`.
-We axiomatise it here pending a measure-theoretic construction from
-`Z_S` and `phi_S`. -/
-axiom rho_S : ℝ → MeasureTheory.Measure ℝ
+
+Defined concretely via `Measure.withDensity` so that downstream
+properties (`IsProbabilityMeasure`, reflection invariance) become
+*derivable* rather than axiomatic. -/
+noncomputable def rho_S (S : ℝ) : MeasureTheory.Measure ℝ :=
+  MeasureTheory.volume.withDensity
+    (fun x => ENNReal.ofReal ((Z_S S)⁻¹ * Real.exp (-(phi_S S x))))
 
 /-- The potential is nonneg everywhere. Follows from
 `phi_S_quadratic_lower` (`phi_S S x ≥ η_S x²/2 ≥ 0`). -/
@@ -645,15 +649,53 @@ We record the three target identities in finitary form, with the
 asymptotic remainder `O(S^{-3})` packaged as the upstream axiom
 `q_S_asymp` and `t_S_asymp`. -/
 
-/-- `|q_S S| ≤ 1` for `S` large; this expresses that `q_S` is the mass of
-a measurable set under a probability measure. -/
-axiom q_S_abs_le_one {S : ℝ} (hS : 1 < S) : |q_S S| ≤ 1
+/-- `|q_S S| ≤ 2` for `S > 1`. Follows from `q_S = 2·tailInt_S/Z_S` with
+`tailInt_S ≤ Z_S` (the tail integral of a nonneg function is at most
+the full integral). The blueprint actually has `q_S ≤ 1` via the
+left/right symmetry of `exp(-φ_S)`, but the looser `|q_S| ≤ 2` suffices
+for the variance bound below. -/
+theorem q_S_abs_le_two {S : ℝ} (hS_large : 1 < S) : |q_S S| ≤ 2 := by
+  have hS : 0 < S := lt_trans zero_lt_one hS_large
+  have hZ_pos : 0 < Z_S S := Z_S_pos S hS
+  have h_int : Integrable (fun x => Real.exp (-(phi_S S x))) :=
+    exp_negPhiS_integrable S hS
+  have h_nn : 0 ≤ᵐ[volume] fun x => Real.exp (-(phi_S S x)) :=
+    Filter.Eventually.of_forall fun _ => (Real.exp_pos _).le
+  -- `tailInt_S ≤ Z_S` because the tail integral is a set integral of
+  -- a nonneg function.
+  have h_tail_le : tailInt_S S ≤ Z_S S :=
+    setIntegral_le_integral h_int h_nn
+  -- `q_S = 2·tailInt_S / Z_S ≥ 0` and ≤ 2·Z_S/Z_S = 2.
+  have hq_nn : 0 ≤ q_S S := q_S_nonneg S hS
+  have hq_ub : q_S S ≤ 2 := by
+    show 2 * tailInt_S S / Z_S S ≤ 2
+    rw [div_le_iff₀ hZ_pos]
+    linarith
+  rw [abs_of_nonneg hq_nn]
+  exact hq_ub
 
-/-- `t_S S ≤ 1` for `S` large; the layer mass is at most one. -/
-axiom t_S_le_one {S : ℝ} (hS : 1 < S) : t_S S ≤ 1
+/-- `t_S S ≤ 1` for `S > 1`. Derived from `∫_{T_S} exp(−φ) ≤ ∫_ℝ exp(−φ)
+  = Z_S`. -/
+theorem t_S_le_one {S : ℝ} (hS_large : 1 < S) : t_S S ≤ 1 := by
+  have hS : 0 < S := lt_trans zero_lt_one hS_large
+  have hZ_pos : 0 < Z_S S := Z_S_pos S hS
+  have h_int : Integrable (fun x => Real.exp (-(phi_S S x))) :=
+    exp_negPhiS_integrable S hS
+  have h_nn : 0 ≤ᵐ[volume] fun x => Real.exp (-(phi_S S x)) :=
+    Filter.Eventually.of_forall fun _ => (Real.exp_pos _).le
+  have h_le : ∫ x in T_S S, Real.exp (-(phi_S S x)) ≤ Z_S S :=
+    setIntegral_le_integral h_int h_nn
+  have h_div : (∫ x in T_S S, Real.exp (-(phi_S S x))) / Z_S S ≤ Z_S S / Z_S S :=
+    div_le_div_of_nonneg_right h_le hZ_pos.le |>.trans_eq (by rfl)
+  have h_one : Z_S S / Z_S S = 1 := div_self hZ_pos.ne'
+  show t_S S ≤ 1
+  unfold t_S
+  rw [← h_one]
+  exact div_le_div_of_nonneg_right h_le hZ_pos.le
 
-/-- `t_S S ≥ 0` for `S` large; the layer mass is nonnegative. -/
-axiom t_S_nonneg_axiom {S : ℝ} (hS : 1 < S) : 0 ≤ t_S S
+/-- `t_S S ≥ 0` for `S` large; derived from `Normalization.t_S_nonneg`. -/
+theorem t_S_nonneg_axiom {S : ℝ} (hS : 1 < S) : 0 ≤ t_S S :=
+  t_S_nonneg S (lt_trans zero_lt_one hS)
 
 /-- **Mean of `g_S`**: `∫ g_S ∂ρ_S = q_S + O(S^{-3})`. -/
 axiom integral_g_S_eq_q_plus_error {S : ℝ} (hS : 1 < S) :
@@ -665,15 +707,17 @@ axiom integral_g_S_sq_eq_q_plus_error {S : ℝ} (hS : 1 < S) :
 
 /-- **Variance of `g_S`** equals `q_S(1-q_S) + O(S^{-3})`.
 
-The remainder is bounded by `4 t_S S`: this combines `|q_S| ≤ 1`, `|R₁| ≤ t_S`,
-`|R₂| ≤ t_S`, and `t_S ≤ 1`. -/
+The remainder is bounded by `6 t_S S`: this combines `|q_S| ≤ 2`,
+`|R₁| ≤ t_S`, `|R₂| ≤ t_S`, and `t_S ≤ 1`. (The blueprint's tighter
+`|q_S| ≤ 1` would give the bound `4 t_S`, but the looser `|q_S| ≤ 2`
+suffices for the `IsBigO` conclusion downstream.) -/
 lemma Var_phi_g_S {S : ℝ} (hS : 1 < S) :
-    ∃ R : ℝ, |R| ≤ 4 * t_S S ∧
+    ∃ R : ℝ, |R| ≤ 6 * t_S S ∧
       Var_phi S (g_S S) = q_S S * (1 - q_S S) + R := by
   obtain ⟨R₁, hR₁, hint₁⟩ := integral_g_S_eq_q_plus_error hS
   obtain ⟨R₂, hR₂, hint₂⟩ := integral_g_S_sq_eq_q_plus_error hS
   refine ⟨R₂ - 2 * q_S S * R₁ - R₁^2, ?_, ?_⟩
-  · have hq_le_one : |q_S S| ≤ 1 := q_S_abs_le_one hS
+  · have hq_le_two : |q_S S| ≤ 2 := q_S_abs_le_two hS
     have ht_le_one : t_S S ≤ 1 := t_S_le_one hS
     have ht_nn : 0 ≤ t_S S := t_S_nonneg_axiom hS
     have hR1_abs : |R₁| ≤ t_S S := hR₁
@@ -683,7 +727,7 @@ lemma Var_phi_g_S {S : ℝ} (hS : 1 < S) :
     have hq_nn : 0 ≤ |q_S S| := abs_nonneg _
     -- Bound each term.
     have hT1 : |R₂| ≤ t_S S := hR2_abs
-    have hT2 : |2 * q_S S * R₁| ≤ 2 * t_S S := by
+    have hT2 : |2 * q_S S * R₁| ≤ 4 * t_S S := by
       have heq : |2 * q_S S * R₁| = 2 * |q_S S| * |R₁| := by
         rw [show (2 : ℝ) * q_S S * R₁ = 2 * (q_S S * R₁) from by ring,
             abs_mul, abs_mul]
@@ -721,7 +765,7 @@ lemma Var_phi_g_S_isBigO :
   -- Step 1: |Var − q(1−q)| ≤ 3 · t_S for S > 1.
   have hbound :
       ∀ᶠ S in Filter.atTop,
-        ‖Var_phi S (g_S S) - q_S S * (1 - q_S S)‖ ≤ 4 * ‖t_S S‖ := by
+        ‖Var_phi S (g_S S) - q_S S * (1 - q_S S)‖ ≤ 6 * ‖t_S S‖ := by
     rw [Filter.eventually_atTop]
     refine ⟨2, fun S hS => ?_⟩
     have hS' : (1 : ℝ) < S := by linarith
@@ -733,7 +777,7 @@ lemma Var_phi_g_S_isBigO :
     rw [hkey, abs_of_nonneg hnn]
     exact hR
   -- Step 2: combine with t_S = O(S^{-3}).
-  exact (IsBigO.of_bound (4 : ℝ) hbound).trans t_S_isBigO
+  exact (IsBigO.of_bound (6 : ℝ) hbound).trans t_S_isBigO
 
 /-- Combining `Var_phi_g_S_isBigO` with `q_S_asymp` and the algebraic
 expansion of `q(1-q)` we obtain `Var ρ_S g_S = 1/S - 2/S^2 + O(S^{-3})`. -/

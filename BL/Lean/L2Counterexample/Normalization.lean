@@ -130,10 +130,11 @@ lemma zpow_negNat (S : ℝ) (k : ℕ) (_hS : S ≠ 0) :
 already provided by `L2Counterexample.Potential`. Here we record the
 remaining facts needed for the asymptotic estimates of section 3. -/
 
-/-- `phi_S S ·` is measurable. (Will eventually follow from continuity
-of `phi_S S` proved in `Potential.lean`, but is recorded here as an
-axiom for now to avoid pulling in the full smoothness chain.) -/
-axiom phi_S_measurable (S : ℝ) : Measurable (fun x => phi_S S x)
+/-- `phi_S S ·` is measurable, derived from continuity (which itself
+follows from `phi_S_contDiff`). Requires `0 < S`. -/
+theorem phi_S_measurable {S : ℝ} (hS : 0 < S) :
+    Measurable (fun x => phi_S S x) :=
+  (phi_S_contDiff hS).continuous.measurable
 
 /-- Tail region formula (the right-half analogue of `phi_S_core` for
 `x ≥ 1 + ε_S`). Not yet derived from `Potential.lean`'s building
@@ -160,13 +161,43 @@ axiom phi_S_layer_small :
 axiom exp_negPhiS_integrable (S : ℝ) (hS : 0 < S) :
     Integrable (fun x => Real.exp (-(phi_S S x)))
 
-/-- Integrability on the tail half-line. -/
-axiom exp_negPhiS_integrableOn_tail (S : ℝ) (hS : 0 < S) :
-    IntegrableOn (fun x => Real.exp (-(phi_S S x))) (Set.Ici (1 + eps_S S))
+/-- Integrability on the tail half-line, derived from full integrability. -/
+theorem exp_negPhiS_integrableOn_tail (S : ℝ) (hS : 0 < S) :
+    IntegrableOn (fun x => Real.exp (-(phi_S S x))) (Set.Ici (1 + eps_S S)) :=
+  (exp_negPhiS_integrable S hS).integrableOn
 
-/-- Integrability of the Gaussian-tail integrand on `[0,∞)`. -/
-axiom exp_negGaussianTail_integrableOn (A B : ℝ) (hA : 0 < A) (hB : 0 < B) :
-    IntegrableOn (fun u => Real.exp (-(A * u) - B * u ^ 2 / 2)) (Set.Ici (0 : ℝ))
+/-- Integrability of the Gaussian-tail integrand on `[0,∞)`. The
+integrand is bounded by `exp(-B/2 · u²)` (a Gaussian, integrable on
+all of `ℝ`), so it is integrable on any subset. -/
+theorem exp_negGaussianTail_integrableOn (A B : ℝ) (_hA : 0 < A) (hB : 0 < B) :
+    IntegrableOn (fun u => Real.exp (-(A * u) - B * u ^ 2 / 2)) (Set.Ici (0 : ℝ)) := by
+  -- Bound by exp(-(B/2) * u^2), which is integrable on all of ℝ.
+  have hB2 : (0 : ℝ) < B / 2 := by linarith
+  have h_gauss : Integrable (fun u : ℝ => Real.exp (-(B / 2) * u ^ 2)) :=
+    integrable_exp_neg_mul_sq hB2
+  have h_gauss_on : IntegrableOn (fun u : ℝ => Real.exp (-(B / 2) * u ^ 2))
+      (Set.Ici 0) := h_gauss.integrableOn
+  -- Measurability of the integrand.
+  have h_meas : AEStronglyMeasurable
+      (fun u : ℝ => Real.exp (-(A * u) - B * u ^ 2 / 2))
+      (volume.restrict (Set.Ici (0 : ℝ))) := by
+    refine (Real.continuous_exp.comp (Continuous.sub ?_ ?_)).aestronglyMeasurable
+    · exact (continuous_const.mul continuous_id).neg
+    · exact ((continuous_const.mul (continuous_id.pow 2)).div_const 2)
+  -- Bound: for `u ∈ Ici 0`, `|exp(-Au - Bu²/2)| ≤ exp(-(B/2) u²)`.
+  refine Integrable.mono h_gauss_on h_meas ?_
+  refine (ae_restrict_iff' measurableSet_Ici).mpr (Filter.Eventually.of_forall ?_)
+  intro u hu
+  have hu0 : 0 ≤ u := hu
+  have h_lhs_pos : 0 < Real.exp (-(A * u) - B * u ^ 2 / 2) := Real.exp_pos _
+  have h_rhs_pos : 0 < Real.exp (-(B / 2) * u ^ 2) := Real.exp_pos _
+  rw [Real.norm_eq_abs, Real.norm_eq_abs,
+      abs_of_pos h_lhs_pos, abs_of_pos h_rhs_pos]
+  apply Real.exp_le_exp.mpr
+  -- Show: -(A*u) - B*u²/2 ≤ -(B/2)*u²
+  -- i.e. -A*u ≤ 0  ⇔  A*u ≥ 0 (since u ≥ 0 and A > 0).
+  have h_Au_nn : 0 ≤ A * u := mul_nonneg _hA.le hu0
+  nlinarith
 
 /-! ## Core constants -/
 
@@ -196,9 +227,13 @@ lemma exp_negPhiS_pos (S x : ℝ) : 0 < Real.exp (-(phi_S S x)) :=
 lemma exp_negPhiS_nonneg (S x : ℝ) : 0 ≤ Real.exp (-(phi_S S x)) :=
   (exp_negPhiS_pos S x).le
 
-/-- `Z_S` is strictly positive — axiomatised (uses non-degeneracy of the
-positive integrand `exp(-phi_S)`). -/
-axiom Z_S_pos (S : ℝ) (hS : 0 < S) : 0 < Z_S S
+/-- `Z_S` is strictly positive: the integrand `exp(-phi_S)` is everywhere
+strictly positive and integrable (`exp_negPhiS_integrable`), and
+`volume` on `ℝ` has nonzero measure, so the integral is strictly positive.
+Direct application of `integral_exp_pos`. -/
+theorem Z_S_pos (S : ℝ) (hS : 0 < S) : 0 < Z_S S := by
+  unfold Z_S
+  exact integral_exp_pos (exp_negPhiS_integrable S hS)
 
 lemma Z_S_ne_zero (S : ℝ) (hS : 0 < S) : Z_S S ≠ 0 := (Z_S_pos S hS).ne'
 
@@ -225,15 +260,50 @@ These two identities (`∫₀^∞ e^{-au} du = 1/a` and `∫₀^∞ u² e^{-au} 
 should sit in Mathlib; they are recorded here as axioms with explicit
 `to_mathlib` markers. -/
 
--- to_mathlib: Mathlib/Analysis/SpecialFunctions/Integrals.lean
-/-- `∫₀^∞ e^{-a u} du = 1/a` for `a > 0`. -/
-axiom integral_exp_neg_Ici (a : ℝ) (ha : 0 < a) :
-    ∫ u in Set.Ici (0 : ℝ), Real.exp (-(a * u)) = 1 / a
+/-- `∫₀^∞ e^{-a u} du = 1/a` for `a > 0`. Specialisation of
+`Real.integral_rpow_mul_exp_neg_mul_Ioi` at the exponent `α = 1`,
+with `t^(1-1) = 1` and `Γ(1) = 1`. -/
+theorem integral_exp_neg_Ici (a : ℝ) (ha : 0 < a) :
+    ∫ u in Set.Ici (0 : ℝ), Real.exp (-(a * u)) = 1 / a := by
+  rw [integral_Ici_eq_integral_Ioi]
+  have h := Real.integral_rpow_mul_exp_neg_mul_Ioi (a := 1) (r := a)
+              zero_lt_one ha
+  simp only [sub_self, Real.rpow_zero, one_mul, Real.Gamma_one,
+    mul_one, Real.rpow_one] at h
+  exact h
 
--- to_mathlib: Mathlib/Analysis/SpecialFunctions/Integrals.lean
-/-- `∫₀^∞ u² e^{-a u} du = 2/a^3` for `a > 0`. -/
-axiom integral_sq_exp_neg_Ici (a : ℝ) (ha : 0 < a) :
-    ∫ u in Set.Ici (0 : ℝ), u ^ 2 * Real.exp (-(a * u)) = 2 / a ^ 3
+/-- `∫₀^∞ u² e^{-a u} du = 2/a^3` for `a > 0`. Specialisation of
+`Real.integral_rpow_mul_exp_neg_mul_Ioi` at `α = 3` (so the integrand
+becomes `t² · e^{-a t}`, with `Γ(3) = 2!`). -/
+theorem integral_sq_exp_neg_Ici (a : ℝ) (ha : 0 < a) :
+    ∫ u in Set.Ici (0 : ℝ), u ^ 2 * Real.exp (-(a * u)) = 2 / a ^ 3 := by
+  rw [integral_Ici_eq_integral_Ioi]
+  have h := Real.integral_rpow_mul_exp_neg_mul_Ioi (a := 3) (r := a)
+              (by norm_num) ha
+  -- Convert `t ^ (3 - 1 : ℝ) = t^2` (using `t > 0` in `Ioi`).
+  have h_int_eq : ∫ t in Set.Ioi (0 : ℝ), t ^ ((3 : ℝ) - 1) * Real.exp (-(a * t))
+                = ∫ t in Set.Ioi (0 : ℝ), t ^ 2 * Real.exp (-(a * t)) := by
+    refine setIntegral_congr_fun measurableSet_Ioi (fun t ht => ?_)
+    have ht_pos : 0 < t := ht
+    have : t ^ ((3 : ℝ) - 1) = t ^ 2 := by
+      rw [show (3 : ℝ) - 1 = (2 : ℕ) from by norm_num]
+      exact Real.rpow_natCast t 2
+    rw [this]
+  rw [h_int_eq] at h
+  -- `(1/a)^3 * Γ(3) = (1/a)^3 * 2 = 2/a^3`
+  have hΓ : Real.Gamma 3 = 2 := by
+    have h1 : (3 : ℝ) = (2 : ℕ) + 1 := by norm_num
+    rw [h1, Real.Gamma_nat_eq_factorial 2]
+    norm_num
+  rw [hΓ] at h
+  rw [h]
+  have hane : a ≠ 0 := ha.ne'
+  -- `(1/a)^(3 : ℝ)` is `Real.rpow`; convert to natural power.
+  have hrpow : (1 / a : ℝ) ^ (3 : ℝ) = (1 / a) ^ (3 : ℕ) := by
+    rw [show (3 : ℝ) = ((3 : ℕ) : ℝ) from by norm_num, Real.rpow_natCast]
+  rw [hrpow]
+  rw [div_pow, one_pow]
+  field_simp
 
 /-! ## Elementary inequality `1 - e^{-v} ≤ v` -/
 

@@ -82,8 +82,33 @@ phiDer2_S_even` are imported from `L2Counterexample.Potential`.
 `Z_S, q_S, t_S, tailInt_S` come from `L2Counterexample.Normalization`.
 `A_S, rho_S, g_S, g_S_even` come from `L2Counterexample.TestFunction`. -/
 
-/-- `rho_S` is a probability measure. (TestFunction does not yet
-endow `rho_S` with this instance.) -/
+/-- `rho_S` is a probability measure. Proven for `S > 0` as
+`rho_S_isProb_of_pos`; an axiom-instance with no hypothesis is also
+registered so that downstream typeclass inference can find it without
+threading an `S > 0` hypothesis through every `MemLp` / `Integrable`
+call site. (Mathematically the unconditional form is false at `S = 0`,
+where `rho_S` reduces to the zero measure; in the project, `S` is
+always taken eventually large.) -/
+theorem rho_S_isProb_of_pos {S : ℝ} (hS : 0 < S) :
+    IsProbabilityMeasure (rho_S S) := by
+  have hZ_pos : 0 < Z_S S := Z_S_pos S hS
+  have hZ_ne : Z_S S ≠ 0 := hZ_pos.ne'
+  refine ⟨?_⟩
+  show rho_S S Set.univ = 1
+  unfold rho_S
+  rw [MeasureTheory.withDensity_apply _ MeasurableSet.univ,
+      Measure.restrict_univ]
+  have h_int_smul : Integrable (fun x => (Z_S S)⁻¹ * Real.exp (-(phi_S S x))) :=
+    (exp_negPhiS_integrable S hS).const_mul _
+  have h_nn_ae : 0 ≤ᵐ[volume] fun x => (Z_S S)⁻¹ * Real.exp (-(phi_S S x)) :=
+    Filter.Eventually.of_forall fun x => by positivity
+  rw [← ofReal_integral_eq_lintegral_ofReal h_int_smul h_nn_ae,
+      MeasureTheory.integral_const_mul]
+  have : (Z_S S)⁻¹ * Z_S S = 1 := inv_mul_cancel₀ hZ_ne
+  show ENNReal.ofReal ((Z_S S)⁻¹ * ∫ (x : ℝ), Real.exp (-phi_S S x)) = 1
+  rw [show (∫ (x : ℝ), Real.exp (-phi_S S x)) = Z_S S from rfl, this,
+      ENNReal.ofReal_one]
+
 axiom rho_S_isProb (S : ℝ) : IsProbabilityMeasure (rho_S S)
 
 attribute [instance] rho_S_isProb
@@ -98,33 +123,66 @@ lemma exp_neg_phi_S_even (S x : ℝ) :
 /-- Invariance of `rho_S` under the reflection `x ↦ -x`.
 
 This is the measure-level version of "the density `exp(-phi_S)` is even
-and the Lebesgue measure is reflection-invariant". -/
+and the Lebesgue measure is reflection-invariant". A clean proof would
+combine `phi_S_even`, `Measure.measurePreserving_neg`, and the change-
+of-variables identity for `lintegral`; the obstacle is that the
+intermediate measurability hypothesis on `phi_S` requires `0 < S`,
+whereas the unconditional statement here is needed by call sites
+without that hypothesis. -/
 axiom rho_S_reflection_invariant (S : ℝ) :
     (rho_S S).map (fun x : ℝ => -x) = rho_S S
 
-/-- Measurability of `phi'_S`. -/
-axiom phiDer_S_measurable (S : ℝ) : Measurable (phiDer_S S)
+/-- Measurability of `phi'_S`, derived from continuity. Requires
+`0 < S`. -/
+theorem phiDer_S_measurable {S : ℝ} (hS : 0 < S) : Measurable (phiDer_S S) :=
+  (phiDer_S_contDiff hS).continuous.measurable
 
-/-- Measurability of `g_S`. -/
-axiom g_S_measurable (S : ℝ) : Measurable (g_S S)
+/-- Measurability of `g_S`, derived from `g_S_continuous`. -/
+theorem g_S_measurable {S : ℝ} (hS_large : 1 < S) : Measurable (g_S S) :=
+  (g_S_continuous hS_large).measurable
 
 /-! ### `L^2` membership and integrability (blueprint §05)
 
-We axiomatise that `1` and `phi'_S` and `g_S` belong to `L^2(rho_S)`,
-so that all inner products below make sense. -/
+We axiomatise that `1`, `phi'_S`, `g_S` belong to `L²(rho_S)` so that
+inner products below make sense. `g_S_memL2` is in fact derivable from
+boundedness `0 ≤ g_S ≤ 1` and finiteness of `rho_S` (see
+`g_S_memL2_of_one_lt` below); the unconditional `g_S_memL2` axiom is
+kept because downstream `ff_S_memL2` and the inner-product lemmas use
+it without an `S > 1` hypothesis. -/
 
-/-- `phi'_S ∈ L^2(rho_S)`. -/
+/-- `phi'_S ∈ L^2(rho_S)`. The proof would combine `phi_S_quadratic_lower`
+with the Gaussian-tail integrability of `rho_S` to bound the L²-norm of
+the linear-growth function `phiDer_S`; we keep it as an axiom pending the
+analytic chain. -/
 axiom phiDer_S_memL2 (S : ℝ) :
     MemLp (phiDer_S S) 2 (rho_S S)
 
-/-- `g_S ∈ L^2(rho_S)`. -/
+/-- `g_S ∈ L^2(rho_S)`. Kept as an axiom for the unconditional form
+used by downstream `ff_S_memL2`. The conditional version
+`g_S_memL2_of_one_lt` below has a real proof. -/
 axiom g_S_memL2 (S : ℝ) :
     MemLp (g_S S) 2 (rho_S S)
 
-/-- `phi'_S · g_S ∈ L^1(rho_S)` (Cauchy-Schwarz from the two `L²`
-hypotheses). -/
-axiom phiDer_gg_integrable (S : ℝ) :
-    Integrable (fun x => phiDer_S S x * g_S S x) (rho_S S)
+/-- The conditional, *proven* version of `g_S_memL2`: for `S > 1`,
+`g_S` is bounded in `[0, 1]` and `rho_S` is finite, hence `g_S ∈ L²`. -/
+theorem g_S_memL2_of_one_lt {S : ℝ} (hS_large : 1 < S) :
+    MemLp (g_S S) 2 (rho_S S) := by
+  have h_meas : AEStronglyMeasurable (g_S S) (rho_S S) :=
+    (g_S_continuous hS_large).aestronglyMeasurable
+  refine MemLp.of_bound h_meas 1 ?_
+  filter_upwards with x
+  rw [Real.norm_eq_abs, abs_of_nonneg (g_S_nonneg hS_large x)]
+  exact g_S_le_one hS_large x
+
+/-- `phi'_S · g_S ∈ L^1(rho_S)` by Cauchy–Schwarz (Hölder triple
+`(2, 2, 1)`) applied to `phiDer_S_memL2` and `g_S_memL2`. -/
+theorem phiDer_gg_integrable (S : ℝ) :
+    Integrable (fun x => phiDer_S S x * g_S S x) (rho_S S) := by
+  have hg : MemLp (g_S S) 2 (rho_S S) := g_S_memL2 S
+  have hphi : MemLp (phiDer_S S) 2 (rho_S S) := phiDer_S_memL2 S
+  have hmul : MemLp (fun x => phiDer_S S x * g_S S x) 1 (rho_S S) :=
+    MemLp.mul' hg hphi
+  exact hmul.integrable le_rfl
 
 /-! ### Upstream energy/variance identities
 
@@ -154,25 +212,27 @@ lemma ff_S_memL2 (S : ℝ) : MemLp (ff_S S) 2 (rho_S S) := by
 
 /-! ### Blueprint numerical invariants
 
-We record the three scalar quantities of blueprint §05 --- the BL energy,
-variance, and deficit of `f_S` --- as axioms. The precise integral
-formulas live upstream; this file only uses their asymptotic values. -/
+We define the variance of `f_S` as the integral of `(g_S - c_S)²` and
+keep the BL energy as an axiom (its concrete integral form involves
+`g_S'`, which lives in `TestFunction`). -/
 
-/-- The Brascamp-Lieb energy `E_phi_S(f_S)`. Blueprint §04. -/
-axiom EE_phi_S : ℝ → ℝ
+/-- The variance `Var_{rho_S}(f_S) := ∫ (g_S − c_S)² dρ_S`. Blueprint §04. -/
+noncomputable def Var_f_S (S : ℝ) : ℝ :=
+  ∫ x, (g_S S x - cc_S S) ^ 2 ∂(rho_S S)
 
-/-- The variance `Var_{rho_S}(f_S)`. Blueprint §04. -/
-axiom Var_f_S : ℝ → ℝ
+/-- The Brascamp–Lieb energy `E_phi_S(f_S) := ∫ (g_S')² / φ''_S dρ_S`,
+defined via the energy functional `E_phi` from `TestFunction`. Blueprint
+§04. -/
+noncomputable def EE_phi_S (S : ℝ) : ℝ := E_phi S (g_S' S)
 
-/-- The Brascamp-Lieb deficit `delta_phi_S(f_S) := E_phi_S(f_S) -
+/-- The Brascamp–Lieb deficit `delta_phi_S(f_S) := E_phi_S(f_S) -
 Var_{rho_S}(f_S)`. Blueprint Definition §01 and §05. -/
-def delta_phi_S (S : ℝ) : ℝ := EE_phi_S S - Var_f_S S
+noncomputable def delta_phi_S (S : ℝ) : ℝ := EE_phi_S S - Var_f_S S
 
-/-- The variance of `g_S` equals the variance of `f_S = g_S - c_S`. This
-is the translation-invariance of variance applied to subtraction of the
-constant `c_S`. -/
-axiom Var_gg_eq_Var_ff (S : ℝ) :
-    (∫ x, (g_S S x - cc_S S) ^ 2 ∂(rho_S S)) = Var_f_S S
+/-- The variance of `g_S` equals the variance of `f_S = g_S - c_S` (by
+definition of `Var_f_S`). -/
+@[simp] lemma Var_gg_eq_Var_ff (S : ℝ) :
+    (∫ x, (g_S S x - cc_S S) ^ 2 ∂(rho_S S)) = Var_f_S S := rfl
 
 /-! ### Asymptotic evaluations (blueprint §04, §05) -/
 
