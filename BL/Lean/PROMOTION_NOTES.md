@@ -13,6 +13,10 @@
 | HigherDimensional.lean  |      0 |
 | **Total**               | **5**  |
 
+Note: `Z_S_asymp` was attempted but the full proof (partitioning
+`∫ exp(-φ_S)` over core/layer/tail with three separate Taylor-style
+bounds) requires ~200 lines and was not completed in the session.
+
 (Earlier counts in this file undercounted HigherDimensional by 1: the
 `@[instance] axiom stdGaussian_isProb` doesn't start with `axiom`, so
 the simple grep pattern `^axiom` missed it.)
