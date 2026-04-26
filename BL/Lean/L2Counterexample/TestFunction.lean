@@ -179,10 +179,315 @@ theorem t_S_isBigO :
   have h := BigOInv.toIsBigO_aux L2Counterexample.t_S_asymp
   simpa using h
 
-/-- Asymptotic `A_S - S = O(S^{-1})`. Genuinely about the layer
-normalizer, recorded as an axiom. -/
-axiom A_S_asymp :
-  (fun S : ℝ => A_S S - S) =O[Filter.atTop] fun S : ℝ => (S : ℝ)^(-1 : ℤ)
+/-- Helper: on `[1 - ε_S, 1 + ε_S]` (with `eps_S ≤ 1`), the second bump
+`κ((t+1)/ε_S)` vanishes pointwise. -/
+private lemma kappa_shift_right_zero_on_layer {S t : ℝ} (hS : 1 ≤ S)
+    (ht : t ∈ Set.uIcc (1 - eps_S S) (1 + eps_S S)) :
+    kappa ((t + 1) / eps_S S) = 0 := by
+  have hSpos : 0 < S := lt_of_lt_of_le zero_lt_one hS
+  have heps_pos : 0 < eps_S S := eps_S_pos hSpos
+  have heps_le_one : eps_S S ≤ 1 := by
+    unfold eps_S
+    rw [show ((-(3 : ℤ))) = -((3 : ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+    exact inv_le_one_of_one_le₀ (one_le_pow₀ hS)
+  have h_le : 1 - eps_S S ≤ 1 + eps_S S := by linarith
+  rw [Set.uIcc_of_le h_le, Set.mem_Icc] at ht
+  -- t ≥ 1 - ε, so t + 1 ≥ 2 - ε ≥ 1 (since ε ≤ 1).
+  have h_t_plus_1 : 1 ≤ (t + 1) / eps_S S := by
+    rw [le_div_iff₀ heps_pos]
+    linarith [ht.1]
+  apply kappa_eq_zero_of_abs_ge_one
+  rw [abs_of_pos (by linarith : (0 : ℝ) < (t + 1) / eps_S S)]
+  exact h_t_plus_1
+
+/-- Helper: integral of `phi''_S` on the positive layer
+`[1-ε, 1+ε]` equals `S + 2·η_S·ε`. -/
+private lemma integral_phiDer2_S_layer {S : ℝ} (hS : 1 ≤ S) :
+    ∫ t in (1 - eps_S S)..(1 + eps_S S), phiDer2_S S t
+      = S + 2 * eta_S S * eps_S S := by
+  have hSpos : 0 < S := lt_of_lt_of_le zero_lt_one hS
+  have heps_pos : 0 < eps_S S := eps_S_pos hSpos
+  have heps_ne : eps_S S ≠ 0 := heps_pos.ne'
+  -- Replace the integrand with the simplified form (third kappa = 0 on layer).
+  have h_eq_on_layer : ∀ t ∈ Set.uIcc (1 - eps_S S) (1 + eps_S S),
+      phiDer2_S S t = eta_S S + (S / eps_S S) * kappa ((t - 1) / eps_S S) := by
+    intro t ht
+    have h3 : kappa ((t + 1) / eps_S S) = 0 :=
+      kappa_shift_right_zero_on_layer hS ht
+    unfold phiDer2_S
+    rw [h3, mul_zero, add_zero]
+  rw [intervalIntegral.integral_congr h_eq_on_layer]
+  -- Integral of (eta_S + first kappa) = ∫ eta_S + ∫ first kappa.
+  have h_int_eta : IntervalIntegrable (fun _ : ℝ => eta_S S) MeasureTheory.volume
+      (1 - eps_S S) (1 + eps_S S) :=
+    intervalIntegrable_const
+  have h_int_kappa : IntervalIntegrable
+      (fun t => (S / eps_S S) * kappa ((t - 1) / eps_S S)) MeasureTheory.volume
+      (1 - eps_S S) (1 + eps_S S) := by
+    refine (continuous_const.mul ?_).intervalIntegrable _ _
+    refine kappa_continuous.comp ?_
+    continuity
+  rw [intervalIntegral.integral_add h_int_eta h_int_kappa]
+  -- ∫ eta_S = eta_S · 2ε.
+  rw [intervalIntegral.integral_const, smul_eq_mul]
+  -- ∫ (S/ε)·κ((t-1)/ε) = S.
+  rw [kappa_scaled_integral_right hSpos]
+  ring
+
+/-- Asymptotic `A_S - S = O(S^{-1})`.
+
+Decomposition: `A_S = ∫_{1-ε}^{1+ε} phi''_S(t)·exp(phi_S(t)) dt
+              = ∫ phi''_S + ∫ phi''_S·(exp(phi_S) - 1)
+              = (S + 2·η_S·ε) + R`
+where `|R| ≤ (sup |exp(phi_S(t))-1| on layer) · (S + 2·η_S·ε) = O(S^{-2}) · O(S) = O(S^{-1})`. -/
+theorem A_S_asymp :
+    (fun S : ℝ => A_S S - S) =O[Filter.atTop] fun S : ℝ => (S : ℝ)^(-1 : ℤ) := by
+  obtain ⟨C_layer, S_layer, hS_layer_pos, h_layer_bd⟩ := phi_S_layer_small
+  -- Make C_layer nonneg.
+  have hC_layer_nn : 0 ≤ C_layer := by
+    have hε_layer : 0 < eps_S S_layer := eps_S_pos hS_layer_pos
+    have h := h_layer_bd S_layer le_rfl 1 (by simp; linarith [hε_layer])
+    have h_abs_nn : 0 ≤ |Real.exp (-(phi_S S_layer 1)) - 1| := abs_nonneg _
+    have h_pow_pos : (0 : ℝ) < S_layer ^ (-(2 : ℤ)) := zpow_pos hS_layer_pos _
+    nlinarith
+  -- Pick S₀ so that C_layer/S² ≤ 1/2.
+  -- Need S² ≥ 2 C_layer, i.e., S ≥ √(2 C_layer).
+  refine IsBigO.of_bound (4 * C_layer + 2) ?_
+  rw [Filter.eventually_atTop]
+  refine ⟨max (max S_layer 2) (Real.sqrt (2 * C_layer) + 1), fun S hS => ?_⟩
+  have hS_layer : S_layer ≤ S :=
+    le_trans (le_max_left _ _) (le_trans (le_max_left _ _) hS)
+  have hS_2 : (2 : ℝ) ≤ S :=
+    le_trans (le_max_right _ _) (le_trans (le_max_left _ _) hS)
+  have hS_one : (1 : ℝ) ≤ S := by linarith
+  have hSpos : 0 < S := by linarith
+  have hS_sqrt : Real.sqrt (2 * C_layer) + 1 ≤ S :=
+    le_trans (le_max_right _ _) hS
+  -- C_layer / S² ≤ 1/2.
+  have hCS2_le_half : C_layer / S^2 ≤ 1/2 := by
+    have h_sqrt_nn : 0 ≤ Real.sqrt (2 * C_layer) := Real.sqrt_nonneg _
+    have hS_sqrt_lt : Real.sqrt (2 * C_layer) < S := by linarith
+    have hS_sq : S^2 ≥ 2 * C_layer := by
+      have h1 : (Real.sqrt (2 * C_layer))^2 = 2 * C_layer :=
+        Real.sq_sqrt (by positivity : (0 : ℝ) ≤ 2 * C_layer)
+      have h2 : (Real.sqrt (2 * C_layer))^2 < S^2 := by
+        nlinarith [hS_sqrt_lt, h_sqrt_nn]
+      linarith
+    have hS2_pos : (0 : ℝ) < S^2 := by positivity
+    rw [div_le_iff₀ hS2_pos]
+    linarith
+  -- Setup constants.
+  have heps_pos : 0 < eps_S S := eps_S_pos hSpos
+  have heta_pos : 0 < eta_S S := eta_S_pos hSpos
+  have h_le : 1 - eps_S S ≤ 1 + eps_S S := by linarith
+  have h_int_layer := integral_phiDer2_S_layer hS_one
+  -- exp(-phi_S(t)) ≥ 1/2 on the layer (so exp(phi_S(t)) ≤ 2).
+  have h_exp_neg_lb : ∀ t, |t - 1| ≤ eps_S S → 1/2 ≤ Real.exp (-(phi_S S t)) := by
+    intro t ht
+    have h := h_layer_bd S hS_layer t ht
+    have h_phi_nn : 0 ≤ phi_S S t := phi_S_nonneg hSpos t
+    have h_exp_le_one : Real.exp (-(phi_S S t)) ≤ 1 :=
+      Real.exp_le_one_iff.mpr (by linarith)
+    have h_neg_le_zero : Real.exp (-(phi_S S t)) - 1 ≤ 0 := by linarith
+    have h_abs_eq : |Real.exp (-(phi_S S t)) - 1| = 1 - Real.exp (-(phi_S S t)) := by
+      rw [abs_of_nonpos h_neg_le_zero]; ring
+    have h_diff_le : 1 - Real.exp (-(phi_S S t)) ≤ C_layer * S^(-(2:ℤ)) := by
+      rw [← h_abs_eq]; exact h
+    have h_pow : (S : ℝ)^(-(2:ℤ)) = 1/S^2 := by
+      rw [show (-(2:ℤ)) = -((2:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+      exact (one_div _).symm
+    rw [h_pow] at h_diff_le
+    have h_simp : C_layer * (1/S^2) = C_layer / S^2 := by ring
+    linarith [hCS2_le_half]
+  -- |exp(phi_S(t)) - 1| ≤ 2 · C_layer/S² on the layer.
+  have h_exp_pos_bd : ∀ t, |t - 1| ≤ eps_S S
+      → |Real.exp (phi_S S t) - 1| ≤ 2 * (C_layer / S^2) := by
+    intro t ht
+    have h_neg_lb := h_exp_neg_lb t ht
+    have h_phi_nn : 0 ≤ phi_S S t := phi_S_nonneg hSpos t
+    have h_exp_pos_pos : 0 < Real.exp (phi_S S t) := Real.exp_pos _
+    have h_exp_pos_ge_one : 1 ≤ Real.exp (phi_S S t) := Real.one_le_exp h_phi_nn
+    have h_diff_nn : 0 ≤ Real.exp (phi_S S t) - 1 := by linarith
+    have h_abs_eq : |Real.exp (phi_S S t) - 1| = Real.exp (phi_S S t) - 1 :=
+      abs_of_nonneg h_diff_nn
+    rw [h_abs_eq]
+    have h_exp_neg_ne : Real.exp (-(phi_S S t)) ≠ 0 := (Real.exp_pos _).ne'
+    have h_eq : Real.exp (phi_S S t) - 1
+              = (1 - Real.exp (-(phi_S S t))) / Real.exp (-(phi_S S t)) := by
+      rw [Real.exp_neg]
+      field_simp
+    rw [h_eq]
+    have h := h_layer_bd S hS_layer t ht
+    have h_pow : (S : ℝ)^(-(2:ℤ)) = 1/S^2 := by
+      rw [show (-(2:ℤ)) = -((2:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+      exact (one_div _).symm
+    rw [h_pow] at h
+    have h_simp : C_layer * (1 / S ^ 2) = C_layer / S^2 := by ring
+    rw [h_simp] at h
+    have h_exp_neg_le_one : Real.exp (-(phi_S S t)) ≤ 1 :=
+      Real.exp_le_one_iff.mpr (by linarith)
+    have h_neg_le_zero : Real.exp (-(phi_S S t)) - 1 ≤ 0 := by linarith
+    have h_abs_one_minus : |Real.exp (-(phi_S S t)) - 1|
+                       = 1 - Real.exp (-(phi_S S t)) := by
+      rw [abs_of_nonpos h_neg_le_zero]; ring
+    rw [h_abs_one_minus] at h
+    -- (1 - exp(-phi))/exp(-phi) ≤ (C/S²)/(1/2) = 2(C/S²)
+    have h_div_le : (1 - Real.exp (-(phi_S S t))) / Real.exp (-(phi_S S t))
+                  ≤ (C_layer / S^2) / (1/2) := by
+      have hC_S2_nn : 0 ≤ C_layer / S^2 := by positivity
+      have h_half_pos : (0 : ℝ) < 1/2 := by norm_num
+      exact div_le_div₀ hC_S2_nn h h_half_pos h_neg_lb
+    have h_eq2 : (C_layer / S^2) / (1/2) = 2 * (C_layer / S^2) := by ring
+    linarith
+  -- A_S - (S + 2 η ε) = ∫ phi''_S · (exp(phi_S) - 1).
+  have h_A_decomp : A_S S - (S + 2 * eta_S S * eps_S S)
+                  = ∫ t in (1 - eps_S S)..(1 + eps_S S),
+                      phiDer2_S S t * (Real.exp (phi_S S t) - 1) := by
+    unfold A_S
+    have h_pointwise : ∀ t, phiDer2_S S t * Real.exp (phi_S S t)
+                          = phiDer2_S S t + phiDer2_S S t * (Real.exp (phi_S S t) - 1) := by
+      intro t; ring
+    rw [show (fun t => phiDer2_S S t * Real.exp (phi_S S t))
+          = (fun t => phiDer2_S S t + phiDer2_S S t * (Real.exp (phi_S S t) - 1))
+          from funext h_pointwise]
+    have h_int_phi'' : IntervalIntegrable (phiDer2_S S) MeasureTheory.volume
+        (1 - eps_S S) (1 + eps_S S) :=
+      (phiDer2_S_continuous hSpos).intervalIntegrable _ _
+    have h_int_rest : IntervalIntegrable
+        (fun t => phiDer2_S S t * (Real.exp (phi_S S t) - 1)) MeasureTheory.volume
+        (1 - eps_S S) (1 + eps_S S) := by
+      refine (((phiDer2_S_continuous hSpos).mul
+        ((Real.continuous_exp.comp (phi_S_contDiff hSpos).continuous).sub
+          continuous_const))).intervalIntegrable _ _
+    rw [intervalIntegral.integral_add h_int_phi'' h_int_rest]
+    rw [h_int_layer]
+    ring
+  -- Bound the integral on the right.
+  have h_R_bd : |∫ t in (1 - eps_S S)..(1 + eps_S S),
+                  phiDer2_S S t * (Real.exp (phi_S S t) - 1)|
+              ≤ 4 * C_layer / S := by
+    -- |∫| ≤ ∫ |·| ≤ ∫ phi''_S · 2C/S² = (S + 2η ε)·(2C/S²) ≤ 2S·2C/S² = 4C/S.
+    have h_int_bd : ∀ t ∈ Set.Icc (1 - eps_S S) (1 + eps_S S),
+        |phiDer2_S S t * (Real.exp (phi_S S t) - 1)|
+          ≤ phiDer2_S S t * (2 * (C_layer / S^2)) := by
+      intro t ht
+      rw [Set.mem_Icc] at ht
+      have htL1 : |t - 1| ≤ eps_S S := abs_le.mpr ⟨by linarith, by linarith⟩
+      have h_phi''_nn : 0 ≤ phiDer2_S S t := (phiDer2_S_pos hSpos t).le
+      rw [abs_mul, abs_of_nonneg h_phi''_nn]
+      exact mul_le_mul_of_nonneg_left (h_exp_pos_bd t htL1) h_phi''_nn
+    -- Apply norm_intervalIntegral_le_of_norm_le_const_with_le.
+    have h_norm_bd : |∫ t in (1 - eps_S S)..(1 + eps_S S),
+                      phiDer2_S S t * (Real.exp (phi_S S t) - 1)|
+                  ≤ ∫ t in (1 - eps_S S)..(1 + eps_S S),
+                      phiDer2_S S t * (2 * (C_layer / S^2)) := by
+      have h_int_orig : IntervalIntegrable
+        (fun t => phiDer2_S S t * (Real.exp (phi_S S t) - 1))
+        MeasureTheory.volume (1 - eps_S S) (1 + eps_S S) := by
+        refine (((phiDer2_S_continuous hSpos).mul
+          ((Real.continuous_exp.comp (phi_S_contDiff hSpos).continuous).sub
+            continuous_const))).intervalIntegrable _ _
+      have h_int_bound : IntervalIntegrable
+        (fun t => phiDer2_S S t * (2 * (C_layer / S^2)))
+        MeasureTheory.volume (1 - eps_S S) (1 + eps_S S) :=
+        ((phiDer2_S_continuous hSpos).mul continuous_const).intervalIntegrable _ _
+      -- Use abs_integral_le_integral_abs.
+      have h_abs_le : |∫ t in (1 - eps_S S)..(1 + eps_S S),
+                        phiDer2_S S t * (Real.exp (phi_S S t) - 1)|
+                    ≤ ∫ t in (1 - eps_S S)..(1 + eps_S S),
+                        |phiDer2_S S t * (Real.exp (phi_S S t) - 1)| :=
+        intervalIntegral.abs_integral_le_integral_abs h_le
+      refine le_trans h_abs_le ?_
+      exact intervalIntegral.integral_mono_on h_le h_int_orig.abs h_int_bound h_int_bd
+    refine le_trans h_norm_bd ?_
+    -- ∫ phi''_S · 2C/S² = (2C/S²) · ∫ phi''_S = (2C/S²) · (S + 2 η ε)
+    rw [intervalIntegral.integral_mul_const]
+    rw [h_int_layer]
+    -- (S + 2 η ε) · (2C/S²) ≤ 4C/S.
+    have h_eta_eps_small : 2 * eta_S S * eps_S S ≤ S := by
+      -- 2 · eta_S · eps = 2 · S^{-4} · S^{-3} = 2/S^7 ≤ S for S ≥ 1.
+      have h_eta_eq : eta_S S = 1/S^4 := by
+        unfold eta_S
+        rw [show (-(4:ℤ)) = -((4:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast, one_div]
+      have h_eps_eq : eps_S S = 1/S^3 := by
+        unfold eps_S
+        rw [show (-(3:ℤ)) = -((3:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast, one_div]
+      rw [h_eta_eq, h_eps_eq]
+      have hS3_pos : (0 : ℝ) < S^3 := by positivity
+      have hS4_pos : (0 : ℝ) < S^4 := by positivity
+      have h_eq : 2 * (1 / S^4) * (1 / S^3) = 2 / S^7 := by
+        have hS_ne : (S : ℝ) ≠ 0 := hSpos.ne'
+        have h_pow : (S : ℝ)^4 * S^3 = S^7 := by ring
+        field_simp
+      rw [h_eq]
+      -- 2/S^7 ≤ S iff 2 ≤ S^8 (for S > 0). For S ≥ 2: S^8 ≥ 256 ≥ 2.
+      have hS7_pos : (0 : ℝ) < S^7 := by positivity
+      rw [div_le_iff₀ hS7_pos]
+      have h_S8_ge : (256 : ℝ) ≤ S^8 := by
+        have : (2 : ℝ)^8 = 256 := by norm_num
+        rw [← this]
+        exact pow_le_pow_left₀ (by linarith) hS_2 8
+      nlinarith
+    have h_key : (S + 2 * eta_S S * eps_S S) * (2 * (C_layer / S^2))
+              ≤ (2 * S) * (2 * (C_layer / S^2)) := by
+      apply mul_le_mul_of_nonneg_right
+      · linarith
+      · positivity
+    have h_simp : (2 * S) * (2 * (C_layer / S^2)) = 4 * C_layer / S := by
+      have hSne : (S : ℝ) ≠ 0 := hSpos.ne'
+      field_simp
+      ring
+    linarith
+  -- Final: |A_S - S| ≤ |2 η ε| + |R| ≤ 2/S^7 + 4C/S ≤ (4C + 2)/S.
+  have h_A_diff : A_S S - S = 2 * eta_S S * eps_S S
+      + (∫ t in (1 - eps_S S)..(1 + eps_S S),
+          phiDer2_S S t * (Real.exp (phi_S S t) - 1)) := by linarith [h_A_decomp]
+  have h_2eta_eps_bd : |2 * eta_S S * eps_S S| ≤ 2 / S := by
+    have h_pos : 0 ≤ 2 * eta_S S * eps_S S := by positivity
+    rw [abs_of_nonneg h_pos]
+    have h_eta_eq : eta_S S = 1/S^4 := by
+      unfold eta_S
+      rw [show (-(4:ℤ)) = -((4:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast, one_div]
+    have h_eps_eq : eps_S S = 1/S^3 := by
+      unfold eps_S
+      rw [show (-(3:ℤ)) = -((3:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast, one_div]
+    rw [h_eta_eq, h_eps_eq]
+    have h_eq : 2 * (1 / S^4) * (1 / S^3) = 2 / S^7 := by
+      have hSne : (S : ℝ) ≠ 0 := hSpos.ne'
+      have h_pow : (S : ℝ)^4 * S^3 = S^7 := by ring
+      field_simp
+    rw [h_eq]
+    -- 2/S^7 ≤ 2/S for S ≥ 1.
+    have hS7_pos : (0 : ℝ) < S^7 := by positivity
+    have h_S_le_S7 : S ≤ S^7 := by
+      have h_S1 : S^1 = S := by ring
+      have h_pow : S^1 ≤ S^7 := by
+        have hS6_ge_one : (1 : ℝ) ≤ S^6 := one_le_pow₀ hS_one
+        have h_eq : S^7 = S * S^6 := by ring
+        nlinarith
+      linarith [h_pow, h_S1]
+    have h_div : (2 : ℝ) / S^7 ≤ 2 / S := by
+      apply div_le_div_of_nonneg_left (by norm_num) hSpos h_S_le_S7
+    exact h_div
+  -- Now combine.
+  rw [Real.norm_eq_abs, Real.norm_eq_abs]
+  have hpow_eq : (S : ℝ)^(-(1:ℤ)) = 1/S := by
+    rw [show (-(1:ℤ)) = -((1:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast, pow_one, one_div]
+  rw [hpow_eq, abs_of_pos (by positivity : (0:ℝ) < 1/S)]
+  rw [h_A_diff]
+  have h_tri : |2 * eta_S S * eps_S S
+              + (∫ t in (1 - eps_S S)..(1 + eps_S S),
+                  phiDer2_S S t * (Real.exp (phi_S S t) - 1))|
+            ≤ |2 * eta_S S * eps_S S|
+              + |∫ t in (1 - eps_S S)..(1 + eps_S S),
+                  phiDer2_S S t * (Real.exp (phi_S S t) - 1)| := abs_add_le _ _
+  have h_total : |2 * eta_S S * eps_S S|
+                + |∫ t in (1 - eps_S S)..(1 + eps_S S),
+                    phiDer2_S S t * (Real.exp (phi_S S t) - 1)|
+              ≤ 2/S + 4 * C_layer / S := by linarith [h_2eta_eps_bd, h_R_bd]
+  have h_eq_final : 2/S + 4 * C_layer / S = (4 * C_layer + 2) * (1/S) := by
+    field_simp; ring
+  linarith
 
 /-- Positivity of `Z_S` for `S > 1`. Follows from
 `Normalization.Z_S_pos` (which only requires `0 < S`). -/
