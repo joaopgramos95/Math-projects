@@ -1,0 +1,697 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\spanop}{span}
+\DeclareMathOperator{\diag}{diag}
+
+\newcommand{\R}{\mathbb R}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\BL}{\mathrm{BL}}
+
+\title[A counterexample to uniform $L^2$ stability]{A counterexample to uniform $L^2$ stability\\ in the Brascamp--Lieb inequality}
+\author{}
+\date{}
+
+\begin{document}
+
+\begin{abstract}
+We write down a short paper whose mathematical content matches the Lean
+development in the directory \texttt{Lean/}. The argument produces an explicit
+one-dimensional family $(\phi_S,f_S)$ for which
+\[
+  \frac{\dist_{L^2(\rho_{\phi_S})}(f_S,\cO_{\BL,\phi_S})^2}
+       {\delta_{\BL,\phi_S}(f_S)}
+  = S\bigl(1+O(S^{-1})\bigr),
+  \qquad S\to\infty,
+\]
+where $\delta_{\BL,\phi}$ denotes the Brascamp--Lieb deficit and
+$\cO_{\BL,\phi}=\spanop\{1,\phi'\}$ is the optimizer space in dimension one.
+In particular no finite $L^2$-stability constant can hold uniformly along this
+family. We then lift the example to every dimension $d\ge 1$ by the product
+potential
+\[
+  \Phi_{S,d}(x,y)=\phi_S(x)+\frac{|y|^2}{2},
+\]
+and obtain the exact higher-dimensional statement encoded in the Lean theorem:
+for each fixed $d\ge 1$ there is no finite constant $C$ such that
+\[
+  \dist_{L^2(\rho_{\Phi_{S,d}})}(F_{S,d},\cO_{\BL,\Phi_{S,d}})^2
+  \le C^2\,\delta_{\BL,\Phi_{S,d}}(F_{S,d})
+\]
+for every parameter $S$ for which the deficit is positive.
+\end{abstract}
+
+\maketitle
+
+\section{Statement}
+
+Let $\phi:\R^d\to\R$ be smooth and strictly convex, with
+$0<\int_{\R^d}e^{-\phi(x)}\,dx<\infty$. We write
+\[
+  Z_\phi:=\int_{\R^d}e^{-\phi(x)}\,dx,
+  \qquad
+  d\rho_\phi:=Z_\phi^{-1}e^{-\phi(x)}\,dx.
+\]
+For a locally Lipschitz $f\in L^2(\rho_\phi)$, the Brascamp--Lieb energy and
+deficit are
+\[
+  \mathcal E_\phi(f)
+  :=\int_{\R^d}\langle (D^2\phi)^{-1}\nabla f,\nabla f\rangle\,d\rho_\phi,
+  \qquad
+  \delta_{\BL,\phi}(f):=\mathcal E_\phi(f)-\Var_{\rho_\phi}(f).
+\]
+The optimizer space is
+\[
+  \cO_{\BL,\phi}
+  :=
+  \{a\cdot\nabla\phi+b:\ a\in\R^d,\ b\in\R\}.
+\]
+
+The concrete construction below yields a one-dimensional family
+$(\phi_S,f_S)$ with $\delta_{\BL,\phi_S}(f_S)>0$ for all sufficiently large
+$S$ and
+\[
+  \frac{\dist_{L^2(\rho_{\phi_S})}(f_S,\cO_{\BL,\phi_S})^2}
+       {\delta_{\BL,\phi_S}(f_S)}
+  =S\bigl(1+O(S^{-1})\bigr).
+\]
+This already implies that any stability statement of the form
+\[
+  \dist_{L^2(\rho_\phi)}(f,\cO_{\BL,\phi})
+  \le C\,\delta_{\BL,\phi}(f)^{1/2}
+\]
+must fail on every class of admissible one-dimensional data that contains the
+family $(\phi_S,f_S)$.
+
+The Lean build also proves the following exact fixed-dimension product-family
+statement.
+
+\begin{theorem}\label{thm:main}
+For every integer $d\ge 1$ there exists a smooth strictly convex family
+$\Phi_{S,d}:\R^d\to\R$ and a locally Lipschitz family
+$F_{S,d}\in L^2(\rho_{\Phi_{S,d}})$ such that:
+\begin{enumerate}
+\item for all sufficiently large $S$ one has
+  $\delta_{\BL,\Phi_{S,d}}(F_{S,d})>0$;
+\item for every finite $C\in\R$ there exists $S$ with
+  $\delta_{\BL,\Phi_{S,d}}(F_{S,d})>0$ and
+  \[
+    \dist_{L^2(\rho_{\Phi_{S,d}})}(F_{S,d},\cO_{\BL,\Phi_{S,d}})^2
+    > C^2\,\delta_{\BL,\Phi_{S,d}}(F_{S,d}).
+  \]
+\end{enumerate}
+Equivalently, for fixed $d\ge 1$ there is no finite constant $C$ such that
+\[
+  \dist_{L^2(\rho_{\Phi_{S,d}})}(F_{S,d},\cO_{\BL,\Phi_{S,d}})^2
+  \le C^2\,\delta_{\BL,\Phi_{S,d}}(F_{S,d})
+\]
+for every parameter $S$ with $\delta_{\BL,\Phi_{S,d}}(F_{S,d})>0$.
+\end{theorem}
+
+The proof is one-dimensional at heart. The higher-dimensional statement is
+obtained by tensoring with a standard Gaussian in the transverse variables.
+
+\section{The one-dimensional potential}
+
+Fix a non-negative even $C^\infty$ bump
+$\kappa:\R\to[0,\infty)$ supported in $[-1,1]$ and normalized by
+\[
+  \int_{\R}\kappa(u)\,du=1.
+\]
+For parameters $S\ge 1$, $\varepsilon\in(0,\tfrac14)$ and $\eta>0$, define
+\begin{equation}\label{eq:phi2}
+  \phi''_{S,\varepsilon,\eta}(x)
+  :=
+  \eta
+  +\frac{S}{\varepsilon}\kappa\!\left(\frac{x-1}{\varepsilon}\right)
+  +\frac{S}{\varepsilon}\kappa\!\left(\frac{x+1}{\varepsilon}\right),
+\end{equation}
+and impose the normalization
+\[
+  \phi_{S,\varepsilon,\eta}(0)=0,
+  \qquad
+  \phi'_{S,\varepsilon,\eta}(0)=0.
+\]
+The right-hand side of \eqref{eq:phi2} is smooth, even, and bounded below by
+$\eta$, so $\phi_{S,\varepsilon,\eta}$ is smooth, even, and strictly convex.
+
+We make the specific choice
+\begin{equation}\label{eq:choice}
+  \varepsilon=S^{-3},
+  \qquad
+  \eta=S^{-4},
+\end{equation}
+and abbreviate
+\[
+  \phi_S:=\phi_{S,S^{-3},S^{-4}},
+  \qquad
+  \rho_S:=\rho_{\phi_S},
+  \qquad
+  Z_S:=\int_{\R}e^{-\phi_S(x)}\,dx.
+\]
+All asymptotic notation below refers to the limit $S\to\infty$.
+
+We decompose $\R$ into the central core, two transition layers, and the
+exterior:
+\[
+  C_S:=[-1+\varepsilon,1-\varepsilon],
+  \qquad
+  I_S^+:=(1-\varepsilon,1+\varepsilon),
+  \qquad
+  I_S^-:=(-1-\varepsilon,-1+\varepsilon),
+\]
+\[
+  T_S:=I_S^+\cup I_S^-,
+  \qquad
+  E_S:=\R\setminus(C_S\cup T_S).
+\]
+
+The next lemma summarizes the explicit shape of $\phi_S$ needed in the sequel.
+
+\begin{lemma}\label{lem:profile}
+For the choice \eqref{eq:choice}, the following hold for all sufficiently large
+$S$:
+\begin{enumerate}
+\item on $C_S$ one has
+  \[
+    \phi''_S\equiv\eta,
+    \qquad
+    \phi'_S(x)=\eta x,
+    \qquad
+    \phi_S(x)=\frac{\eta x^2}{2}\in\left[0,\frac{\eta}{2}\right];
+  \]
+\item on $T_S$ one has $\phi_S(x)=O(S^{-2})$ uniformly, hence
+  $e^{\phi_S(x)}=1+O(S^{-2})$ uniformly on $T_S$;
+\item for $x>1+\varepsilon$,
+  \[
+    \phi'_S(x)=S+\eta x,
+  \]
+  and therefore
+  \[
+    \phi_S(x)
+    =\phi_S(1+\varepsilon)
+     +S(x-1-\varepsilon)
+     +\frac{\eta}{2}\bigl(x^2-(1+\varepsilon)^2\bigr);
+  \]
+\item by evenness, the corresponding formulas on the left tail follow from the
+  right-tail ones by the substitution $x\mapsto -x$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+On the core $C_S$ both translated bumps in \eqref{eq:phi2} vanish, so
+$\phi''_S=\eta$ there. Integrating and using $\phi'_S(0)=\phi_S(0)=0$ gives
+the displayed core formulas.
+
+On $I_S^+$ we have
+\[
+  \phi_S(x)
+  =\phi_S(1-\varepsilon)+\int_{1-\varepsilon}^x\phi'_S(t)\,dt.
+\]
+Since $\phi_S(1-\varepsilon)\le \eta/2$ and
+$\sup_{I_S^+}\phi'_S\le \eta+S$, we obtain
+\[
+  \phi_S(x)\le \frac{\eta}{2}+2\varepsilon(\eta+S)=O(S^{-2}),
+\]
+using \eqref{eq:choice}. The same estimate holds on $I_S^-$ by evenness. The
+bound on $e^{\phi_S}-1$ is immediate.
+
+On $(1+\varepsilon,\infty)$ both bumps have again vanished, so
+$\phi''_S=\eta$. Since the total mass of the right bump is $S$,
+$\phi'_S(1+\varepsilon)=S+\eta(1+\varepsilon)$, and the right-tail formulas
+follow by integration. The left tail is obtained by symmetry.
+\end{proof}
+
+\section{Normalization and the tail mass}
+
+The next lemma is the only normalization input needed later on.
+
+\begin{lemma}\label{lem:normalization}
+With the choice \eqref{eq:choice}, as $S\to\infty$:
+\begin{enumerate}
+\item
+  \[
+    \int_{1+\varepsilon}^{\infty}e^{-\phi_S(x)}\,dx
+    =\frac{1}{S}+O(S^{-3});
+  \]
+\item
+  \[
+    Z_S=2+\frac{2}{S}+O(S^{-3});
+  \]
+\item if
+  \[
+    q_S:=\rho_S(E_S)=\rho_S(\{|x|>1+\varepsilon\}),
+    \qquad
+    t_S:=\rho_S(T_S),
+  \]
+  then
+  \[
+    q_S=\frac{1}{S}-\frac{1}{S^2}+O(S^{-3}),
+    \qquad
+    t_S=O(S^{-3}).
+  \]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:profile}, for $x>1+\varepsilon$ we have
+\[
+  \phi_S(x)
+  =\phi_S(1+\varepsilon)+\widetilde S\,(x-1-\varepsilon)
+   +\frac{\eta}{2}(x-1-\varepsilon)^2,
+\]
+where $\widetilde S=S+\eta(1+\varepsilon)=S+O(S^{-4})$. Thus
+\[
+  \int_{1+\varepsilon}^{\infty}e^{-\phi_S(x)}\,dx
+  =
+  e^{-\phi_S(1+\varepsilon)}
+  \int_0^\infty e^{-\widetilde S u-\eta u^2/2}\,du.
+\]
+Since $\phi_S(1+\varepsilon)=O(S^{-2})$, the prefactor equals
+$1+O(S^{-2})$. Also
+\[
+  0\le \frac{1}{\widetilde S}
+  -\int_0^\infty e^{-\widetilde S u-\eta u^2/2}\,du
+  \le
+  \frac{\eta}{2}\int_0^\infty u^2e^{-\widetilde S u}\,du
+  =
+  \frac{\eta}{\widetilde S^3}
+  =O(S^{-7}),
+\]
+so the tail integral is $1/S+O(S^{-6})$. This proves (1).
+
+For (2), split $\int_0^\infty e^{-\phi_S}\,dx$ into the core, the right layer,
+and the right tail. On the core, $\phi_S(x)=\eta x^2/2$, hence
+\[
+  \int_0^{1-\varepsilon}e^{-\phi_S(x)}\,dx
+  =1-\varepsilon+O(\eta).
+\]
+On the layer $I_S^+$, Lemma~\ref{lem:profile} gives
+$e^{-\phi_S(x)}=1+O(S^{-2})$ uniformly, so
+\[
+  \int_{1-\varepsilon}^{1+\varepsilon}e^{-\phi_S(x)}\,dx
+  =2\varepsilon+O(S^{-5}).
+\]
+On the tail we use (1). Therefore
+\[
+  \int_0^\infty e^{-\phi_S(x)}\,dx
+  =1+\frac{1}{S}+O(S^{-3}),
+\]
+and by evenness
+\[
+  Z_S=2+\frac{2}{S}+O(S^{-3}).
+\]
+
+Finally,
+\[
+  t_S
+  \le \frac{|T_S|}{Z_S}\sup_{x\in T_S}e^{-\phi_S(x)}
+  =O(\varepsilon)
+  =O(S^{-3}).
+\]
+Moreover,
+\[
+  q_S
+  =\frac{2}{Z_S}\int_{1+\varepsilon}^\infty e^{-\phi_S(x)}\,dx
+  =
+  \frac{2/S+O(S^{-3})}{2+2/S+O(S^{-3})}
+  =
+  \frac{1}{S}-\frac{1}{S^2}+O(S^{-3}),
+\]
+which proves (3).
+\end{proof}
+
+\section{The transition test function}
+
+Define
+\begin{equation}\label{eq:g}
+  g_S(x):=
+  \begin{cases}
+    0,& x\in C_S,\\[4pt]
+    \displaystyle
+    \frac{\int_{1-\varepsilon}^{|x|}\phi''_S(t)e^{\phi_S(t)}\,dt}
+         {\int_{I_S^+}\phi''_S(t)e^{\phi_S(t)}\,dt},
+      & |x|\in(1-\varepsilon,1+\varepsilon),\\[12pt]
+    1,& x\in E_S.
+  \end{cases}
+\end{equation}
+This function is even, continuous, bounded between $0$ and $1$, and globally
+Lipschitz.
+
+Set
+\[
+  A_S:=\int_{I_S^+}\phi''_S(t)e^{\phi_S(t)}\,dt.
+\]
+The energy of $g_S$ is explicit.
+
+\begin{lemma}\label{lem:energy}
+As $S\to\infty$,
+\[
+  A_S=S\bigl(1+O(S^{-2})\bigr),
+\]
+and
+\[
+  \mathcal E_{\phi_S}(g_S)
+  =
+  \frac{2}{Z_SA_S}
+  =
+  \frac{1}{S}-\frac{1}{S^2}+O(S^{-3}).
+\]
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:profile}, $e^{\phi_S}=1+O(S^{-2})$ uniformly on $I_S^+$,
+while
+\[
+  \int_{I_S^+}\phi''_S(t)\,dt=S+2\eta\varepsilon=S+O(S^{-7}).
+\]
+Hence
+\[
+  A_S
+  =
+  \int_{I_S^+}\phi''_S(t)e^{\phi_S(t)}\,dt
+  =
+  S\bigl(1+O(S^{-2})\bigr).
+\]
+
+To compute the energy, note that $g_S$ is constant on $C_S\cup E_S$, so only
+the two layers contribute. On $I_S^+$ one has
+\[
+  g'_S(x)=\frac{\phi''_S(x)e^{\phi_S(x)}}{A_S},
+\]
+and the same formula holds on $I_S^-$ up to the sign change forced by
+evenness. Therefore
+\[
+  \mathcal E_{\phi_S}(g_S)
+  =
+  \frac{2}{Z_S}\int_{I_S^+}\frac{(g'_S(x))^2}{\phi''_S(x)}e^{-\phi_S(x)}\,dx
+  =
+  \frac{2}{Z_SA_S}.
+\]
+Combining this with Lemma~\ref{lem:normalization} gives
+\[
+  \frac{2}{Z_SA_S}
+  =
+  \frac{2}{(2+2/S+O(S^{-3}))\,S(1+O(S^{-2}))}
+  =
+  \frac{1}{S}-\frac{1}{S^2}+O(S^{-3}).
+\]
+\end{proof}
+
+\begin{lemma}\label{lem:variance}
+The variance of $g_S$ satisfies
+\[
+  \Var_{\rho_S}(g_S)
+  =
+  q_S(1-q_S)+O(S^{-3})
+  =
+  \frac{1}{S}-\frac{2}{S^2}+O(S^{-3}).
+\]
+\end{lemma}
+
+\begin{proof}
+Since $g_S=0$ on $C_S$, $g_S=1$ on $E_S$, and $0\le g_S\le 1$ on $T_S$, we
+have
+\[
+  \int g_S\,d\rho_S=q_S+O(t_S),
+  \qquad
+  \int g_S^2\,d\rho_S=q_S+O(t_S).
+\]
+By Lemma~\ref{lem:normalization}, $t_S=O(S^{-3})$, so
+\[
+  \Var_{\rho_S}(g_S)
+  =
+  \int g_S^2\,d\rho_S-\left(\int g_S\,d\rho_S\right)^2
+  =
+  q_S-q_S^2+O(S^{-3}).
+\]
+Substituting the expansion for $q_S$ from
+Lemma~\ref{lem:normalization} gives the result.
+\end{proof}
+
+Now define
+\[
+  c_S:=\int_{\R}g_S\,d\rho_S,
+  \qquad
+  f_S:=g_S-c_S.
+\]
+Then $f_S$ is even and has $\rho_S$-mean zero. Since the deficit and the
+variance are invariant under addition of constants,
+\begin{equation}\label{eq:constant-shift}
+  \mathcal E_{\phi_S}(f_S)=\mathcal E_{\phi_S}(g_S),
+  \qquad
+  \Var_{\rho_S}(f_S)=\Var_{\rho_S}(g_S),
+  \qquad
+  \delta_{\BL,\phi_S}(f_S)=\delta_{\BL,\phi_S}(g_S).
+\end{equation}
+
+\begin{lemma}\label{lem:orth}
+The function $f_S$ is orthogonal in $L^2(\rho_S)$ to
+\[
+  \cO_{\BL,\phi_S}=\spanop\{1,\phi'_S\}.
+\]
+Consequently
+\[
+  \dist_{L^2(\rho_S)}(f_S,\cO_{\BL,\phi_S})^2
+  =
+  \|f_S\|_{L^2(\rho_S)}^2
+  =
+  \Var_{\rho_S}(g_S).
+\]
+\end{lemma}
+
+\begin{proof}
+By construction $\int f_S\,d\rho_S=0$, so $f_S\perp 1$. Also $f_S$ is even,
+$\phi'_S$ is odd, and $e^{-\phi_S}$ is even, hence
+$f_S(x)\phi'_S(x)e^{-\phi_S(x)}$ is odd and integrable. Therefore
+\[
+  \int_{\R}f_S(x)\phi'_S(x)\,d\rho_S(x)=0.
+\]
+Thus $f_S\perp \spanop\{1,\phi'_S\}$. The distance identity follows because an
+orthogonal projection onto $\cO_{\BL,\phi_S}$ vanishes on $f_S$, while
+\[
+  \|f_S\|_{L^2(\rho_S)}^2=\Var_{\rho_S}(g_S)
+\]
+since $f_S$ is the centered version of $g_S$.
+\end{proof}
+
+\begin{proposition}\label{prop:asymptotics}
+As $S\to\infty$,
+\[
+  \mathcal E_{\phi_S}(f_S)=\frac{1}{S}-\frac{1}{S^2}+O(S^{-3}),
+  \qquad
+  \Var_{\rho_S}(f_S)=\frac{1}{S}-\frac{2}{S^2}+O(S^{-3}),
+  \qquad
+  \delta_{\BL,\phi_S}(f_S)=\frac{1}{S^2}+O(S^{-3}).
+\]
+In particular, $\delta_{\BL,\phi_S}(f_S)>0$ for all sufficiently large $S$.
+\end{proposition}
+
+\begin{proof}
+The first identity follows from Lemma~\ref{lem:energy} and
+\eqref{eq:constant-shift}. The second follows from Lemma~\ref{lem:variance}
+and \eqref{eq:constant-shift}. Subtracting gives
+\[
+  \delta_{\BL,\phi_S}(f_S)
+  =
+  \left(\frac{1}{S}-\frac{1}{S^2}\right)
+  -
+  \left(\frac{1}{S}-\frac{2}{S^2}\right)
+  +O(S^{-3})
+  =
+  \frac{1}{S^2}+O(S^{-3}),
+\]
+and the eventual positivity is immediate.
+\end{proof}
+
+\section{The one-dimensional contradiction}
+
+\begin{theorem}\label{thm:1d}
+The family $(\phi_S,f_S)$ satisfies
+\[
+  \frac{\dist_{L^2(\rho_S)}(f_S,\cO_{\BL,\phi_S})^2}
+       {\delta_{\BL,\phi_S}(f_S)}
+  =
+  S\bigl(1+O(S^{-1})\bigr),
+  \qquad S\to\infty.
+\]
+In particular, for every finite $C$ there exists $S$ such that
+$\delta_{\BL,\phi_S}(f_S)>0$ and
+\[
+  \dist_{L^2(\rho_S)}(f_S,\cO_{\BL,\phi_S})^2
+  >
+  C^2\,\delta_{\BL,\phi_S}(f_S).
+\]
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:orth} and Proposition~\ref{prop:asymptotics},
+\[
+  \dist_{L^2(\rho_S)}(f_S,\cO_{\BL,\phi_S})^2
+  =
+  \frac{1}{S}-\frac{2}{S^2}+O(S^{-3}),
+\]
+while
+\[
+  \delta_{\BL,\phi_S}(f_S)=\frac{1}{S^2}+O(S^{-3}).
+\]
+Therefore
+\[
+  \frac{\dist^2}{\delta_{\BL}}
+  =
+  \frac{(1/S)\bigl(1-2/S+O(S^{-2})\bigr)}
+       {(1/S^2)\bigl(1+O(S^{-1})\bigr)}
+  =
+  S\bigl(1+O(S^{-1})\bigr).
+\]
+The second assertion follows because the ratio tends to $+\infty$ and the
+deficit is eventually positive.
+\end{proof}
+
+\begin{remark}\label{rem:lean-1d}
+The Lean theorem in dimension one is phrased in a slightly more abstract way:
+it records only the numerical invariants ``distance squared'' and ``deficit''
+of an admissible datum. Theorem~\ref{thm:1d} is exactly the concrete
+counterexample needed for that abstract formulation: any class of admissible
+one-dimensional Brascamp--Lieb data that contains the family $(\phi_S,f_S)$
+cannot satisfy a uniform square-root stability estimate.
+\end{remark}
+
+\section{The higher-dimensional lift}
+
+Fix $d\ge 2$. Write points of $\R^d$ as $(x,y)\in \R\times\R^{d-1}$ and define
+\[
+  \Phi_{S,d}(x,y):=\phi_S(x)+\frac{|y|^2}{2},
+  \qquad
+  F_{S,d}(x,y):=f_S(x).
+\]
+Let $\gamma_{d-1}$ denote the standard Gaussian probability measure on
+$\R^{d-1}$. Then
+\[
+  \rho_{\Phi_{S,d}}=\rho_S\otimes\gamma_{d-1},
+\]
+and
+\[
+  D^2\Phi_{S,d}(x,y)=\diag(\phi''_S(x),I_{d-1}).
+\]
+Hence
+\[
+  \nabla F_{S,d}(x,y)=(f'_S(x),0),
+  \qquad
+  \langle (D^2\Phi_{S,d})^{-1}\nabla F_{S,d},\nabla F_{S,d}\rangle
+  =\frac{(f'_S(x))^2}{\phi''_S(x)}.
+\]
+By Fubini,
+\begin{equation}\label{eq:prod-energy}
+  \mathcal E_{\Phi_{S,d}}(F_{S,d})=\mathcal E_{\phi_S}(f_S),
+\end{equation}
+and likewise
+\begin{equation}\label{eq:prod-var}
+  \Var_{\rho_{\Phi_{S,d}}}(F_{S,d})=\Var_{\rho_S}(f_S),
+  \qquad
+  \delta_{\BL,\Phi_{S,d}}(F_{S,d})=\delta_{\BL,\phi_S}(f_S).
+\end{equation}
+
+The optimizer space is
+\[
+  \cO_{\BL,\Phi_{S,d}}
+  =
+  \spanop\{1,\phi'_S(x),y_1,\dots,y_{d-1}\}.
+\]
+Since $\int f_S\,d\rho_S=0$ and each Gaussian coordinate has zero mean,
+$F_{S,d}$ is orthogonal to every generator of this space:
+\[
+  \int F_{S,d}\,d(\rho_S\otimes\gamma_{d-1})=0,
+\]
+\[
+  \int F_{S,d}(x,y)\phi'_S(x)\,d(\rho_S\otimes\gamma_{d-1})
+  =
+  \left(\int f_S(x)\phi'_S(x)\,d\rho_S(x)\right)
+  \left(\int d\gamma_{d-1}\right)
+  =0,
+\]
+\[
+  \int F_{S,d}(x,y)y_j\,d(\rho_S\otimes\gamma_{d-1})
+  =
+  \left(\int f_S(x)\,d\rho_S(x)\right)
+  \left(\int y_j\,d\gamma_{d-1}(y)\right)
+  =0.
+\]
+Therefore
+\begin{equation}\label{eq:prod-dist}
+  \dist_{L^2(\rho_{\Phi_{S,d}})}(F_{S,d},\cO_{\BL,\Phi_{S,d}})^2
+  =
+  \|F_{S,d}\|_{L^2(\rho_{\Phi_{S,d}})}^2
+  =
+  \|f_S\|_{L^2(\rho_S)}^2.
+\end{equation}
+
+\begin{theorem}\label{thm:product}
+For every integer $d\ge 2$,
+\[
+  \frac{\dist_{L^2(\rho_{\Phi_{S,d}})}(F_{S,d},\cO_{\BL,\Phi_{S,d}})^2}
+       {\delta_{\BL,\Phi_{S,d}}(F_{S,d})}
+  =
+  S\bigl(1+O(S^{-1})\bigr),
+  \qquad S\to\infty.
+\]
+In particular, for every finite $C$ there exists $S$ such that
+$\delta_{\BL,\Phi_{S,d}}(F_{S,d})>0$ and
+\[
+  \dist_{L^2(\rho_{\Phi_{S,d}})}(F_{S,d},\cO_{\BL,\Phi_{S,d}})^2
+  >
+  C^2\,\delta_{\BL,\Phi_{S,d}}(F_{S,d}).
+\]
+\end{theorem}
+
+\begin{proof}
+By \eqref{eq:prod-energy}, \eqref{eq:prod-var}, and \eqref{eq:prod-dist}, the
+distance squared and deficit for $(\Phi_{S,d},F_{S,d})$ are exactly the
+one-dimensional ones for $(\phi_S,f_S)$. The claim therefore follows from
+Theorem~\ref{thm:1d}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+For $d=1$ this is exactly Theorem~\ref{thm:1d}. For $d\ge 2$ it is
+Theorem~\ref{thm:product}. The equivalent formulation with a universal bound
+for all $S$ is just the negation of the pointwise contradiction statement.
+\end{proof}
+
+\begin{remark}
+The argument above proves slightly more than the bare non-existence of a finite
+constant: it shows that along the concrete family the ratio
+\[
+  \frac{\dist_{L^2}^2}{\delta_{\BL}}
+\]
+actually grows linearly in $S$. The Lean theorem packages only the exact
+non-existence statement from Theorem~\ref{thm:main}, but it is obtained from
+this stronger asymptotic behavior.
+\end{remark}
+
+\begin{thebibliography}{10}
+
+\bibitem{BLpaper}
+J.~M. Machado and J.~P. G. Ramos,
+\textit{Quantitative stability for Brascamp--Lieb and moment measures},
+arXiv:2511.22636v2.
+
+\bibitem{BL76}
+H.~J. Brascamp and E.~H. Lieb,
+\textit{On extensions of the Brunn--Minkowski and Pr\'ekopa--Leindler theorems,
+including inequalities for log-concave functions, and with an application to
+the diffusion equation},
+J.~Funct.~Anal. 22 (1976), 366--389.
+
+\end{thebibliography}
+
+\end{document}
