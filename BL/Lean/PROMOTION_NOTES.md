@@ -8,10 +8,10 @@
 | Bump.lean               |      0 |
 | Potential.lean          |      0 |
 | Normalization.lean      |      8 |
-| TestFunction.lean       |      4 |
-| OneDimensional.lean     |      6 |
+| TestFunction.lean       |      1 |
+| OneDimensional.lean     |      5 |
 | HigherDimensional.lean  |      5 |
-| **Total**               | **23** |
+| **Total**               | **19** |
 
 `lake build L2Counterexample` succeeds. Zero `sorry` remaining.
 
@@ -25,9 +25,14 @@
 31  → previous round (t_S_asymp, q_S_asymp, one_div_tildeS_asymp,
                        exp_neg_phi_boundary_asymp)
 30  → g_S_continuous (FTC for primitives + Continuous.if_le)
-23  → this round (hasDerivAt_g_S_layer_pos, hasDerivAt_g_S_layer_neg,
-                   A_S_symm, layerLebesgueEnergyPos_eq,
-                   layerLebesgueEnergyNeg_eq, E_phi_g_S_eq)
+23  → previous round (hasDerivAt_g_S_layer_pos, hasDerivAt_g_S_layer_neg,
+                       A_S_symm, layerLebesgueEnergyPos_eq,
+                       layerLebesgueEnergyNeg_eq, E_phi_g_S_eq)
+21  → integral_g_S_eq_q_plus_error, integral_g_S_sq_eq_q_plus_error
+       (rho_S/volume conversion + partition of ℝ + tail symmetry)
+20  → Var_phi_g_S_expansion (algebraic q(1−q) expansion + IsBigO algebra)
+19  → Var_f_S_asymp (Var_f_S = Var_phi g_S via probability-measure
+       linearity; bridge IsBigO → BigOInv1D)
 ```
 
 ## Axioms discharged in this round
