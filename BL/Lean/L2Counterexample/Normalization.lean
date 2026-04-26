@@ -196,9 +196,221 @@ theorem phi_S_tail (S x : ℝ) (hS : 1 ≤ S) (hx : 1 + eps_S S ≤ x) :
   rw [h_int_simp, h_int_eq] at h_ftc
   linarith [h_ftc]
 
-/-- Smallness at the layer boundary: `phi_S S (1+ε_S) = O(S^{-2})`. -/
-axiom phi_S_boundary_small :
-    BigOInv (fun S => phi_S S (1 + eps_S S)) (fun _ => 0) 2
+/-- Helper: `phi_S(b) = ∫_0^b (b - t) · phi''_S(t) dt` for `b ≥ 0`,
+via integration by parts. -/
+private lemma phi_S_eq_ibp {S : ℝ} (hS : 0 < S) {b : ℝ} (hb : 0 ≤ b) :
+    phi_S S b = ∫ t in (0 : ℝ)..b, (b - t) * phiDer2_S S t := by
+  have h_u_cont : ContinuousOn (fun t : ℝ => b - t) (Set.uIcc 0 b) :=
+    (continuous_const.sub continuous_id).continuousOn
+  have h_v_cont : ContinuousOn (phiDer_S S) (Set.uIcc 0 b) :=
+    (phiDer_S_contDiff hS).continuous.continuousOn
+  have h_u_deriv : ∀ x ∈ Set.Ioo (min 0 b) (max 0 b),
+      HasDerivAt (fun s : ℝ => b - s) (-1) x := by
+    intro x _
+    simpa using (hasDerivAt_const x b).sub (hasDerivAt_id x)
+  have h_v_deriv : ∀ x ∈ Set.Ioo (min 0 b) (max 0 b),
+      HasDerivAt (phiDer_S S) (phiDer2_S S x) x := by
+    intro x _
+    have h_eq : phiDer2_S S = deriv (phiDer_S S) := (deriv_phiDer_S hS).symm
+    rw [h_eq]
+    have h_diff : Differentiable ℝ (phiDer_S S) :=
+      (phiDer_S_contDiff hS).differentiable (by simp)
+    exact (h_diff x).hasDerivAt
+  have h_u'_int : IntervalIntegrable (fun _ : ℝ => (-1 : ℝ)) MeasureTheory.volume 0 b :=
+    intervalIntegral.intervalIntegrable_const
+  have h_v'_int : IntervalIntegrable (phiDer2_S S) MeasureTheory.volume 0 b :=
+    (phiDer2_S_continuous hS).intervalIntegrable _ _
+  have h_ibp := intervalIntegral.integral_mul_deriv_eq_deriv_mul_of_hasDerivAt
+    h_u_cont h_v_cont h_u_deriv h_v_deriv h_u'_int h_v'_int
+  -- h_ibp: ∫(b-t)·phi''_S = (b-b)·phi'(b) - (b-0)·phi'(0) - ∫(-1)·phi'_S
+  -- = 0 - 0 - (-∫ phi'_S) = ∫ phi'_S = phi_S(b)
+  -- h_ibp: ∫(b-t)·phi''_S = (b-b)·phi'_S(b) - (b-0)·phi'_S(0) - ∫(-1)·phi'_S
+  -- Simplify using phi'_S(0) = 0.
+  rw [phiDer_S_zero] at h_ibp
+  -- h_ibp: ∫(b-t)·phi''_S = (b-b)·phi'(b) - (b-0)·0 - ∫(-1)·phi'
+  have h_neg_int : ∫ t in (0:ℝ)..b, (-1 : ℝ) * phiDer_S S t
+                 = -(∫ t in (0:ℝ)..b, phiDer_S S t) := by
+    rw [intervalIntegral.integral_const_mul]; ring
+  have h_phi_int : ∫ t in (0:ℝ)..b, phiDer_S S t = phi_S S b := by
+    show ∫ t in (0:ℝ)..b, psi (phiDer2_S S) t = phi (phiDer2_S S) b
+    rfl
+  rw [h_neg_int, h_phi_int] at h_ibp
+  linarith [h_ibp]
+
+/-- Smallness at the layer boundary: `phi_S S (1+ε_S) = O(S^{-2})`.
+
+Proof: integration by parts gives `phi_S(1+ε) = ∫_0^{1+ε} (1+ε-t)·phi''_S(t) dt`.
+Split at `t = 1-ε`:
+* On `[0, 1-ε]`: `phi''_S = η_S`, so `∫_0^{1-ε} (1+ε-t)·η_S dt
+  = η_S·((1+ε)(1-ε) - (1-ε)²/2) ≤ 2·η_S = 2/S^4 ≤ 2/S²` for `S ≥ 1`.
+* On `[1-ε, 1+ε]`: `(1+ε-t) ≤ 2·ε`, and `∫ phi''_S = S + 2·η_S·ε`
+  via `integral_phiDer2_S_layer`. So bound by
+  `2·ε·(S + 2·η_S·ε) ≤ 4·ε·S = 4/S²` for `S ≥ 1`.
+Total: `phi_S(1+ε) ≤ 6/S²`. -/
+theorem phi_S_boundary_small :
+    BigOInv (fun S => phi_S S (1 + eps_S S)) (fun _ => 0) 2 := by
+  refine ⟨8, 1, one_pos, ?_⟩
+  intro S hS_one
+  have hSpos : 0 < S := by linarith
+  have heps_pos : 0 < eps_S S := eps_S_pos hSpos
+  have heta_pos : 0 < eta_S S := eta_S_pos hSpos
+  have heps_le_one : eps_S S ≤ 1 := by
+    unfold eps_S
+    rw [show ((-(3 : ℤ))) = -((3 : ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+    exact inv_le_one_of_one_le₀ (one_le_pow₀ hS_one)
+  set b := 1 + eps_S S with hb_def
+  have hb_nn : (0 : ℝ) ≤ b := by simp [hb_def]; linarith
+  have h_one_minus_eps_nn : (0 : ℝ) ≤ 1 - eps_S S := by linarith
+  have h_le : 1 - eps_S S ≤ b := by simp [hb_def]; linarith
+  -- IBP: phi_S(b) = ∫_0^b (b-t)·phi''_S(t) dt.
+  have h_ibp : phi_S S b = ∫ t in (0:ℝ)..b, (b - t) * phiDer2_S S t :=
+    phi_S_eq_ibp hSpos hb_nn
+  -- Split: ∫_0^b = ∫_0^{1-ε} + ∫_{1-ε}^b.
+  have h_int_split :
+      ∫ t in (0:ℝ)..b, (b - t) * phiDer2_S S t
+        = (∫ t in (0:ℝ)..(1 - eps_S S), (b - t) * phiDer2_S S t)
+        + (∫ t in (1 - eps_S S)..b, (b - t) * phiDer2_S S t) := by
+    have h_int1 : IntervalIntegrable (fun t => (b - t) * phiDer2_S S t) MeasureTheory.volume
+        0 (1 - eps_S S) :=
+      ((continuous_const.sub continuous_id).mul (phiDer2_S_continuous hSpos)).intervalIntegrable _ _
+    have h_int2 : IntervalIntegrable (fun t => (b - t) * phiDer2_S S t) MeasureTheory.volume
+        (1 - eps_S S) b :=
+      ((continuous_const.sub continuous_id).mul (phiDer2_S_continuous hSpos)).intervalIntegrable _ _
+    exact (intervalIntegral.integral_add_adjacent_intervals h_int1 h_int2).symm
+  -- Bound each piece.
+  -- Piece 1: ∫_0^{1-ε} (b-t)·eta_S dt ≤ 2·eta_S = 2/S^4 ≤ 2/S^2.
+  have h_piece1_eq : ∫ t in (0:ℝ)..(1 - eps_S S), (b - t) * phiDer2_S S t
+                   = ∫ t in (0:ℝ)..(1 - eps_S S), (b - t) * eta_S S := by
+    apply intervalIntegral.integral_congr
+    intro t ht
+    rw [Set.uIcc_of_le h_one_minus_eps_nn, Set.mem_Icc] at ht
+    have h_core : phiDer2_S S t = eta_S S :=
+      phiDer2_S_core hSpos (by rw [abs_of_nonneg ht.1]; exact ht.2)
+    show (b - t) * phiDer2_S S t = (b - t) * eta_S S
+    rw [h_core]
+  -- Piece 2: ∫_{1-ε}^b (b-t)·phi''_S(t) dt ≤ 2·ε · ∫ phi''_S = 2ε(S + 2 η ε).
+  -- Put bounds together.
+  -- For piece 1: |(b-t)·eta_S| = (b-t)·eta_S ≤ b · eta_S ≤ 2 · eta_S (since b ≤ 2).
+  --   ∫ ≤ 2·eta_S · (1-ε) ≤ 2·eta_S = 2/S^4.
+  have hb_le_2 : b ≤ 2 := by simp [hb_def]; linarith
+  have h_piece1_bd : ∫ t in (0:ℝ)..(1 - eps_S S), (b - t) * eta_S S
+                   ≤ 2 * eta_S S := by
+    -- (b-t)·eta_S ≤ b·eta_S ≤ 2·eta_S on [0, 1-ε]
+    have h_bd : ∀ t ∈ Set.uIcc (0:ℝ) (1 - eps_S S),
+        (b - t) * eta_S S ≤ 2 * eta_S S := by
+      intro t ht
+      rw [Set.uIcc_of_le h_one_minus_eps_nn, Set.mem_Icc] at ht
+      have hbt : b - t ≤ 2 := by linarith
+      have h_eta_nn : 0 ≤ eta_S S := heta_pos.le
+      nlinarith [hbt, h_eta_nn]
+    have h_int_le : ∫ t in (0:ℝ)..(1 - eps_S S), (b - t) * eta_S S
+                  ≤ ∫ _ in (0:ℝ)..(1 - eps_S S), 2 * eta_S S := by
+      apply intervalIntegral.integral_mono_on h_one_minus_eps_nn
+      · exact ((continuous_const.sub continuous_id).mul continuous_const).intervalIntegrable _ _
+      · exact (continuous_const).intervalIntegrable _ _
+      · intro t ht
+        apply h_bd
+        rw [Set.uIcc_of_le h_one_minus_eps_nn]
+        exact ht
+    have h_const_int : ∫ _ in (0:ℝ)..(1 - eps_S S), 2 * eta_S S
+                     = 2 * eta_S S * (1 - eps_S S) := by
+      rw [intervalIntegral.integral_const, smul_eq_mul]; ring
+    rw [h_const_int] at h_int_le
+    have h_le2 : 2 * eta_S S * (1 - eps_S S) ≤ 2 * eta_S S := by
+      have h_eta_nn : 0 ≤ eta_S S := heta_pos.le
+      nlinarith
+    linarith
+  -- Piece 2: similar.
+  have h_piece2_bd : ∫ t in (1 - eps_S S)..b, (b - t) * phiDer2_S S t
+                   ≤ 2 * eps_S S * (S + 2 * eta_S S * eps_S S) := by
+    -- (b-t) ≤ 2ε on [1-ε, b], phi''_S ≥ 0, so (b-t)·phi''_S ≤ 2ε·phi''_S.
+    have h_bd : ∀ t ∈ Set.uIcc (1 - eps_S S) b,
+        (b - t) * phiDer2_S S t ≤ 2 * eps_S S * phiDer2_S S t := by
+      intro t ht
+      rw [Set.uIcc_of_le h_le, Set.mem_Icc] at ht
+      have hbt : b - t ≤ 2 * eps_S S := by simp [hb_def] at ht ⊢; linarith
+      have h_phi''_nn : 0 ≤ phiDer2_S S t := (phiDer2_S_pos hSpos t).le
+      nlinarith
+    have h_int_le : ∫ t in (1 - eps_S S)..b, (b - t) * phiDer2_S S t
+                  ≤ ∫ t in (1 - eps_S S)..b, 2 * eps_S S * phiDer2_S S t := by
+      apply intervalIntegral.integral_mono_on h_le
+      · exact ((continuous_const.sub continuous_id).mul (phiDer2_S_continuous hSpos)).intervalIntegrable _ _
+      · exact (continuous_const.mul (phiDer2_S_continuous hSpos)).intervalIntegrable _ _
+      · intro t ht
+        apply h_bd
+        rw [Set.uIcc_of_le h_le]
+        exact ht
+    have h_factor : ∫ t in (1 - eps_S S)..b, 2 * eps_S S * phiDer2_S S t
+                  = 2 * eps_S S * ∫ t in (1 - eps_S S)..b, phiDer2_S S t := by
+      rw [intervalIntegral.integral_const_mul]
+    rw [h_factor] at h_int_le
+    have h_layer : ∫ t in (1 - eps_S S)..b, phiDer2_S S t = S + 2 * eta_S S * eps_S S := by
+      simp only [hb_def]
+      exact integral_phiDer2_S_layer hS_one
+    rw [h_layer] at h_int_le
+    exact h_int_le
+  -- Combine: |phi_S(1+ε)| = phi_S(1+ε) ≤ 2·eta_S + 2·ε·(S + 2·η·ε).
+  have h_phi_nn : 0 ≤ phi_S S b := by
+    have h_q := phi_S_quadratic_lower hSpos b
+    nlinarith [sq_nonneg b, heta_pos.le]
+  have h_total : phi_S S b ≤ 2 * eta_S S + 2 * eps_S S * (S + 2 * eta_S S * eps_S S) := by
+    rw [h_ibp, h_int_split, h_piece1_eq]
+    linarith [h_piece1_bd, h_piece2_bd]
+  -- Final: phi_S(1+ε) ≤ 6 · S^(-2).
+  -- Specifically: 2·eta_S = 2/S^4 ≤ 2/S² for S ≥ 1.
+  -- 2·ε·S = 2/S² and 2·ε·2·η·ε = 4 η ε² = 4/(S^4 · S^6) = 4/S^10 ≤ 4/S² for S ≥ 1.
+  have h_pow_eq : (S : ℝ)^(-(2:ℤ)) = 1/S^2 := by
+    rw [show (-(2:ℤ)) = -((2:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+    exact (one_div _).symm
+  show |phi_S S b - (fun _ : ℝ => (0 : ℝ)) S| ≤ 8 * S ^ (-(2 : ℤ))
+  show |phi_S S b - 0| ≤ 8 * S ^ (-(2 : ℤ))
+  rw [sub_zero, abs_of_nonneg h_phi_nn, h_pow_eq]
+  -- Show: phi_S(1+ε) ≤ 6/S²
+  have h_eta_eq : eta_S S = 1/S^4 := by
+    unfold eta_S
+    rw [show (-(4:ℤ)) = -((4:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+    exact (one_div _).symm
+  have h_eps_eq : eps_S S = 1/S^3 := by
+    unfold eps_S
+    rw [show (-(3:ℤ)) = -((3:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+    exact (one_div _).symm
+  -- 2 * eta + 2*eps*(S + 2*eta*eps) ≤ 6/S^2
+  -- = 2/S^4 + 2*(1/S^3)*S + 4*(1/S^4)*(1/S^3)*(1/S^3)
+  -- = 2/S^4 + 2/S^2 + 4/S^10
+  -- ≤ 6/S^2 for S ≥ 1
+  have hS2_pos : (0 : ℝ) < S^2 := by positivity
+  have hS3_pos : (0 : ℝ) < S^3 := by positivity
+  have hS4_pos : (0 : ℝ) < S^4 := by positivity
+  have hS10_pos : (0 : ℝ) < S^10 := by positivity
+  have hS2_le_S4 : (1 : ℝ)/S^4 ≤ 1/S^2 := by
+    apply one_div_le_one_div_of_le hS2_pos
+    have : S^2 ≤ S^4 := by nlinarith [hS_one]
+    linarith
+  have hS2_le_S10 : (1 : ℝ)/S^10 ≤ 1/S^2 := by
+    apply one_div_le_one_div_of_le hS2_pos
+    have h_S8_ge_1 : (1 : ℝ) ≤ S^8 := one_le_pow₀ hS_one
+    have h_eq : S^10 = S^2 * S^8 := by ring
+    nlinarith
+  -- compute the upper bound
+  have h_compute : 2 * eta_S S + 2 * eps_S S * (S + 2 * eta_S S * eps_S S)
+                 = 2/S^4 + 2/S^2 + 4/S^10 := by
+    rw [h_eta_eq, h_eps_eq]
+    have hSne : (S : ℝ) ≠ 0 := hSpos.ne'
+    field_simp
+    ring
+  rw [show (8 : ℝ) * (1/S^2) = 8/S^2 from by ring]
+  have h_a : (2 : ℝ)/S^4 ≤ 2/S^2 := by
+    have : (2 : ℝ) * (1/S^4) ≤ 2 * (1/S^2) := by linarith
+    linarith [show (2:ℝ)/S^4 = 2 * (1/S^4) from by ring,
+              show (2:ℝ)/S^2 = 2 * (1/S^2) from by ring]
+  have h_b : (4 : ℝ)/S^10 ≤ 4/S^2 := by
+    have : (4 : ℝ) * (1/S^10) ≤ 4 * (1/S^2) := by linarith
+    linarith [show (4:ℝ)/S^10 = 4 * (1/S^10) from by ring,
+              show (4:ℝ)/S^2 = 4 * (1/S^2) from by ring]
+  calc phi_S S b ≤ 2 * eta_S S + 2 * eps_S S * (S + 2 * eta_S S * eps_S S) := h_total
+    _ = 2/S^4 + 2/S^2 + 4/S^10 := h_compute
+    _ ≤ 2/S^2 + 2/S^2 + 4/S^2 := by linarith [h_a, h_b]
+    _ = 8/S^2 := by ring
 
 /-- Helper: `phiDer_S` is nonneg on `[0, ∞)` (since it has `phiDer_S 0 = 0`
 and `phiDer2_S ≥ 0`). -/
