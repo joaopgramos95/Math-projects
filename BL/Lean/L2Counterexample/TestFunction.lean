@@ -1147,6 +1147,84 @@ private lemma rho_S_set_eq {S : ℝ} (hS : 1 < S) (s : Set ℝ)
   congr 1
   funext x; ring
 
+/-- Helper: `g_S` evaluates to `1` whenever `1+ε_S ≤ |x|` (including
+the boundary case, which is *not* covered by `g_S_exterior_eq_one`). -/
+lemma g_S_eq_one_of_ge {S : ℝ} (hS : 0 < S) {x : ℝ}
+    (hx : 1 + eps_S S ≤ |x|) : g_S S x = 1 := by
+  unfold g_S
+  have h1 : ¬ |x| ≤ 1 - eps_S S := by
+    intro hle
+    have : (1 + eps_S S) ≤ 1 - eps_S S := le_trans hx hle
+    linarith [eps_S_pos hS]
+  have h2 : ¬ |x| < 1 + eps_S S := not_lt.mpr hx
+  classical
+  rw [if_neg h1, if_neg h2]
+
+/-- Helper: symmetry of the right tail integral via `phi_S_even` and
+`integral_comp_neg_Iic`. -/
+private lemma integral_left_tail_eq_tailInt {S : ℝ} (hS : 0 < S) :
+    ∫ x in Set.Iic (-(1 + eps_S S)), Real.exp (-(phi_S S x))
+      = tailInt_S S := by
+  -- Step 1: rewrite using phi_S_even: exp(-phi(x)) = exp(-phi(-x)).
+  have h_eq : ∀ x, Real.exp (-(phi_S S x)) = Real.exp (-(phi_S S (-x))) := by
+    intro x; rw [phi_S_even]
+  rw [show (fun x => Real.exp (-(phi_S S x))) =
+        (fun x => (fun t => Real.exp (-(phi_S S t))) (-x)) from by
+        funext x; exact h_eq x]
+  -- Step 2: apply integral_comp_neg_Iic.
+  rw [integral_comp_neg_Iic (-(1 + eps_S S))
+        (fun t => Real.exp (-(phi_S S t)))]
+  -- Step 3: simplify -(-c) = c and convert Ioi to Ici (null set).
+  show ∫ x in Set.Ioi (-(-(1 + eps_S S))), Real.exp (-(phi_S S x))
+       = tailInt_S S
+  rw [neg_neg]
+  unfold tailInt_S
+  exact (integral_Ici_eq_integral_Ioi).symm
+
+/-- Helper: ρ_S-measure of the closed exterior `E = {|x| ≥ 1+ε}` equals
+`q_S`. -/
+private lemma rho_S_exterior_eq_q_S {S : ℝ} (hS : 1 < S) :
+    ∫ _ in {x : ℝ | 1 + eps_S S ≤ |x|}, (1 : ℝ) ∂(rho_S S) = q_S S := by
+  have hSpos : 0 < S := lt_trans zero_lt_one hS
+  have hZ_pos : 0 < Z_S S := Z_S_pos_TF hS
+  have hZ_ne : Z_S S ≠ 0 := hZ_pos.ne'
+  have hε_pos : 0 < eps_S S := eps_S_pos hSpos
+  set E := {x : ℝ | 1 + eps_S S ≤ |x|}
+  have hE_meas : MeasurableSet E :=
+    measurableSet_le measurable_const continuous_abs.measurable
+  rw [rho_S_set_eq hS E hE_meas]
+  -- E = Iic (-(1+ε)) ∪ Ici (1+ε) (disjoint).
+  have hE_eq : E = Set.Iic (-(1 + eps_S S)) ∪ Set.Ici (1 + eps_S S) := by
+    ext x
+    simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_Iic, Set.mem_Ici, E]
+    constructor
+    · intro h
+      rcases le_or_gt 0 x with hxnn | hxneg
+      · right; rw [abs_of_nonneg hxnn] at h; exact h
+      · left; rw [abs_of_neg hxneg] at h; linarith
+    · rintro (h | h)
+      · have hxnp : x ≤ 0 := by linarith
+        rw [abs_of_nonpos hxnp]; linarith
+      · have hxnn : (0 : ℝ) ≤ x := by linarith
+        rw [abs_of_nonneg hxnn]; exact h
+  have h_disj : Disjoint (Set.Iic (-(1 + eps_S S))) (Set.Ici (1 + eps_S S)) := by
+    rw [Set.disjoint_iff_inter_eq_empty]; ext x
+    simp only [Set.mem_inter_iff, Set.mem_Iic, Set.mem_Ici, Set.mem_empty_iff_false]
+    constructor
+    · rintro ⟨h1, h2⟩; linarith
+    · intro h; exact h.elim
+  have h_int_full : Integrable (fun x => Real.exp (-(phi_S S x))) :=
+    exp_negPhiS_integrable S hSpos
+  have h_int_left : IntegrableOn (fun x => Real.exp (-(phi_S S x)))
+      (Set.Iic (-(1 + eps_S S))) := h_int_full.integrableOn
+  have h_int_right : IntegrableOn (fun x => Real.exp (-(phi_S S x)))
+      (Set.Ici (1 + eps_S S)) := h_int_full.integrableOn
+  rw [hE_eq, setIntegral_union h_disj measurableSet_Ici h_int_left h_int_right]
+  rw [integral_left_tail_eq_tailInt hSpos]
+  -- ∫_{Ici (1+ε)} exp(-phi) = tailInt_S by definition.
+  show (Z_S S)⁻¹ * (tailInt_S S + tailInt_S S) = 2 * tailInt_S S / Z_S S
+  field_simp; ring
+
 /-- The integral of `g_S` against `ρ_S` decomposed via the partition
 `{|x| ≤ 1-ε} ∪ ((1-ε, 1+ε) ∪ (-1-ε, -1+ε)) ∪ {|x| ≥ 1+ε}`:
 the core contributes `0`, the layers contribute the remainder `R`,
@@ -1158,19 +1236,298 @@ theorem integral_g_S_eq_q_plus_error {S : ℝ} (hS : 1 < S) :
   have hZ_ne : Z_S S ≠ 0 := hZ_pos.ne'
   have hε_pos : 0 < eps_S S := eps_S_pos hSpos
   have hε_lt : eps_S S < 1 := eps_S_lt_one hS
-  -- Witness for R: integral over the layers.
-  refine ⟨∫ x in transitionRegion S, g_S S x ∂(rho_S S), ?_, ?_⟩
-  · -- |R| ≤ t_S: bound the layer integral by ρ_S(T_S) = t_S.
-    sorry
-  · sorry
+  -- Setup: closed exterior E, transition T, and density d.
+  set E := {x : ℝ | 1 + eps_S S ≤ |x|} with hE_def
+  set T := transitionRegion S with hT_def
+  set d : ℝ → ℝ := fun x => (Z_S S)⁻¹ * Real.exp (-(phi_S S x)) with hd_def
+  have hE_meas : MeasurableSet E :=
+    measurableSet_le measurable_const continuous_abs.measurable
+  have hT_meas : MeasurableSet T :=
+    measurableSet_Ioo.union measurableSet_Ioo
+  have hd_nn : ∀ x, 0 ≤ d x := fun x =>
+    mul_nonneg (inv_nonneg.mpr hZ_pos.le) (Real.exp_pos _).le
+  have hd_int : Integrable d :=
+    (exp_negPhiS_integrable S hSpos).const_mul _
+  have hg_cont : Continuous (g_S S) := g_S_continuous hS
+  have hg_meas : Measurable (g_S S) := hg_cont.measurable
+  have hg_nn : ∀ x, 0 ≤ g_S S x := g_S_nonneg hS
+  have hg_le_one : ∀ x, g_S S x ≤ 1 := g_S_le_one hS
+  -- The integrand `d * g_S` is integrable on volume.
+  have hdg_meas : AEStronglyMeasurable (fun x => d x * g_S S x) volume :=
+    hd_int.aestronglyMeasurable.mul hg_cont.aestronglyMeasurable
+  have hdg_bound : ∀ x, ‖d x * g_S S x‖ ≤ ‖d x‖ := by
+    intro x
+    rw [Real.norm_eq_abs, abs_mul, Real.norm_eq_abs]
+    refine mul_le_of_le_one_right (abs_nonneg _) ?_
+    rw [abs_of_nonneg (hg_nn x)]; exact hg_le_one x
+  have hdg_int : Integrable (fun x => d x * g_S S x) :=
+    hd_int.mono hdg_meas (Filter.Eventually.of_forall hdg_bound)
+  -- Witness R = ∫_T g_S dρ_S.
+  refine ⟨∫ x in T, g_S S x ∂(rho_S S), ?_, ?_⟩
+  · -- Bound: |R| ≤ t_S.
+    have hR_eq_vol : ∫ x in T, g_S S x ∂(rho_S S) = ∫ x in T, d x * g_S S x :=
+      setIntegral_rho_S_eq hS T hT_meas (g_S S)
+    rw [hR_eq_vol]
+    have hR_nn : 0 ≤ ∫ x in T, d x * g_S S x := by
+      apply setIntegral_nonneg hT_meas
+      intro x _
+      exact mul_nonneg (hd_nn x) (hg_nn x)
+    rw [abs_of_nonneg hR_nn]
+    -- Step 1: ∫_T d * g_S ≤ ∫_T d * 1 = ∫_T d.
+    have h1 : ∫ x in T, d x * g_S S x ≤ ∫ x in T, d x := by
+      have h_mono : ∫ x in T, d x * g_S S x ≤ ∫ x in T, d x * 1 :=
+        setIntegral_mono_on hdg_int.integrableOn
+          (by simpa using hd_int.integrableOn) hT_meas (fun x _ => by
+            have hd_x_nn : 0 ≤ d x := hd_nn x
+            nlinarith [hg_nn x, hg_le_one x])
+      simpa using h_mono
+    -- Step 2: ∫_T d ≤ ∫_{T_S} d  (since T ⊆ T_S).
+    have hT_sub : T ⊆ T_S S := by
+      intro x hx
+      rcases hx with hx_pos | hx_neg
+      · right
+        rcases hx_pos with ⟨hx1, hx2⟩
+        exact ⟨le_of_lt hx1, le_of_lt hx2⟩
+      · left
+        rcases hx_neg with ⟨hx1, hx2⟩
+        exact ⟨le_of_lt hx1, le_of_lt hx2⟩
+    have h2 : ∫ x in T, d x ≤ ∫ x in T_S S, d x := by
+      apply setIntegral_mono_set hd_int.integrableOn
+      · exact Filter.Eventually.of_forall fun x => hd_nn x
+      · exact Filter.Eventually.of_forall hT_sub
+    -- Step 3: ∫_{T_S} d = t_S.
+    have h3 : ∫ x in T_S S, d x = t_S S := by
+      simp only [d, hd_def]
+      rw [MeasureTheory.integral_const_mul]
+      unfold t_S
+      ring
+    linarith
+  · -- Equality: ∫ g_S dρ = q_S + R.
+    -- Convert LHS to volume integral.
+    rw [integral_rho_S_eq hS (g_S S)]
+    -- Convert R to volume.
+    rw [setIntegral_rho_S_eq hS T hT_meas (g_S S)]
+    -- Split ∫ d * g_S over T and Tᶜ.
+    rw [← integral_add_compl hT_meas hdg_int]
+    -- Reduce to: ∫_Tᶜ d * g_S = q_S.
+    have h_compl_eq : ∫ x in Tᶜ, d x * g_S S x = q_S S := by
+      -- On Tᶜ: g_S = E.indicator 1 (case analysis).
+      -- So d * g_S = E.indicator d on Tᶜ.
+      have h_eq_on_Tcompl : ∀ x ∈ Tᶜ,
+          d x * g_S S x = E.indicator d x := by
+        intro x hx
+        rw [Set.mem_compl_iff] at hx
+        -- x ∉ T = layerPos ∪ layerNeg
+        have hx_outside : ¬ (1 - eps_S S < |x| ∧ |x| < 1 + eps_S S) := by
+          intro ⟨h1, h2⟩
+          apply hx
+          rcases le_or_gt 0 x with hxnn | hxneg
+          · left
+            rw [abs_of_nonneg hxnn] at h1 h2
+            exact ⟨h1, h2⟩
+          · right
+            rw [abs_of_neg hxneg] at h1 h2
+            refine ⟨by linarith, by linarith⟩
+        push_neg at hx_outside
+        by_cases hxE : x ∈ E
+        · -- x ∈ E: |x| ≥ 1+ε, so g_S = 1.
+          rw [Set.indicator_of_mem hxE]
+          rw [g_S_eq_one_of_ge hSpos hxE, mul_one]
+        · -- x ∉ E: |x| < 1+ε. Combined with ¬(1-ε < |x| < 1+ε), so |x| ≤ 1-ε.
+          have hxE' : ¬ (1 + eps_S S ≤ |x|) := hxE
+          have hxabs_lt : |x| < 1 + eps_S S := lt_of_not_ge hxE'
+          have hxcore : |x| ≤ 1 - eps_S S := by
+            by_contra h
+            push_neg at h
+            exact absurd (hx_outside h) (not_le.mpr hxabs_lt)
+          rw [Set.indicator_of_notMem hxE]
+          rw [g_S_core_eq_zero hSpos ?_, mul_zero]
+          -- coreRegion = Icc (-1+ε) (1-ε); from |x| ≤ 1-ε.
+          refine ⟨?_, ?_⟩
+          · have : -|x| ≤ x := neg_abs_le x
+            linarith [abs_nonneg x]
+          · exact le_trans (le_abs_self x) hxcore
+      rw [setIntegral_congr_fun hT_meas.compl h_eq_on_Tcompl]
+      -- ∫_Tᶜ E.indicator d = ∫_{Tᶜ ∩ E} d = ∫_E d (since E ⊆ Tᶜ).
+      rw [setIntegral_indicator hE_meas]
+      -- Now goal: ∫_{Tᶜ ∩ E} d = q_S.
+      have hTcomplE : Tᶜ ∩ E = E := by
+        ext x
+        simp only [Set.mem_inter_iff, Set.mem_compl_iff, and_iff_right_iff_imp]
+        intro hx_E
+        have hx_E' : 1 + eps_S S ≤ |x| := hx_E
+        intro hx_T
+        rcases hx_T with hxL | hxL
+        · rcases hxL with ⟨h1, h2⟩
+          have hxpos : 0 < x := by linarith
+          have habs : |x| < 1 + eps_S S := by rw [abs_of_pos hxpos]; exact h2
+          linarith
+        · rcases hxL with ⟨h1, h2⟩
+          have hxneg : x < 0 := by linarith
+          have habs : |x| < 1 + eps_S S := by rw [abs_of_neg hxneg]; linarith
+          linarith
+      rw [hTcomplE]
+      -- ∫_E d = (1/Z_S) ∫_E exp(-phi)
+      have h_unfold_d : ∫ x in E, d x = (Z_S S)⁻¹ * ∫ x in E, Real.exp (-(phi_S S x)) := by
+        simp only [d, hd_def]
+        rw [MeasureTheory.integral_const_mul]
+      rw [h_unfold_d]
+      -- Use rho_S_exterior_eq_q_S to get q_S, working backwards:
+      -- rho_S_exterior_eq_q_S says ∫ _ in E, 1 ∂rho = q_S
+      -- And ∫ _ in E, 1 ∂rho = (1/Z_S) ∫_E exp(-phi) by rho_S_set_eq.
+      have h_set := rho_S_set_eq hS E hE_meas
+      have h_rho_E := rho_S_exterior_eq_q_S hS
+      rw [h_set] at h_rho_E
+      exact h_rho_E
+    rw [h_compl_eq]
+    ring
 
 /-- **Second moment of `g_S`**: `∫ g_S^2 ∂ρ_S = q_S + O(S^{-3})`.
 
 Proof analogous to `integral_g_S_eq_q_plus_error` since `g_S² = g_S` on
 core (where both equal `0`) and on exterior (where both equal `1`); on
 the layers, `g_S² ∈ [0, 1]` so the same `t_S`-bound applies. -/
-axiom integral_g_S_sq_eq_q_plus_error {S : ℝ} (hS : 1 < S) :
-  ∃ R : ℝ, |R| ≤ t_S S ∧ ∫ x, (g_S S x)^2 ∂(rho_S S) = q_S S + R
+theorem integral_g_S_sq_eq_q_plus_error {S : ℝ} (hS : 1 < S) :
+    ∃ R : ℝ, |R| ≤ t_S S ∧ ∫ x, (g_S S x)^2 ∂(rho_S S) = q_S S + R := by
+  have hSpos : 0 < S := lt_trans zero_lt_one hS
+  have hZ_pos : 0 < Z_S S := Z_S_pos_TF hS
+  have hZ_ne : Z_S S ≠ 0 := hZ_pos.ne'
+  have hε_pos : 0 < eps_S S := eps_S_pos hSpos
+  have hε_lt : eps_S S < 1 := eps_S_lt_one hS
+  -- Setup.
+  set E := {x : ℝ | 1 + eps_S S ≤ |x|} with hE_def
+  set T := transitionRegion S with hT_def
+  set d : ℝ → ℝ := fun x => (Z_S S)⁻¹ * Real.exp (-(phi_S S x)) with hd_def
+  have hE_meas : MeasurableSet E :=
+    measurableSet_le measurable_const continuous_abs.measurable
+  have hT_meas : MeasurableSet T :=
+    measurableSet_Ioo.union measurableSet_Ioo
+  have hd_nn : ∀ x, 0 ≤ d x := fun x =>
+    mul_nonneg (inv_nonneg.mpr hZ_pos.le) (Real.exp_pos _).le
+  have hd_int : Integrable d :=
+    (exp_negPhiS_integrable S hSpos).const_mul _
+  have hg_cont : Continuous (g_S S) := g_S_continuous hS
+  have hg_meas : Measurable (g_S S) := hg_cont.measurable
+  have hg_nn : ∀ x, 0 ≤ g_S S x := g_S_nonneg hS
+  have hg_le_one : ∀ x, g_S S x ≤ 1 := g_S_le_one hS
+  have hg_sq_nn : ∀ x, 0 ≤ (g_S S x)^2 := fun x => sq_nonneg _
+  have hg_sq_le_one : ∀ x, (g_S S x)^2 ≤ 1 := fun x => by
+    have h := pow_le_pow_left₀ (hg_nn x) (hg_le_one x) 2
+    simpa using h
+  -- The integrand `d * g_S^2` is integrable on volume.
+  have hgsq_cont : Continuous (fun x => (g_S S x)^2) := hg_cont.pow 2
+  have hdg_meas : AEStronglyMeasurable (fun x => d x * (g_S S x)^2) volume :=
+    hd_int.aestronglyMeasurable.mul hgsq_cont.aestronglyMeasurable
+  have hdg_bound : ∀ x, ‖d x * (g_S S x)^2‖ ≤ ‖d x‖ := by
+    intro x
+    rw [Real.norm_eq_abs, abs_mul, Real.norm_eq_abs]
+    refine mul_le_of_le_one_right (abs_nonneg _) ?_
+    rw [abs_of_nonneg (hg_sq_nn x)]; exact hg_sq_le_one x
+  have hdg_int : Integrable (fun x => d x * (g_S S x)^2) :=
+    hd_int.mono hdg_meas (Filter.Eventually.of_forall hdg_bound)
+  -- Witness R = ∫_T g_S^2 dρ_S.
+  refine ⟨∫ x in T, (g_S S x)^2 ∂(rho_S S), ?_, ?_⟩
+  · -- Bound: |R| ≤ t_S.
+    have hR_eq_vol : ∫ x in T, (g_S S x)^2 ∂(rho_S S)
+                   = ∫ x in T, d x * (g_S S x)^2 :=
+      setIntegral_rho_S_eq hS T hT_meas (fun x => (g_S S x)^2)
+    rw [hR_eq_vol]
+    have hR_nn : 0 ≤ ∫ x in T, d x * (g_S S x)^2 := by
+      apply setIntegral_nonneg hT_meas
+      intro x _
+      exact mul_nonneg (hd_nn x) (hg_sq_nn x)
+    rw [abs_of_nonneg hR_nn]
+    have h1 : ∫ x in T, d x * (g_S S x)^2 ≤ ∫ x in T, d x := by
+      have h_mono : ∫ x in T, d x * (g_S S x)^2 ≤ ∫ x in T, d x * 1 :=
+        setIntegral_mono_on hdg_int.integrableOn
+          (by simpa using hd_int.integrableOn) hT_meas (fun x _ => by
+            have hd_x_nn : 0 ≤ d x := hd_nn x
+            nlinarith [hg_sq_nn x, hg_sq_le_one x])
+      simpa using h_mono
+    have hT_sub : T ⊆ T_S S := by
+      intro x hx
+      rcases hx with hx_pos | hx_neg
+      · right
+        rcases hx_pos with ⟨hx1, hx2⟩
+        exact ⟨le_of_lt hx1, le_of_lt hx2⟩
+      · left
+        rcases hx_neg with ⟨hx1, hx2⟩
+        exact ⟨le_of_lt hx1, le_of_lt hx2⟩
+    have h2 : ∫ x in T, d x ≤ ∫ x in T_S S, d x := by
+      apply setIntegral_mono_set hd_int.integrableOn
+      · exact Filter.Eventually.of_forall fun x => hd_nn x
+      · exact Filter.Eventually.of_forall hT_sub
+    have h3 : ∫ x in T_S S, d x = t_S S := by
+      simp only [d, hd_def]
+      rw [MeasureTheory.integral_const_mul]
+      unfold t_S
+      ring
+    linarith
+  · -- Equality: ∫ g_S^2 dρ = q_S + R.
+    rw [integral_rho_S_eq hS (fun x => (g_S S x)^2)]
+    rw [setIntegral_rho_S_eq hS T hT_meas (fun x => (g_S S x)^2)]
+    rw [← integral_add_compl hT_meas hdg_int]
+    have h_compl_eq : ∫ x in Tᶜ, d x * (g_S S x)^2 = q_S S := by
+      have h_eq_on_Tcompl : ∀ x ∈ Tᶜ,
+          d x * (g_S S x)^2 = E.indicator d x := by
+        intro x hx
+        rw [Set.mem_compl_iff] at hx
+        have hx_outside : ¬ (1 - eps_S S < |x| ∧ |x| < 1 + eps_S S) := by
+          intro ⟨h1, h2⟩
+          apply hx
+          rcases le_or_gt 0 x with hxnn | hxneg
+          · left
+            rw [abs_of_nonneg hxnn] at h1 h2
+            exact ⟨h1, h2⟩
+          · right
+            rw [abs_of_neg hxneg] at h1 h2
+            refine ⟨by linarith, by linarith⟩
+        push_neg at hx_outside
+        by_cases hxE : x ∈ E
+        · -- x ∈ E: g_S = 1, so g_S^2 = 1.
+          rw [Set.indicator_of_mem hxE]
+          rw [g_S_eq_one_of_ge hSpos hxE]
+          ring
+        · -- x ∉ E: g_S = 0 on core.
+          have hxE' : ¬ (1 + eps_S S ≤ |x|) := hxE
+          have hxabs_lt : |x| < 1 + eps_S S := lt_of_not_ge hxE'
+          have hxcore : |x| ≤ 1 - eps_S S := by
+            by_contra h
+            push_neg at h
+            exact absurd (hx_outside h) (not_le.mpr hxabs_lt)
+          rw [Set.indicator_of_notMem hxE]
+          have hg_zero : g_S S x = 0 := g_S_core_eq_zero hSpos ⟨by
+            have : -|x| ≤ x := neg_abs_le x; linarith [abs_nonneg x],
+            le_trans (le_abs_self x) hxcore⟩
+          rw [hg_zero]; ring
+      rw [setIntegral_congr_fun hT_meas.compl h_eq_on_Tcompl]
+      rw [setIntegral_indicator hE_meas]
+      have hTcomplE : Tᶜ ∩ E = E := by
+        ext x
+        simp only [Set.mem_inter_iff, Set.mem_compl_iff, and_iff_right_iff_imp]
+        intro hx_E
+        have hx_E' : 1 + eps_S S ≤ |x| := hx_E
+        intro hx_T
+        rcases hx_T with hxL | hxL
+        · rcases hxL with ⟨h1, h2⟩
+          have hxpos : 0 < x := by linarith
+          have habs : |x| < 1 + eps_S S := by rw [abs_of_pos hxpos]; exact h2
+          linarith
+        · rcases hxL with ⟨h1, h2⟩
+          have hxneg : x < 0 := by linarith
+          have habs : |x| < 1 + eps_S S := by rw [abs_of_neg hxneg]; linarith
+          linarith
+      rw [hTcomplE]
+      have h_unfold_d : ∫ x in E, d x = (Z_S S)⁻¹ * ∫ x in E, Real.exp (-(phi_S S x)) := by
+        simp only [d, hd_def]
+        rw [MeasureTheory.integral_const_mul]
+      rw [h_unfold_d]
+      have h_set := rho_S_set_eq hS E hE_meas
+      have h_rho_E := rho_S_exterior_eq_q_S hS
+      rw [h_set] at h_rho_E
+      exact h_rho_E
+    rw [h_compl_eq]
+    ring
 
 /-- **Variance of `g_S`** equals `q_S(1-q_S) + O(S^{-3})`.
 
