@@ -240,9 +240,60 @@ definition of `Var_f_S`). -/
 axiom EE_phi_S_asymp :
     BigOInv1D EE_phi_S (fun S => 1 / S - 1 / S ^ 2) 3
 
-/-- `Var rho_S f_S = 1/S - 2/S² + O(S⁻³)`. -/
-axiom Var_f_S_asymp :
-    BigOInv1D Var_f_S (fun S => 1 / S - 2 / S ^ 2) 3
+/-- The integrated variance `Var_f_S S = ∫ (g_S - c_S)² dρ_S` equals the
+algebraic variance `Var_phi S (g_S S) = ∫ g_S² dρ - (∫ g_S dρ)²`. The
+identity uses linearity of integration and that `ρ_S` is a probability
+measure (so `∫ 1 dρ = 1`). Requires `1 < S` so that `g_S ∈ L²(ρ_S)`. -/
+lemma Var_f_S_eq_Var_phi_g_S {S : ℝ} (hS : 1 < S) :
+    Var_f_S S = Var_phi S (g_S S) := by
+  have hSpos : 0 < S := lt_trans zero_lt_one hS
+  haveI := rho_S_isProb_of_pos hSpos
+  have h_g_int : Integrable (g_S S) (rho_S S) :=
+    (g_S_memL2 S).integrable (by norm_num)
+  have h_g_sq_int : Integrable (fun x => (g_S S x)^2) (rho_S S) := by
+    have h_mul : MemLp (fun x => g_S S x * g_S S x) 1 (rho_S S) :=
+      MemLp.mul' (g_S_memL2 S) (g_S_memL2 S)
+    have h_int_mul : Integrable (fun x => g_S S x * g_S S x) (rho_S S) :=
+      h_mul.integrable le_rfl
+    convert h_int_mul using 1
+    funext x; ring
+  unfold Var_f_S Var_phi
+  -- Expand (g - c)² pointwise.
+  have h_expand : (fun x => (g_S S x - cc_S S)^2)
+      = (fun x => ((g_S S x)^2 - 2 * cc_S S * g_S S x) + cc_S S^2) := by
+    funext x; ring
+  rw [h_expand]
+  -- Two-step linearity: ∫ ((g² - 2c·g) + c²) = ∫ (g² - 2c·g) + ∫ c².
+  have h_int_inner : Integrable (fun x => (g_S S x)^2 - 2 * cc_S S * g_S S x) (rho_S S) :=
+    h_g_sq_int.sub (h_g_int.const_mul (2 * cc_S S))
+  rw [integral_add h_int_inner (integrable_const _)]
+  rw [integral_sub h_g_sq_int (h_g_int.const_mul (2 * cc_S S))]
+  rw [integral_const_mul]
+  -- ∫ const dρ = const since ρ is a probability measure.
+  have h_const_int : ∫ _ : ℝ, cc_S S^2 ∂(rho_S S) = cc_S S^2 := by
+    rw [integral_const, measureReal_univ_eq_one, smul_eq_mul, one_mul]
+  rw [h_const_int]
+  unfold cc_S
+  ring
+
+/-- `Var rho_S f_S = 1/S - 2/S² + O(S⁻³)`. Follows from
+`Var_phi_g_S_expansion` and `Var_f_S_eq_Var_phi_g_S`. -/
+theorem Var_f_S_asymp :
+    BigOInv1D Var_f_S (fun S => 1 / S - 2 / S ^ 2) 3 := by
+  obtain ⟨C, hC⟩ := Var_phi_g_S_expansion.bound
+  rw [Filter.eventually_atTop] at hC
+  obtain ⟨S₀, hS₀⟩ := hC
+  refine ⟨C, max S₀ 2, ?_, fun S hS => ?_⟩
+  · exact lt_max_of_lt_right (by norm_num : (0:ℝ) < 2)
+  have hS' : S₀ ≤ S := le_trans (le_max_left _ _) hS
+  have hS_2 : (2 : ℝ) ≤ S := le_trans (le_max_right _ _) hS
+  have hS_1 : (1 : ℝ) < S := by linarith
+  have hS_pos : 0 < S := by linarith
+  rw [Var_f_S_eq_Var_phi_g_S hS_1]
+  have h := hS₀ S hS'
+  rw [Real.norm_eq_abs, Real.norm_eq_abs,
+      abs_of_pos (zpow_pos hS_pos _)] at h
+  exact h
 
 /-! ## Parity-orthogonality package (blueprint task #11)
 
