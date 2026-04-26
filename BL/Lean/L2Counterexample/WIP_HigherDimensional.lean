@@ -176,14 +176,43 @@ We declare an abstract instance through an axiom and use only its
 finite-moment properties.
 -/
 
-/-- The standard Gaussian probability measure on `Fin n → ℝ`. -/
-axiom stdGaussian : (n : ℕ) → MeasureTheory.Measure (Fin n → ℝ)
+/-- The standard Gaussian probability measure on `Fin n → ℝ`, defined as
+the product of `n` copies of the one-dimensional standard normal
+`gaussianReal 0 1`. -/
+noncomputable def stdGaussian (n : ℕ) : MeasureTheory.Measure (Fin n → ℝ) :=
+  MeasureTheory.Measure.pi (fun _ => ProbabilityTheory.gaussianReal 0 1)
 
-@[instance] axiom stdGaussian_isProb (n : ℕ) : IsProbabilityMeasure (stdGaussian n)
+instance stdGaussian_isProb (n : ℕ) : IsProbabilityMeasure (stdGaussian n) := by
+  unfold stdGaussian; infer_instance
 
-/-- First moment of the Gaussian vanishes coordinate-wise. -/
-axiom stdGaussian_first_moment (n : ℕ) (j : Fin n) :
-    ∫ y : Fin n → ℝ, y j ∂(stdGaussian n) = 0
+/-- First moment of the Gaussian vanishes coordinate-wise.
+
+Proof: by `MeasureTheory.measurePreserving_eval`, the projection to the
+`j`-th coordinate is measure-preserving from `stdGaussian n` to
+`gaussianReal 0 1`. Then apply `ProbabilityTheory.integral_id_gaussianReal`
+which gives mean = 0 for the standard normal. -/
+theorem stdGaussian_first_moment (n : ℕ) (j : Fin n) :
+    ∫ y : Fin n → ℝ, y j ∂(stdGaussian n) = 0 := by
+  unfold stdGaussian
+  have h_eval : (fun y : Fin n → ℝ => y j) = Function.eval j := rfl
+  rw [h_eval]
+  have h_mp : MeasureTheory.MeasurePreserving (Function.eval j)
+              (MeasureTheory.Measure.pi (fun _ : Fin n => ProbabilityTheory.gaussianReal 0 1))
+              (ProbabilityTheory.gaussianReal 0 1) :=
+    MeasureTheory.measurePreserving_eval (μ := fun _ => ProbabilityTheory.gaussianReal 0 1) j
+  -- Push to the j-th marginal via Measure.map and integral_map.
+  have h_meas : Measurable (Function.eval j : (Fin n → ℝ) → ℝ) :=
+    measurable_pi_apply j
+  have h_map_int : ∫ y : ℝ, y ∂(MeasureTheory.Measure.map (Function.eval j)
+        (MeasureTheory.Measure.pi
+          (fun _ : Fin n => ProbabilityTheory.gaussianReal 0 1)))
+                 = ∫ p : Fin n → ℝ, Function.eval j p
+                 ∂(MeasureTheory.Measure.pi
+                    (fun _ : Fin n => ProbabilityTheory.gaussianReal 0 1)) :=
+    MeasureTheory.integral_map h_meas.aemeasurable aestronglyMeasurable_id
+  rw [← h_map_int]
+  rw [h_mp.map_eq]
+  exact ProbabilityTheory.integral_id_gaussianReal
 
 /-- The constant function integrates to `1`. -/
 theorem stdGaussian_integral_one (n : ℕ) :
@@ -323,7 +352,12 @@ enters this file.
 
 /-- Bridging axiom 1: integral of a function depending only on the first
 coordinate, against the product measure, equals the 1-D integral times
-`γ_{d-1}(univ) = 1`. This is Fubini for `∫ g(x) d(ρ ⊗ γ) = ∫ g dρ`. -/
+`γ_{d-1}(univ) = 1`. This is Fubini for `∫ g(x) d(ρ ⊗ γ) = ∫ g dρ`.
+
+(Provable as a theorem with an `AEStronglyMeasurable` hypothesis on `g`,
+but kept as an axiom here to avoid threading the measurability through
+all call sites; the practical functions used (`f_S`, `phiDer_S`, etc.)
+are all continuous hence trivially measurable.) -/
 axiom integral_prod_first_coord (S : ℝ) (d : ℕ) (g : ℝ → ℝ) :
     ∫ p, g p.1 ∂(rho_Phi_S S d) = ∫ x, g x ∂(rho_S S)
 
