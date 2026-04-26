@@ -7,11 +7,11 @@
 | Basic.lean              |      0 |
 | Bump.lean               |      0 |
 | Potential.lean          |      0 |
-| Normalization.lean      |      8 |
+| Normalization.lean      |      7 |
 | TestFunction.lean       |      1 |
 | OneDimensional.lean     |      5 |
 | HigherDimensional.lean  |      5 |
-| **Total**               | **19** |
+| **Total**               | **18** |
 
 `lake build L2Counterexample` succeeds. Zero `sorry` remaining.
 
@@ -33,6 +33,8 @@
 20  → Var_phi_g_S_expansion (algebraic q(1−q) expansion + IsBigO algebra)
 19  → Var_f_S_asymp (Var_f_S = Var_phi g_S via probability-measure
        linearity; bridge IsBigO → BigOInv1D)
+18  → tail_gaussian_bound (1 - exp(-v) ≤ v with v = η u²/2;
+       integrate ∫ exp(-S̃u) · η u²/2 = η/S̃³ via Gamma-function helper)
 ```
 
 ## Axioms discharged in this round
