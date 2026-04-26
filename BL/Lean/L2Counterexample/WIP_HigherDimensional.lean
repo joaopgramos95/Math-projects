@@ -509,18 +509,16 @@ theorem no_uniform_L2_stability (d : ℕ) (hd : 1 ≤ d) :
   rw [productDistSq_eq, productDeficit_eq] at h
   exact h
 
-/-! ## §8. Optional bridge to `EuclideanSpace ℝ (Fin d)`
+/-! ## §8. (Removed) Optional bridge to `EuclideanSpace ℝ (Fin d)`
 
-We record (as an axiom) the linear isometry between the split product
-space and `EuclideanSpace ℝ (Fin d)`. This is *not used* in the umbrella
-theorem above; it is only here so downstream files can transport the
-result if they wish.
+A previous axiom claimed a linear isometric equivalence between the
+split product space `ProdSpace d := ℝ × (Fin (d-1) → ℝ)` and
+`EuclideanSpace ℝ (Fin d)`. This was *unused* anywhere in the project,
+and is moreover **false** for `d ≥ 2`: the default `Prod` norm is the
+sup norm `‖(x,y)‖ = max(‖x‖, ‖y‖)`, whereas `EuclideanSpace` carries
+the `ℓ²` norm. To restore such an equivalence one would need to use a
+`WithLp 2` wrapper on `ProdSpace`. The axiom has been removed; restore
+it (with corrected norm structure) if downstream transport is needed.
 -/
-
-/-- Linear isometric equivalence between the split product space
-`ℝ × (Fin (d-1) → ℝ)` and `EuclideanSpace ℝ (Fin d)`, available for
-`1 ≤ d`. -/
-axiom prodSpace_iso_euclidean (d : ℕ) (_hd : 1 ≤ d) :
-    ProdSpace d ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Fin d)
 
 end L2Counterexample
