@@ -53,10 +53,23 @@ lemma eps_S_lt_one {S : ℝ} (hS : 1 < S) : eps_S S < 1 := by
 
 Defined concretely via `Measure.withDensity` so that downstream
 properties (`IsProbabilityMeasure`, reflection invariance) become
-*derivable* rather than axiomatic. -/
+*derivable* rather than axiomatic. For `S ≤ 0`, where `Z_S` may be
+zero (degenerating the natural density definition), we fall back to
+`Measure.dirac 0`, a probability measure. The eventually-large `S` of
+the actual results is unaffected. -/
 noncomputable def rho_S (S : ℝ) : MeasureTheory.Measure ℝ :=
-  MeasureTheory.volume.withDensity
-    (fun x => ENNReal.ofReal ((Z_S S)⁻¹ * Real.exp (-(phi_S S x))))
+  if 0 < S then
+    MeasureTheory.volume.withDensity
+      (fun x => ENNReal.ofReal ((Z_S S)⁻¹ * Real.exp (-(phi_S S x))))
+  else
+    MeasureTheory.Measure.dirac 0
+
+/-- For `0 < S`, `rho_S` reduces to its natural `withDensity` definition. -/
+lemma rho_S_of_pos {S : ℝ} (hS : 0 < S) :
+    rho_S S = MeasureTheory.volume.withDensity
+      (fun x => ENNReal.ofReal ((Z_S S)⁻¹ * Real.exp (-(phi_S S x)))) := by
+  unfold rho_S
+  rw [if_pos hS]
 
 /-- The potential is nonneg everywhere. Follows from
 `phi_S_quadratic_lower` (`phi_S S x ≥ η_S x²/2 ≥ 0`). -/
@@ -1163,7 +1176,8 @@ theorem E_phi_g_S_eq {S : ℝ} (hS : 1 < S) :
   have hA_ne : A_S S ≠ 0 := hA_pos.ne'
   have hε_pos : 0 < eps_S S := eps_S_pos hSpos
   -- Step 1: rewrite the `ρ_S` integral via `withDensity`.
-  unfold E_phi rho_S
+  unfold E_phi
+  rw [rho_S_of_pos hSpos]
   have h_meas_density : Measurable fun x =>
         ENNReal.ofReal ((Z_S S)⁻¹ * Real.exp (-(phi_S S x))) := by
     refine ENNReal.measurable_ofReal.comp ?_
@@ -1359,7 +1373,7 @@ private lemma integral_rho_S_eq {S : ℝ} (hS : 1 < S) (f : ℝ → ℝ) :
       = ∫ x, ((Z_S S)⁻¹ * Real.exp (-(phi_S S x))) * f x := by
   have hSpos : 0 < S := lt_trans zero_lt_one hS
   have hZ_pos : 0 < Z_S S := Z_S_pos_TF hS
-  unfold rho_S
+  rw [rho_S_of_pos hSpos]
   have h_meas_density : Measurable fun x =>
         ENNReal.ofReal ((Z_S S)⁻¹ * Real.exp (-(phi_S S x))) := by
     refine ENNReal.measurable_ofReal.comp ?_

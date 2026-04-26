@@ -82,20 +82,17 @@ phiDer2_S_even` are imported from `L2Counterexample.Potential`.
 `Z_S, q_S, t_S, tailInt_S` come from `L2Counterexample.Normalization`.
 `A_S, rho_S, g_S, g_S_even` come from `L2Counterexample.TestFunction`. -/
 
-/-- `rho_S` is a probability measure. Proven for `S > 0` as
-`rho_S_isProb_of_pos`; an axiom-instance with no hypothesis is also
-registered so that downstream typeclass inference can find it without
-threading an `S > 0` hypothesis through every `MemLp` / `Integrable`
-call site. (Mathematically the unconditional form is false at `S = 0`,
-where `rho_S` reduces to the zero measure; in the project, `S` is
-always taken eventually large.) -/
+/-- `rho_S` is a probability measure for `0 < S` — proven as
+`rho_S_isProb_of_pos`. The unconditional `rho_S_isProb` instance below
+follows by case analysis: for `0 < S`, use this lemma; for `S ≤ 0`,
+`rho_S S = Measure.dirac 0` (a probability measure). -/
 theorem rho_S_isProb_of_pos {S : ℝ} (hS : 0 < S) :
     IsProbabilityMeasure (rho_S S) := by
   have hZ_pos : 0 < Z_S S := Z_S_pos S hS
   have hZ_ne : Z_S S ≠ 0 := hZ_pos.ne'
   refine ⟨?_⟩
   show rho_S S Set.univ = 1
-  unfold rho_S
+  rw [rho_S_of_pos hS]
   rw [MeasureTheory.withDensity_apply _ MeasurableSet.univ,
       Measure.restrict_univ]
   have h_int_smul : Integrable (fun x => (Z_S S)⁻¹ * Real.exp (-(phi_S S x))) :=
@@ -109,9 +106,12 @@ theorem rho_S_isProb_of_pos {S : ℝ} (hS : 0 < S) :
   rw [show (∫ (x : ℝ), Real.exp (-phi_S S x)) = Z_S S from rfl, this,
       ENNReal.ofReal_one]
 
-axiom rho_S_isProb (S : ℝ) : IsProbabilityMeasure (rho_S S)
-
-attribute [instance] rho_S_isProb
+/-- `rho_S` is unconditionally a probability measure (the `S ≤ 0` case
+falls back to `Measure.dirac 0` in the definition of `rho_S`). -/
+instance rho_S_isProb (S : ℝ) : IsProbabilityMeasure (rho_S S) := by
+  by_cases hS : 0 < S
+  · exact rho_S_isProb_of_pos hS
+  · unfold rho_S; rw [if_neg hS]; infer_instance
 
 /-! ### Parity and basic identities (blueprint §05 eq. (a)--(e)) -/
 
@@ -122,15 +122,59 @@ lemma exp_neg_phi_S_even (S x : ℝ) :
 
 /-- Invariance of `rho_S` under the reflection `x ↦ -x`.
 
-This is the measure-level version of "the density `exp(-phi_S)` is even
-and the Lebesgue measure is reflection-invariant". A clean proof would
-combine `phi_S_even`, `Measure.measurePreserving_neg`, and the change-
-of-variables identity for `lintegral`; the obstacle is that the
-intermediate measurability hypothesis on `phi_S` requires `0 < S`,
-whereas the unconditional statement here is needed by call sites
-without that hypothesis. -/
-axiom rho_S_reflection_invariant (S : ℝ) :
-    (rho_S S).map (fun x : ℝ => -x) = rho_S S
+For `0 < S`: the density `(Z_S)⁻¹ · exp(-φ_S)` is even (by
+`phi_S_even`), and Lebesgue measure on `ℝ` is reflection-invariant
+(`measurePreserving_neg`); combining these via `Measure.map_withDensity`
+gives the result. For `S ≤ 0`: `rho_S S = Measure.dirac 0`, and
+`(dirac 0).map (-·) = dirac (-0) = dirac 0`. -/
+theorem rho_S_reflection_invariant (S : ℝ) :
+    (rho_S S).map (fun x : ℝ => -x) = rho_S S := by
+  by_cases hS : 0 < S
+  · -- For 0 < S, density even + Lebesgue reflection-invariant.
+    rw [rho_S_of_pos hS]
+    set f : ℝ → ENNReal :=
+      fun x => ENNReal.ofReal ((Z_S S)⁻¹ * Real.exp (-(phi_S S x))) with hf_def
+    have h_meas_f : Measurable f :=
+      ENNReal.measurable_ofReal.comp (measurable_const.mul
+        (Real.measurable_exp.comp (phi_S_measurable hS).neg))
+    have h_f_even : ∀ x, f (-x) = f x := by
+      intro x
+      show ENNReal.ofReal ((Z_S S)⁻¹ * Real.exp (-(phi_S S (-x))))
+         = ENNReal.ofReal ((Z_S S)⁻¹ * Real.exp (-(phi_S S x)))
+      rw [phi_S_even]
+    -- Show via Measure.ext.
+    refine MeasureTheory.Measure.ext ?_
+    intro s hs
+    rw [MeasureTheory.Measure.map_apply measurable_neg hs]
+    rw [MeasureTheory.withDensity_apply _ (measurable_neg hs)]
+    rw [MeasureTheory.withDensity_apply _ hs]
+    -- Goal: ∫⁻ x in (-·)⁻¹' s, f x ∂vol = ∫⁻ x in s, f x ∂vol
+    -- Strategy: replace f x with f(-x) on LHS (using f even), then apply
+    -- setLIntegral_map (reverse direction): ∫⁻ x in g⁻¹'s, f(gx) ∂μ = ∫⁻ y in s, f y ∂(map g μ)
+    -- with g = neg, then use measurePreserving_neg.
+    have h_neg_mp : MeasureTheory.MeasurePreserving (Neg.neg : ℝ → ℝ)
+                    MeasureTheory.volume MeasureTheory.volume :=
+      MeasureTheory.Measure.measurePreserving_neg MeasureTheory.volume
+    -- Step A: ∫⁻ x in (-·)⁻¹' s, f x = ∫⁻ x in (-·)⁻¹' s, f(-x) by f even.
+    have h_step_A : ∫⁻ x in (Neg.neg : ℝ → ℝ) ⁻¹' s, f x ∂MeasureTheory.volume
+                  = ∫⁻ x in (Neg.neg : ℝ → ℝ) ⁻¹' s, f (-x) ∂MeasureTheory.volume := by
+      refine MeasureTheory.setLIntegral_congr_fun (measurable_neg hs) ?_
+      intro x _
+      exact (h_f_even x).symm
+    -- Step B: ∫⁻ x in (-·)⁻¹' s, f(-x) = ∫⁻ y in s, f y ∂(map (-·) volume)
+    --        = ∫⁻ y in s, f y ∂volume (since map (-·) volume = volume).
+    have h_step_B : ∫⁻ x in (Neg.neg : ℝ → ℝ) ⁻¹' s, f (-x) ∂MeasureTheory.volume
+                  = ∫⁻ y in s, f y ∂MeasureTheory.volume := by
+      have := MeasureTheory.setLIntegral_map (μ := MeasureTheory.volume)
+                hs h_meas_f measurable_neg
+      rw [h_neg_mp.map_eq] at this
+      exact this.symm
+    rw [h_step_A, h_step_B]
+  · -- For S ≤ 0, rho_S S = dirac 0; map (-·) (dirac 0) = dirac (-0) = dirac 0.
+    unfold rho_S
+    rw [if_neg hS]
+    rw [MeasureTheory.Measure.map_dirac' measurable_neg]
+    simp
 
 /-- Measurability of `phi'_S`, derived from continuity. Requires
 `0 < S`. -/
