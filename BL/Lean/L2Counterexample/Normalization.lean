@@ -1323,20 +1323,244 @@ private lemma inner_int_diff_bd {S : ℝ} (hS : 0 < S) :
         · exact (phi_S_contDiff hS).continuous.intervalIntegrable _ _
         · intros x _; exact h_diff_le_phi x
 
-/-- `Z_S = 2 + 2/S + O(S^{-3})`.
+/-- Bound on `∫_0^{1+ε} φ_S(x) dx`. Splits at `t = 1-ε`:
+* On `[0, 1-ε]`: `φ_S(x) = η_S x²/2` (by `phi_S_core`), integral is
+  `η_S(1-ε)³/6 ≤ η_S/6 = 1/(6S^4) ≤ 1/(6S^3)` for `S ≥ 1`.
+* On `[1-ε, 1+ε]`: `φ_S(x) ≤ φ_S(1+ε)` (by `phi_S_le_of_le`); use
+  `phi_S_boundary_small` to bound `φ_S(1+ε) ≤ C_φ/S²`. Integral
+  `≤ 2ε · C_φ/S² = 2C_φ/S^5 ≤ 2C_φ/S³` for `S ≥ 1`.
+Total: `≤ (1/6 + 2·C_φ)/S³`. -/
+private lemma int_phi_S_bound {S : ℝ} (hS : 1 ≤ S)
+    {C_phi S_phi : ℝ} (hS_phi_pos : 0 < S_phi) (hC_phi_nn : 0 ≤ C_phi)
+    (h_phi_bd : ∀ S' : ℝ, S_phi ≤ S' →
+                |phi_S S' (1 + eps_S S') - (fun _ : ℝ => (0:ℝ)) S'|
+                  ≤ C_phi * S' ^ (-(2:ℤ)))
+    (hS_phi : S_phi ≤ S) :
+    ∫ x in (0:ℝ)..(1 + eps_S S), phi_S S x
+      ≤ 1/(6 * S^3) + 2 * C_phi / S^3 := by
+  have hSpos : 0 < S := by linarith
+  have heps_pos : 0 < eps_S S := eps_S_pos hSpos
+  have heta_pos : 0 < eta_S S := eta_S_pos hSpos
+  have heps_le_one : eps_S S ≤ 1 := by
+    unfold eps_S
+    rw [show ((-(3 : ℤ))) = -((3 : ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+    exact inv_le_one_of_one_le₀ (one_le_pow₀ hS)
+  have h_one_minus_eps_nn : (0 : ℝ) ≤ 1 - eps_S S := by linarith
+  have h_le_eps : 1 - eps_S S ≤ 1 + eps_S S := by linarith
+  have h_le_full : (0 : ℝ) ≤ 1 + eps_S S := by linarith
+  have hS3_pos : (0 : ℝ) < S^3 := by positivity
+  -- Split integral.
+  have h_int1 : IntervalIntegrable (phi_S S) MeasureTheory.volume 0 (1 - eps_S S) :=
+    (phi_S_contDiff hSpos).continuous.intervalIntegrable _ _
+  have h_int2 : IntervalIntegrable (phi_S S) MeasureTheory.volume
+      (1 - eps_S S) (1 + eps_S S) :=
+    (phi_S_contDiff hSpos).continuous.intervalIntegrable _ _
+  have h_split : ∫ x in (0:ℝ)..(1 + eps_S S), phi_S S x
+              = (∫ x in (0:ℝ)..(1 - eps_S S), phi_S S x)
+              + (∫ x in (1 - eps_S S)..(1 + eps_S S), phi_S S x) :=
+    (intervalIntegral.integral_add_adjacent_intervals h_int1 h_int2).symm
+  -- Piece 1 = ∫_0^{1-ε} eta_S x²/2 = eta_S(1-ε)³/6 ≤ eta_S/6 ≤ 1/(6S^3).
+  have h_piece1_eq : ∫ x in (0:ℝ)..(1 - eps_S S), phi_S S x
+                   = eta_S S * (1 - eps_S S)^3 / 6 := by
+    have h_core : ∀ x ∈ Set.uIcc (0:ℝ) (1 - eps_S S),
+        phi_S S x = eta_S S * x^2 / 2 := by
+      intro x hx
+      rw [Set.uIcc_of_le h_one_minus_eps_nn, Set.mem_Icc] at hx
+      apply phi_S_core hSpos
+      rw [abs_of_nonneg hx.1]; exact hx.2
+    rw [intervalIntegral.integral_congr h_core]
+    have h_eq : (fun x : ℝ => eta_S S * x^2 / 2) = (fun x => (eta_S S / 2) * x^2) := by
+      funext x; ring
+    rw [h_eq, intervalIntegral.integral_const_mul, integral_pow]
+    ring
+  have h_piece1_bd : eta_S S * (1 - eps_S S)^3 / 6 ≤ 1/(6 * S^3) := by
+    have h_pow_le : (1 - eps_S S)^3 ≤ 1 := by
+      have h1 : 0 ≤ 1 - eps_S S := h_one_minus_eps_nn
+      have h2 : 1 - eps_S S ≤ 1 := by linarith
+      have : (1 - eps_S S)^3 ≤ 1^3 := pow_le_pow_left₀ h1 h2 3
+      simpa using this
+    have h_eta_eq : eta_S S = 1/S^4 := by
+      unfold eta_S
+      rw [show ((-(4 : ℤ))) = -((4 : ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+      exact (one_div _).symm
+    have h_eta_pos_nn : 0 ≤ eta_S S := heta_pos.le
+    have h_step : eta_S S * (1 - eps_S S)^3 / 6 ≤ eta_S S / 6 := by
+      nlinarith [h_pow_le, h_eta_pos_nn]
+    have h_eta_div6 : eta_S S / 6 ≤ 1/(6 * S^3) := by
+      rw [h_eta_eq]
+      have hS4_pos : (0 : ℝ) < S^4 := by positivity
+      have h_S3_le_S4 : (1 : ℝ)/S^4 ≤ 1/S^3 := by
+        apply one_div_le_one_div_of_le hS3_pos
+        nlinarith [hS]
+      have h_eq : (1:ℝ)/S^4 / 6 = (1/S^4) / 6 := by ring
+      rw [h_eq]
+      have : (1 : ℝ)/S^4 / 6 ≤ (1/S^3) / 6 := by linarith
+      have h_eq2 : (1 : ℝ)/S^3 / 6 = 1/(6 * S^3) := by ring
+      linarith [this, h_eq2.le, h_eq2.ge]
+    linarith
+  -- Piece 2: ∫_{1-ε}^{1+ε} phi_S(x) dx ≤ 2ε · phi_S(1+ε) ≤ 2 C_phi/S^5 ≤ 2 C_phi/S^3.
+  have h_phi_at_one_plus : phi_S S (1 + eps_S S) ≤ C_phi / S^2 := by
+    have h := h_phi_bd S hS_phi
+    have h_phi_nn : 0 ≤ phi_S S (1 + eps_S S) := by
+      have h_q := phi_S_quadratic_lower hSpos (1 + eps_S S)
+      nlinarith [sq_nonneg (1 + eps_S S), heta_pos.le]
+    have h_pow_eq : (S : ℝ)^(-(2:ℤ)) = 1/S^2 := by
+      rw [show ((-(2 : ℤ))) = -((2 : ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+      exact (one_div _).symm
+    rw [sub_zero, abs_of_nonneg h_phi_nn, h_pow_eq] at h
+    have h_simp : C_phi * (1/S^2) = C_phi/S^2 := by ring
+    linarith
+  have h_piece2_bd : ∫ x in (1 - eps_S S)..(1 + eps_S S), phi_S S x
+                   ≤ 2 * C_phi / S^3 := by
+    -- phi_S(x) ≤ phi_S(1+ε) on [1-ε, 1+ε] by monotonicity.
+    have h_mono_on : ∀ x ∈ Set.uIcc (1 - eps_S S) (1 + eps_S S),
+        phi_S S x ≤ C_phi / S^2 := by
+      intro x hx
+      rw [Set.uIcc_of_le h_le_eps, Set.mem_Icc] at hx
+      have hx_nn : 0 ≤ x := by linarith
+      have h_le : x ≤ 1 + eps_S S := hx.2
+      exact le_trans (phi_S_le_of_le hSpos hx_nn h_le) h_phi_at_one_plus
+    have h_int_le : ∫ x in (1 - eps_S S)..(1 + eps_S S), phi_S S x
+                  ≤ ∫ _ in (1 - eps_S S)..(1 + eps_S S), C_phi / S^2 := by
+      apply intervalIntegral.integral_mono_on h_le_eps
+      · exact (phi_S_contDiff hSpos).continuous.intervalIntegrable _ _
+      · exact intervalIntegral.intervalIntegrable_const
+      · intros x hx; apply h_mono_on
+        rw [Set.uIcc_of_le h_le_eps]; exact hx
+    have h_const_int : ∫ _ in (1 - eps_S S)..(1 + eps_S S), C_phi / S^2
+                     = 2 * eps_S S * (C_phi / S^2) := by
+      rw [intervalIntegral.integral_const, smul_eq_mul]; ring
+    have h_eps_eq : eps_S S = 1/S^3 := by
+      unfold eps_S
+      rw [show ((-(3 : ℤ))) = -((3 : ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+      exact (one_div _).symm
+    have h_calc : 2 * eps_S S * (C_phi / S^2) = 2 * C_phi / S^5 := by
+      rw [h_eps_eq]
+      have hSne : (S : ℝ) ≠ 0 := hSpos.ne'
+      have h_pow : (S : ℝ)^3 * S^2 = S^5 := by ring
+      field_simp
+    have h_S5_le_S3 : (2 : ℝ) * C_phi / S^5 ≤ 2 * C_phi / S^3 := by
+      have hS5_pos : (0 : ℝ) < S^5 := by positivity
+      apply div_le_div_of_nonneg_left (by linarith : 0 ≤ 2 * C_phi) hS3_pos
+      have h_S2_ge_1 : (1 : ℝ) ≤ S^2 := one_le_pow₀ hS
+      nlinarith
+    linarith
+  -- Combine.
+  rw [h_split, h_piece1_eq]
+  linarith [h_piece1_bd, h_piece2_bd]
 
-Combines `Z_S_eq_two_half_integral` (symmetry `Z_S = 2·∫_{Ici 0} exp(-φ_S)`),
-`half_int_eq_inner_plus_tail` (split into `[0,1+ε]` and tail), and
-`inner_int_diff_bd` (bound `|∫_0^{1+ε} exp(-φ_S) - (1+ε)| ≤ ∫_0^{1+ε} φ_S`).
-
-The remaining ingredients to bound `∫_0^{1+ε} φ_S` (split at `t=1-ε`,
-core piece via `phi_S_core` gives `O(1/S^4)`, layer piece via
-`phi_S_le_of_le` + `phi_S_boundary_small` gives `O(1/S^5)`) and then
-combine with `tailInt_S_asymp` are roughly 100 more lines that the
-session ran out of time to assemble. The axiomatised statement is
-mathematically correct; the bound is `(36 + 2·C_tail)/S^3`. -/
-axiom Z_S_asymp :
-    BigOInv Z_S (fun S => 2 + 2 / S) 3
+/-- `Z_S = 2 + 2/S + O(S^{-3})`. Combines four structural helpers:
+* `Z_S_eq_two_half_integral`: `Z_S = 2·∫_{Ici 0} exp(-φ_S)`;
+* `half_int_eq_inner_plus_tail`: `∫_{Ici 0} = ∫_0^{1+ε} + tailInt_S`;
+* `inner_int_diff_bd`: `|∫_0^{1+ε} exp(-φ_S) - (1+ε)| ≤ ∫_0^{1+ε} φ_S`;
+* `int_phi_S_bound`: `∫_0^{1+ε} φ_S ≤ (1/6 + 2C_φ)/S³`;
+plus `tailInt_S_asymp` for `|tailInt_S - 1/S| ≤ C_tail/S³`. -/
+theorem Z_S_asymp : BigOInv Z_S (fun S => 2 + 2 / S) 3 := by
+  obtain ⟨C_phi, S_phi, hS_phi_pos, h_phi_bd⟩ := phi_S_boundary_small
+  obtain ⟨C_tail, S_tail, hS_tail_pos, h_tail_bd⟩ := tailInt_S_asymp
+  have hC_phi_nn : 0 ≤ C_phi := by
+    have h : |phi_S S_phi (1 + eps_S S_phi) - 0| ≤ C_phi * S_phi ^ (-(2:ℤ)) :=
+      h_phi_bd S_phi le_rfl
+    have h_abs_nn : 0 ≤ |phi_S S_phi (1 + eps_S S_phi) - 0| := abs_nonneg _
+    have h_pow_pos : (0 : ℝ) < S_phi ^ (-(2 : ℤ)) := zpow_pos hS_phi_pos _
+    nlinarith
+  have hC_tail_nn : 0 ≤ C_tail := by
+    have h := h_tail_bd S_tail le_rfl
+    have : 0 ≤ |tailInt_S S_tail - (fun S => 1 / S) S_tail| := abs_nonneg _
+    have h_pow_pos : (0 : ℝ) < S_tail ^ (-(3 : ℤ)) := zpow_pos hS_tail_pos _
+    nlinarith
+  refine ⟨3 + 4 * C_phi + 2 * C_tail,
+          max (max S_phi S_tail) 1, lt_max_of_lt_right one_pos, ?_⟩
+  intro S hS
+  have hS_phi : S_phi ≤ S :=
+    le_trans (le_max_left _ _) (le_trans (le_max_left _ _) hS)
+  have hS_tail : S_tail ≤ S :=
+    le_trans (le_max_right _ _) (le_trans (le_max_left _ _) hS)
+  have hS_one : (1 : ℝ) ≤ S := le_trans (le_max_right _ _) hS
+  have hSpos : 0 < S := by linarith
+  have heps_pos : 0 < eps_S S := eps_S_pos hSpos
+  have hS3_pos : (0 : ℝ) < S^3 := by positivity
+  have h_eps_eq : eps_S S = 1/S^3 := by
+    unfold eps_S
+    rw [show ((-(3 : ℤ))) = -((3 : ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+    exact (one_div _).symm
+  -- Combine helpers: Z_S = 2(∫_0^{1+ε} exp + tailInt_S).
+  have h_Z_eq : Z_S S
+              = 2 * ((∫ x in (0:ℝ)..(1 + eps_S S), Real.exp (-(phi_S S x)))
+                     + tailInt_S S) := by
+    rw [Z_S_eq_two_half_integral hSpos, half_int_eq_inner_plus_tail hSpos]
+  -- Bound on tailInt_S - 1/S.
+  have h_tail_bd_app : |tailInt_S S - 1/S| ≤ C_tail / S^3 := by
+    have h : |tailInt_S S - 1/S| ≤ C_tail * S ^ (-(3:ℤ)) := h_tail_bd S hS_tail
+    have h_pow_eq : (S : ℝ)^(-(3:ℤ)) = 1/S^3 := by
+      rw [show ((-(3 : ℤ))) = -((3 : ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+      exact (one_div _).symm
+    rw [h_pow_eq] at h
+    have h_simp : C_tail * (1/S^3) = C_tail/S^3 := by ring
+    linarith
+  -- Bound on ∫_0^{1+ε} exp - (1+ε).
+  have h_inner_bd : |(∫ x in (0:ℝ)..(1 + eps_S S), Real.exp (-(phi_S S x)))
+                      - (1 + eps_S S)|
+                  ≤ 1/(6 * S^3) + 2 * C_phi / S^3 := by
+    have h_int_diff_bd := inner_int_diff_bd hSpos
+    have h_phi_int_bd := int_phi_S_bound hS_one hS_phi_pos hC_phi_nn h_phi_bd hS_phi
+    linarith
+  -- Z_S - (2 + 2/S) = 2((∫ exp - (1+ε)) + ε + (tailInt_S - 1/S))
+  have h_diff_eq : Z_S S - (2 + 2/S)
+                 = 2 * (((∫ x in (0:ℝ)..(1 + eps_S S), Real.exp (-(phi_S S x)))
+                          - (1 + eps_S S))
+                        + eps_S S
+                        + (tailInt_S S - 1/S)) := by
+    rw [h_Z_eq]; ring
+  -- Triangle inequality
+  show |Z_S S - (fun S => (2:ℝ) + 2 / S) S| ≤ (3 + 4 * C_phi + 2 * C_tail) * S^(-(3:ℤ))
+  show |Z_S S - (2 + 2 / S)| ≤ (3 + 4 * C_phi + 2 * C_tail) * S^(-(3:ℤ))
+  have h_pow_eq : (S : ℝ)^(-(3:ℤ)) = 1/S^3 := by
+    rw [show ((-(3 : ℤ))) = -((3 : ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+    exact (one_div _).symm
+  rw [h_pow_eq, h_diff_eq]
+  -- |2 * (a + ε + b)| ≤ 2(|a| + ε + |b|).
+  set a := (∫ x in (0:ℝ)..(1 + eps_S S), Real.exp (-(phi_S S x))) - (1 + eps_S S)
+    with ha_def
+  set b := tailInt_S S - 1/S with hb_def
+  have h_abs_2_mul : |2 * (a + eps_S S + b)| = 2 * |a + eps_S S + b| := by
+    rw [abs_mul]; simp [abs_of_pos (by norm_num : (0:ℝ) < 2)]
+  rw [h_abs_2_mul]
+  -- |a + ε + b| ≤ |a| + ε + |b|.
+  have h_eps_pos_real : 0 < eps_S S := heps_pos
+  have h_eps_abs : |eps_S S| = eps_S S := abs_of_pos h_eps_pos_real
+  have h_tri : |a + eps_S S + b| ≤ |a| + eps_S S + |b| := by
+    have h1 := abs_add_le (a + eps_S S) b
+    have h2 := abs_add_le a (eps_S S)
+    rw [h_eps_abs] at h2
+    linarith
+  -- |a| ≤ 1/(6 S³) + 2 C_phi/S³, ε = 1/S³, |b| ≤ C_tail/S³.
+  have h_a_bd : |a| ≤ 1/(6 * S^3) + 2 * C_phi / S^3 := h_inner_bd
+  have h_eps_S3 : eps_S S = 1/S^3 := h_eps_eq
+  have h_b_bd : |b| ≤ C_tail / S^3 := h_tail_bd_app
+  -- Sum: 2(|a| + ε + |b|) ≤ 2(1/(6 S³) + 2 C_phi/S³ + 1/S³ + C_tail/S³)
+  --                       = (1/3 + 4 C_phi + 2 + 2 C_tail) / S³
+  --                       ≤ (3 + 4 C_phi + 2 C_tail) / S³.
+  have h_sum : 2 * (|a| + eps_S S + |b|)
+             ≤ 2 * ((1/(6 * S^3) + 2 * C_phi / S^3) + 1/S^3 + C_tail / S^3) := by
+    have : |a| + eps_S S + |b|
+         ≤ (1/(6 * S^3) + 2 * C_phi / S^3) + 1/S^3 + C_tail / S^3 := by
+      rw [h_eps_S3]; linarith
+    linarith
+  have h_sum_eq : 2 * ((1/(6 * S^3) + 2 * C_phi / S^3) + 1/S^3 + C_tail / S^3)
+               = (1/3 + 4 * C_phi + 2 + 2 * C_tail) * (1/S^3) := by
+    field_simp; ring
+  have h_C_bd : (1/3 + 4 * C_phi + 2 + 2 * C_tail : ℝ)
+              ≤ (3 + 4 * C_phi + 2 * C_tail) := by linarith
+  have h_inv_pos : (0 : ℝ) ≤ 1/S^3 := by positivity
+  have h_final : (1/3 + 4 * C_phi + 2 + 2 * C_tail) * (1/S^3)
+              ≤ (3 + 4 * C_phi + 2 * C_tail) * (1/S^3) :=
+    mul_le_mul_of_nonneg_right h_C_bd h_inv_pos
+  calc 2 * |a + eps_S S + b|
+      ≤ 2 * (|a| + eps_S S + |b|) := by linarith
+    _ ≤ 2 * ((1/(6 * S^3) + 2 * C_phi / S^3) + 1/S^3 + C_tail / S^3) := h_sum
+    _ = (1/3 + 4 * C_phi + 2 + 2 * C_tail) * (1/S^3) := h_sum_eq
+    _ ≤ (3 + 4 * C_phi + 2 * C_tail) * (1/S^3) := h_final
 
 /-! ## Lemma (c): tail probability and layer mass
 
