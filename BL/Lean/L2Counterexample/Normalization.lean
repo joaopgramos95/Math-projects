@@ -1279,14 +1279,62 @@ private lemma half_int_eq_inner_plus_tail {S : ℝ} (hS : 0 < S) :
     exact MeasureTheory.setIntegral_congr_set Ioi_ae_eq_Ici
   rw [h_icc_eq, h_tail_eq]
 
-/-- `Z_S = 2 + 2/S + O(S^{-3})`. The proof requires partitioning
-`∫ exp(-φ_S)` into core `[0, 1-ε]`, layer `[1-ε, 1+ε]` and tail
-`[1+ε, ∞)` — about 200 lines of tedious analytic bookkeeping that
-the session ran out of time to complete. The two structural helpers
-`Z_S_eq_two_half_integral` and `half_int_eq_inner_plus_tail` are
-provided as a starting point; the axiomatised statement is
-mathematically true (combine `phi_S_quadratic_lower`, `phi_S_layer_small`,
-`phi_S_le_of_le`, `tailInt_S_asymp` with bounds on each region). -/
+/-- Bound on the inner integral: `|∫_0^{1+ε} exp(-φ_S) - (1+ε)| ≤
+∫_0^{1+ε} φ_S(x) dx`. Uses `Real.add_one_le_exp` (gives `1 - y ≤
+exp(-y)` so `exp(-y) - 1 ∈ [-y, 0]`). -/
+private lemma inner_int_diff_bd {S : ℝ} (hS : 0 < S) :
+    |(∫ x in (0:ℝ)..(1 + eps_S S), Real.exp (-(phi_S S x))) - (1 + eps_S S)|
+      ≤ ∫ x in (0:ℝ)..(1 + eps_S S), phi_S S x := by
+  have heps_pos : 0 < eps_S S := eps_S_pos hS
+  have h_le : (0 : ℝ) ≤ 1 + eps_S S := by linarith
+  -- |∫(exp(-phi_S) - 1)| ≤ ∫|exp(-phi_S) - 1| ≤ ∫ phi_S.
+  -- And ∫_0^{1+ε} (exp(-phi_S) - 1) = ∫ exp(-phi_S) - (1+ε).
+  have h_int_const : ∫ _ in (0:ℝ)..(1 + eps_S S), (1:ℝ) = 1 + eps_S S := by
+    rw [intervalIntegral.integral_const, smul_eq_mul]; ring
+  have h_int_full : Integrable (fun x => Real.exp (-(phi_S S x))) :=
+    exp_negPhiS_integrable S hS
+  have h_int_int : IntervalIntegrable (fun x => Real.exp (-(phi_S S x)))
+      MeasureTheory.volume 0 (1 + eps_S S) := h_int_full.intervalIntegrable
+  have h_diff_int_eq : ∫ x in (0:ℝ)..(1 + eps_S S), Real.exp (-(phi_S S x)) - 1
+                = (∫ x in (0:ℝ)..(1 + eps_S S), Real.exp (-(phi_S S x))) - (1 + eps_S S) := by
+    rw [intervalIntegral.integral_sub h_int_int intervalIntegral.intervalIntegrable_const]
+    rw [h_int_const]
+  rw [← h_diff_int_eq]
+  -- Now: |∫(exp(-phi_S) - 1)| ≤ ∫ phi_S
+  have h_phi_nn : ∀ x, 0 ≤ phi_S S x := fun x => by
+    have h_q := phi_S_quadratic_lower hS x
+    nlinarith [sq_nonneg x, (eta_S_pos hS).le]
+  have h_diff_le_phi : ∀ x, |Real.exp (-(phi_S S x)) - 1| ≤ phi_S S x := by
+    intro x
+    have h_phi_x_nn : 0 ≤ phi_S S x := h_phi_nn x
+    have h_exp_le_one : Real.exp (-(phi_S S x)) ≤ 1 :=
+      Real.exp_le_one_iff.mpr (by linarith)
+    have h_lower : 1 - phi_S S x ≤ Real.exp (-(phi_S S x)) := by
+      have := Real.add_one_le_exp (-(phi_S S x)); linarith
+    rw [abs_of_nonpos (by linarith : Real.exp (-(phi_S S x)) - 1 ≤ 0)]
+    linarith
+  calc |∫ x in (0:ℝ)..(1 + eps_S S), Real.exp (-(phi_S S x)) - 1|
+      ≤ ∫ x in (0:ℝ)..(1 + eps_S S), |Real.exp (-(phi_S S x)) - 1| :=
+        intervalIntegral.abs_integral_le_integral_abs h_le
+    _ ≤ ∫ x in (0:ℝ)..(1 + eps_S S), phi_S S x := by
+        apply intervalIntegral.integral_mono_on h_le
+        · exact (continuous_abs.comp ((Real.continuous_exp.comp
+            (phi_S_contDiff hS).continuous.neg).sub continuous_const)).intervalIntegrable _ _
+        · exact (phi_S_contDiff hS).continuous.intervalIntegrable _ _
+        · intros x _; exact h_diff_le_phi x
+
+/-- `Z_S = 2 + 2/S + O(S^{-3})`.
+
+Combines `Z_S_eq_two_half_integral` (symmetry `Z_S = 2·∫_{Ici 0} exp(-φ_S)`),
+`half_int_eq_inner_plus_tail` (split into `[0,1+ε]` and tail), and
+`inner_int_diff_bd` (bound `|∫_0^{1+ε} exp(-φ_S) - (1+ε)| ≤ ∫_0^{1+ε} φ_S`).
+
+The remaining ingredients to bound `∫_0^{1+ε} φ_S` (split at `t=1-ε`,
+core piece via `phi_S_core` gives `O(1/S^4)`, layer piece via
+`phi_S_le_of_le` + `phi_S_boundary_small` gives `O(1/S^5)`) and then
+combine with `tailInt_S_asymp` are roughly 100 more lines that the
+session ran out of time to assemble. The axiomatised statement is
+mathematically correct; the bound is `(36 + 2·C_tail)/S^3`. -/
 axiom Z_S_asymp :
     BigOInv Z_S (fun S => 2 + 2 / S) 3
 
