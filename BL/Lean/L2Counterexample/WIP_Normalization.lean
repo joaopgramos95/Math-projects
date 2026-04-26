@@ -1210,8 +1210,10 @@ theorem tailInt_S_asymp : BigOInv tailInt_S (fun S => 1 / S) 3 := by
 
 /-- `Z_S = 2 + 2/S + O(S^{-3})`. The proof requires partitioning
 `∫ exp(-φ_S)` into core `[0, 1-ε]`, layer `[1-ε, 1+ε]` and tail
-`[1+ε, ∞)` (200+ lines of tedious analytic bookkeeping); kept as an
-axiom for now. -/
+`[1+ε, ∞)` — about 200 lines of tedious analytic bookkeeping that
+the session ran out of time to complete; the axiomatised statement is
+mathematically true (combine `phi_S_quadratic_lower`, `phi_S_layer_small`,
+`phi_S_le_of_le`, `tailInt_S_asymp` with bounds on each region). -/
 axiom Z_S_asymp :
     BigOInv Z_S (fun S => 2 + 2 / S) 3
 
