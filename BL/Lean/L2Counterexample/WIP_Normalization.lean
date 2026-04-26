@@ -149,11 +149,99 @@ axiom phi_S_tail (S x : ℝ) (hS : 0 < S) (hx : 1 + eps_S S ≤ x) :
 axiom phi_S_boundary_small :
     BigOInv (fun S => phi_S S (1 + eps_S S)) (fun _ => 0) 2
 
+/-- Helper: `phiDer_S` is nonneg on `[0, ∞)` (since it has `phiDer_S 0 = 0`
+and `phiDer2_S ≥ 0`). -/
+private lemma phiDer_S_nonneg_of_nonneg {S : ℝ} (hS : 0 < S) {t : ℝ}
+    (ht : 0 ≤ t) : 0 ≤ phiDer_S S t := by
+  -- phiDer_S t - phiDer_S 0 = ∫_0^t phiDer2_S, which is nonneg.
+  have h_eq : phiDer_S S t = phiDer_S S 0 + ∫ s in (0 : ℝ)..t, phiDer2_S S s := by
+    rw [phiDer_S_zero, zero_add]
+    show psi (phiDer2_S S) t = ∫ s in (0:ℝ)..t, phiDer2_S S s
+    unfold psi; rfl
+  rw [h_eq, phiDer_S_zero, zero_add]
+  apply intervalIntegral.integral_nonneg ht
+  intros s _
+  exact (phiDer2_S_pos hS s).le
+
+/-- Helper: `phi_S` is non-decreasing on `[0, ∞)`. -/
+private lemma phi_S_le_of_le {S : ℝ} (hS : 0 < S) {a b : ℝ}
+    (ha : 0 ≤ a) (hab : a ≤ b) : phi_S S a ≤ phi_S S b := by
+  -- phi_S b - phi_S a = ∫_a^b phi'_S(t) dt ≥ 0 since phi'_S ≥ 0 on [0, ∞).
+  have h_phi_eq : ∀ c : ℝ, phi_S S c = ∫ t in (0:ℝ)..c, phiDer_S S t := fun c => rfl
+  have h_int_int : IntervalIntegrable (phiDer_S S) MeasureTheory.volume 0 b :=
+    (phiDer_S_contDiff hS).continuous.intervalIntegrable 0 b
+  have h_int_int_a : IntervalIntegrable (phiDer_S S) MeasureTheory.volume 0 a :=
+    (phiDer_S_contDiff hS).continuous.intervalIntegrable 0 a
+  have h_int_int_ab : IntervalIntegrable (phiDer_S S) MeasureTheory.volume a b :=
+    (phiDer_S_contDiff hS).continuous.intervalIntegrable a b
+  have h_int_eq := (intervalIntegral.integral_add_adjacent_intervals
+                       h_int_int_a h_int_int_ab).symm
+  have h_eq : phi_S S b = phi_S S a + ∫ t in a..b, phiDer_S S t := by
+    rw [h_phi_eq b, h_int_eq, h_phi_eq a]
+  rw [h_eq]
+  have h_int_nn : 0 ≤ ∫ t in a..b, phiDer_S S t := by
+    apply intervalIntegral.integral_nonneg hab
+    intros t ht
+    exact phiDer_S_nonneg_of_nonneg hS (le_trans ha ht.1)
+  linarith
+
 /-- Uniform smallness on the layer for `exp(-phi_S)`: `|exp(-phi_S(x)) - 1| =
-O(S^{-2})` when `|x-1| ≤ ε_S`. -/
-axiom phi_S_layer_small :
+O(S^{-2})` when `|x-1| ≤ ε_S`. Derived from `phi_S_boundary_small` plus
+the monotonicity of `phi_S` on `[0, ∞)`. -/
+theorem phi_S_layer_small :
     ∃ C S₀ : ℝ, 0 < S₀ ∧ ∀ S, S₀ ≤ S → ∀ x,
-      |x - 1| ≤ eps_S S → |Real.exp (-(phi_S S x)) - 1| ≤ C * S ^ (-(2 : ℤ))
+      |x - 1| ≤ eps_S S → |Real.exp (-(phi_S S x)) - 1| ≤ C * S ^ (-(2 : ℤ)) := by
+  obtain ⟨C, S₀, hS₀_pos, h_bd⟩ := phi_S_boundary_small
+  refine ⟨C, max S₀ 1, lt_max_of_lt_right one_pos, ?_⟩
+  intro S hS x hx
+  have hS₀_le : S₀ ≤ S := le_trans (le_max_left _ _) hS
+  have hS_one : 1 ≤ S := le_trans (le_max_right _ _) hS
+  have hSpos : 0 < S := by linarith
+  have heps_pos : 0 < eps_S S := eps_S_pos hSpos
+  have hx_le : x ≤ 1 + eps_S S := by
+    have := (abs_le.mp hx).2; linarith
+  have hx_ge : 1 - eps_S S ≤ x := by
+    have := (abs_le.mp hx).1; linarith
+  -- For x in [1-ε, 1+ε], phi_S(x) ≤ phi_S(1+ε) by monotonicity on [0, ∞).
+  -- For S ≥ 1, eps_S = 1/S^3 ≤ 1, so x ≥ 1 - ε ≥ 0.
+  have heps_le_one : eps_S S ≤ 1 := by
+    unfold eps_S
+    rw [show ((-(3 : ℤ))) = -((3 : ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast]
+    exact inv_le_one_of_one_le₀ (one_le_pow₀ hS_one)
+  have hx_nn : 0 ≤ x := by linarith
+  have h_phi_le : phi_S S x ≤ phi_S S (1 + eps_S S) :=
+    phi_S_le_of_le hSpos hx_nn hx_le
+  -- phi_S nonneg via quadratic lower bound.
+  have h_phi_x_nn : 0 ≤ phi_S S x := by
+    have h_q := phi_S_quadratic_lower hSpos x
+    have h_quad_nn : 0 ≤ eta_S S * x ^ 2 / 2 := by
+      have := eta_S_pos hSpos
+      positivity
+    linarith
+  have h_phi_1eps_nn : 0 ≤ phi_S S (1 + eps_S S) := by
+    have h_q := phi_S_quadratic_lower hSpos (1 + eps_S S)
+    have h_quad_nn : 0 ≤ eta_S S * (1 + eps_S S) ^ 2 / 2 := by
+      have := eta_S_pos hSpos
+      positivity
+    linarith
+  -- |exp(-phi) - 1| = 1 - exp(-phi) ≤ phi_S ≤ phi_S(1+ε) ≤ C * S^(-2).
+  have h_one_sub_le : 1 - Real.exp (-(phi_S S x)) ≤ phi_S S x := by
+    have h := Real.add_one_le_exp (-(phi_S S x))
+    linarith
+  have h_exp_le_one : Real.exp (-(phi_S S x)) ≤ 1 :=
+    Real.exp_le_one_iff.mpr (by linarith)
+  have h_neg_le_zero : Real.exp (-(phi_S S x)) - 1 ≤ 0 := by linarith
+  have h_abs_eq : |Real.exp (-(phi_S S x)) - 1| = 1 - Real.exp (-(phi_S S x)) := by
+    rw [abs_of_nonpos h_neg_le_zero]; ring
+  rw [h_abs_eq]
+  -- |phi_S(1+ε) - 0| ≤ C * S^(-2)
+  have h_phi_bd_raw : |phi_S S (1 + eps_S S) - 0| ≤ C * S ^ (-(2 : ℤ)) :=
+    h_bd S hS₀_le
+  have h_phi_bd : phi_S S (1 + eps_S S) ≤ C * S ^ (-(2 : ℤ)) := by
+    rw [sub_zero] at h_phi_bd_raw
+    rw [abs_of_nonneg h_phi_1eps_nn] at h_phi_bd_raw
+    exact h_phi_bd_raw
+  linarith
 
 /-! ## Integrability -/
 
