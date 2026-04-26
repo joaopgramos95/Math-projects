@@ -463,12 +463,74 @@ lemma le_tildeS {S : ℝ} (hS : 1 ≤ S) : S ≤ tildeS S := by
     mul_nonneg (eta_S_pos hSpos).le (by linarith [(eps_S_pos hSpos).le])
   linarith
 
-/-- Change-of-variables identity for the tail integral. -/
-axiom tailInt_S_tail_eq (S : ℝ) (hS : 1 ≤ S) :
+/-- Change-of-variables identity for the tail integral.
+
+Substitute `u = x - (1+ε_S)` (so `x = u + 1+ε_S`) on `Ici(1+ε_S)`, then
+expand `phi_S(1+ε_S+u)` via `phi_S_tail` to get
+`phi_S(1+ε_S) + tildeS·u + η/2·u²`, and pull the constant
+`exp(-phi_S(1+ε_S))` out. -/
+theorem tailInt_S_tail_eq (S : ℝ) (hS : 1 ≤ S) :
     tailInt_S S
       = Real.exp (-(phi_S S (1 + eps_S S)))
           * ∫ u in Set.Ici (0 : ℝ),
-              Real.exp (-(tildeS S * u) - eta_S S * u ^ 2 / 2)
+              Real.exp (-(tildeS S * u) - eta_S S * u ^ 2 / 2) := by
+  have hSpos : 0 < S := lt_of_lt_of_le zero_lt_one hS
+  have heps_pos : 0 < eps_S S := eps_S_pos hSpos
+  have heta_pos : 0 < eta_S S := eta_S_pos hSpos
+  -- Step 1: change of variables x = u + (1+ε_S) on Ici(1+ε_S).
+  have h_meas_preserve : MeasureTheory.MeasurePreserving
+      (fun u : ℝ => u + (1 + eps_S S)) MeasureTheory.volume MeasureTheory.volume :=
+    MeasureTheory.measurePreserving_add_right MeasureTheory.volume (1 + eps_S S)
+  have h_meas_emb : MeasurableEmbedding (fun u : ℝ => u + (1 + eps_S S)) :=
+    (Homeomorph.addRight (1 + eps_S S)).isClosedEmbedding.measurableEmbedding
+  have h_preimage : (fun u : ℝ => u + (1 + eps_S S)) ⁻¹' Set.Ici (1 + eps_S S)
+                  = Set.Ici 0 := by
+    ext u
+    simp [Set.mem_Ici, Set.mem_preimage]
+  have h_change : tailInt_S S
+                = ∫ u in Set.Ici (0 : ℝ),
+                    Real.exp (-(phi_S S (u + (1 + eps_S S)))) := by
+    unfold tailInt_S
+    rw [← h_preimage]
+    exact (h_meas_preserve.setIntegral_preimage_emb h_meas_emb _ _).symm
+  rw [h_change]
+  -- Step 2: phi_S_tail simplification.
+  have h_int_eq : ∫ u in Set.Ici (0 : ℝ),
+                    Real.exp (-(phi_S S (u + (1 + eps_S S))))
+                = ∫ u in Set.Ici (0 : ℝ),
+                    Real.exp (-(phi_S S (1 + eps_S S)))
+                      * Real.exp (-(tildeS S * u) - eta_S S * u ^ 2 / 2) := by
+    refine setIntegral_congr_fun measurableSet_Ici ?_
+    intro u hu
+    have hu_nn : 0 ≤ u := hu
+    -- u + (1 + ε_S) ≥ 1 + ε_S, so apply phi_S_tail.
+    have h_x_ge : 1 + eps_S S ≤ u + (1 + eps_S S) := by linarith
+    have h_phi := phi_S_tail S (u + (1 + eps_S S)) hSpos h_x_ge
+    show Real.exp (-(phi_S S (u + (1 + eps_S S))))
+       = Real.exp (-(phi_S S (1 + eps_S S)))
+         * Real.exp (-(tildeS S * u) - eta_S S * u^2 / 2)
+    rw [h_phi]
+    -- Now need: exp(-(A + B + C)) = exp(-A) · exp(-(B' + C'))
+    -- where B' = tildeS · u, C' = η · u²/2.
+    -- After phi_S_tail: phi_S(1+ε+u) = phi_S(1+ε) + S·u + η/2·((u+1+ε)² - (1+ε)²)
+    -- = phi_S(1+ε) + S·u + η/2·(u² + 2u(1+ε))
+    -- = phi_S(1+ε) + S·u + η·(1+ε)·u + η·u²/2
+    -- = phi_S(1+ε) + (S + η(1+ε))·u + η·u²/2
+    -- = phi_S(1+ε) + tildeS·u + η·u²/2
+    have h_arg_eq : phi_S S (1 + eps_S S)
+        + S * (u + (1 + eps_S S) - 1 - eps_S S)
+        + eta_S S / 2 * ((u + (1 + eps_S S))^2 - (1 + eps_S S)^2)
+        = phi_S S (1 + eps_S S) + tildeS S * u + eta_S S * u^2 / 2 := by
+      unfold tildeS
+      ring
+    rw [h_arg_eq]
+    rw [show -(phi_S S (1 + eps_S S) + tildeS S * u + eta_S S * u^2 / 2)
+          = -(phi_S S (1 + eps_S S)) + (-(tildeS S * u) - eta_S S * u^2 / 2)
+          from by ring]
+    rw [Real.exp_add]
+  rw [h_int_eq]
+  -- Step 3: pull constant out of integral.
+  rw [← MeasureTheory.integral_const_mul]
 
 /-! ## Asymptotics of the Gaussian-tail integral
 
