@@ -236,9 +236,238 @@ definition of `Var_f_S`). -/
 
 /-! ### Asymptotic evaluations (blueprint §04, §05) -/
 
-/-- `E_phi_S(f_S) = 1/S - 1/S² + O(S⁻³)`. -/
-axiom EE_phi_S_asymp :
-    BigOInv1D EE_phi_S (fun S => 1 / S - 1 / S ^ 2) 3
+/-- `E_phi_S(f_S) = 1/S - 1/S² + O(S⁻³)`. Combines `E_phi_g_S_eq`
+(showing `EE_phi_S = 2/(Z_S · A_S)`) with `Z_S_asymp` (`Z_S = 2 + 2/S
++ O(S^{-3})`) and `A_S_asymp` (`A_S - S = O(S^{-1})`) via the algebraic
+identity
+  `EE_phi_S - (1/S - 1/S²) = (2 - (S-1)·r) / (S²·Z_S·A_S)`
+where `r := Z_S·A_S - (2S+2)`, plus `Z_S ≥ 1` and `A_S ≥ S/2` eventually. -/
+theorem EE_phi_S_asymp :
+    BigOInv1D EE_phi_S (fun S => 1 / S - 1 / S ^ 2) 3 := by
+  -- Constants from upstream asymptotics.
+  obtain ⟨C_Z, S_Z, hS_Z_pos, h_Z_bd⟩ := Z_S_asymp
+  obtain ⟨C_A_raw, h_A_bd⟩ := A_S_asymp.bound
+  rw [Filter.eventually_atTop] at h_A_bd
+  obtain ⟨S_A, hS_A_bd⟩ := h_A_bd
+  obtain ⟨S_Z1, hS_Z1_pos, hZ_one⟩ := exists_S_Z_S_ge_one
+  -- Make sure C_A ≥ 0 (replace by max C_A_raw 0 to ensure nonnegativity).
+  set C_A := max C_A_raw 0 with hC_A_def
+  have hC_A_nn : 0 ≤ C_A := le_max_right _ _
+  have hS_A_bd' : ∀ S, S_A ≤ S → ‖A_S S - S‖ ≤ C_A * ‖(S : ℝ)^(-(1:ℤ))‖ := by
+    intro S hS
+    refine le_trans (hS_A_bd S hS) ?_
+    refine mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg _)
+  -- Similarly ensure C_Z ≥ 0.
+  have hC_Z_nn : 0 ≤ C_Z := by
+    have h : |Z_S S_Z - (fun S => (2 : ℝ) + 2 / S) S_Z|
+        ≤ C_Z * S_Z ^ (-(3 : ℤ)) := h_Z_bd S_Z le_rfl
+    have h_abs_nn : 0 ≤ |Z_S S_Z - ((2 : ℝ) + 2 / S_Z)| := abs_nonneg _
+    have h_pow_pos : (0 : ℝ) < S_Z ^ (-(3 : ℤ)) := zpow_pos hS_Z_pos _
+    nlinarith
+  -- Pick S₀ large enough for all conditions.
+  -- Need: S ≥ S_Z, S_A, S_Z1, 2, and S ≥ √(2 C_A) + 1 (so A_S ≥ S/2).
+  -- For S ≥ √(2 C_A): C_A/S ≤ S/2, hence A_S ≥ S - C_A/S ≥ S/2.
+  refine ⟨4 + 2 * (C_Z + 4 * C_A + C_Z * C_A),
+          max (max (max S_Z S_A) S_Z1) (max 2 (Real.sqrt (2 * C_A) + 1)),
+          ?_, ?_⟩
+  · refine lt_max_of_lt_right ?_
+    refine lt_max_of_lt_left ?_
+    norm_num
+  intro S hS
+  have hS_Z : S_Z ≤ S :=
+    le_trans (le_max_left _ _) (le_trans (le_max_left _ _)
+      (le_trans (le_max_left _ _) hS))
+  have hS_A : S_A ≤ S :=
+    le_trans (le_max_right _ _) (le_trans (le_max_left _ _)
+      (le_trans (le_max_left _ _) hS))
+  have hS_Z1 : S_Z1 ≤ S :=
+    le_trans (le_max_right _ _) (le_trans (le_max_left _ _) hS)
+  have hS_2 : (2 : ℝ) ≤ S :=
+    le_trans (le_max_left _ _) (le_trans (le_max_right _ _) hS)
+  have hS_sqrt : Real.sqrt (2 * C_A) + 1 ≤ S :=
+    le_trans (le_max_right _ _) (le_trans (le_max_right _ _) hS)
+  have hS_one : (1 : ℝ) ≤ S := by linarith
+  have hS_lt : (1 : ℝ) < S := by linarith
+  have hSpos : 0 < S := by linarith
+  -- Z_S ≥ 1.
+  have hZ_one : 1 ≤ Z_S S := hZ_one S hS_Z1
+  have hZ_pos : 0 < Z_S S := by linarith
+  -- A_S ≥ S/2.
+  have hA_pos_pre : 0 < A_S S := A_S_pos hS_lt
+  have hA_bd : ‖A_S S - S‖ ≤ C_A * ‖(S : ℝ)^(-(1:ℤ))‖ := hS_A_bd' S hS_A
+  have hpow1_eq : (S : ℝ)^(-(1:ℤ)) = 1/S := by
+    rw [show (-(1:ℤ)) = -((1:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast,
+        pow_one, one_div]
+  have hA_diff_bd : |A_S S - S| ≤ C_A / S := by
+    rw [Real.norm_eq_abs, Real.norm_eq_abs, hpow1_eq,
+        abs_of_pos (by positivity : (0:ℝ) < 1/S)] at hA_bd
+    have h_eq : C_A * (1/S) = C_A / S := by ring
+    linarith [hA_bd]
+  have hA_ge_half : S/2 ≤ A_S S := by
+    -- A_S ≥ S - C_A/S, want ≥ S/2, i.e., S/2 ≥ C_A/S, i.e., S² ≥ 2*C_A.
+    -- S ≥ √(2 C_A) + 1 > √(2 C_A), so S² > 2 C_A.
+    have h_sqrt_nn : 0 ≤ Real.sqrt (2 * C_A) := Real.sqrt_nonneg _
+    have hS_sqrt_lt : Real.sqrt (2 * C_A) < S := by linarith
+    have hS_sq : S^2 > 2 * C_A := by
+      have h1 : (Real.sqrt (2 * C_A))^2 = 2 * C_A := by
+        rw [Real.sq_sqrt (by positivity : (0 : ℝ) ≤ 2 * C_A)]
+      have hS_pos_sqrt : Real.sqrt (2 * C_A) ^ 2 < S^2 := by
+        have h_ss : 0 ≤ S := hSpos.le
+        nlinarith [hS_sqrt_lt, h_sqrt_nn]
+      linarith
+    -- C_A / S ≤ S / 2 ↔ 2 * C_A ≤ S * S = S² (when S > 0).
+    have hCAoverS_le : C_A / S ≤ S / 2 := by
+      rw [div_le_div_iff₀ hSpos (by norm_num : (0:ℝ) < 2)]
+      nlinarith
+    -- A_S ≥ S - C_A/S.
+    have h_A_ge : A_S S ≥ S - C_A / S := by
+      have h_neg : -(C_A / S) ≤ A_S S - S := by
+        have := abs_le.mp hA_diff_bd
+        linarith [this.1]
+      linarith
+    linarith
+  -- E_phi_g_S_eq: EE_phi_S S = 2 / (Z_S S * A_S S).
+  have hEE_eq : EE_phi_S S = 2 / (Z_S S * A_S S) := E_phi_g_S_eq hS_lt
+  -- Z_S * A_S - (2S + 2) bound: |r| ≤ M/S where M = C_Z + 4C_A + C_Z·C_A.
+  have hZ_diff_bd : |Z_S S - (2 + 2/S)| ≤ C_Z / S^3 := by
+    have h : |Z_S S - ((2 : ℝ) + 2/S)| ≤ C_Z * S^(-(3:ℤ)) := h_Z_bd S hS_Z
+    have h_eq : (S : ℝ)^(-(3:ℤ)) = 1/S^3 := by
+      rw [show (-(3:ℤ)) = -((3:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast, one_div]
+    rw [h_eq] at h
+    have h_eq2 : C_Z * (1 / S^3) = C_Z / S^3 := by ring
+    linarith
+  -- r := Z_S * A_S - (2S + 2).
+  set r := Z_S S * A_S S - (2*S + 2) with hr_def
+  -- r = (Z_S - (2+2/S))·A_S + (2+2/S)·(A_S - S).
+  have hr_decomp : r = (Z_S S - (2 + 2/S)) * A_S S
+                        + (2 + 2/S) * (A_S S - S) := by
+    rw [hr_def]; field_simp; ring
+  -- |r| bound.
+  have hS3_pos : (0 : ℝ) < S^3 := by positivity
+  have hAbsA_le : |A_S S| ≤ S + C_A / S := by
+    rw [abs_of_nonneg hA_pos_pre.le]
+    have := abs_le.mp hA_diff_bd
+    linarith [this.2]
+  have h_2_plus_2overS_le : 2 + 2/S ≤ 4 := by
+    have h1 : (2 : ℝ)/S ≤ 2 := by
+      rw [div_le_iff₀ hSpos]; linarith
+    linarith
+  have h_2_plus_2overS_nn : (0 : ℝ) ≤ 2 + 2/S := by
+    have : (0 : ℝ) ≤ 2/S := by positivity
+    linarith
+  -- Bound |r|.
+  have hr_bd : |r| ≤ (C_Z + 4 * C_A + C_Z * C_A) / S := by
+    rw [hr_decomp]
+    have hT1 : |(Z_S S - (2 + 2/S)) * A_S S|
+        ≤ (C_Z / S^3) * (S + C_A / S) := by
+      rw [abs_mul]
+      exact mul_le_mul hZ_diff_bd hAbsA_le (abs_nonneg _) (by positivity)
+    have hT2 : |(2 + 2/S) * (A_S S - S)| ≤ 4 * (C_A / S) := by
+      rw [abs_mul, abs_of_nonneg h_2_plus_2overS_nn]
+      exact mul_le_mul h_2_plus_2overS_le hA_diff_bd (abs_nonneg _) (by linarith)
+    -- Triangle.
+    have h_tri : |(Z_S S - (2 + 2/S)) * A_S S + (2 + 2/S) * (A_S S - S)|
+        ≤ |(Z_S S - (2 + 2/S)) * A_S S| + |(2 + 2/S) * (A_S S - S)| :=
+      abs_add_le _ _
+    -- (C_Z/S³)·(S + C_A/S) ≤ C_Z/S² + C_Z·C_A/S^4.
+    have hT1' : (C_Z / S^3) * (S + C_A / S) = C_Z/S^2 + C_Z*C_A/S^4 := by
+      have h_eq : (S : ℝ)^3 * S = S^4 := by ring
+      have h_eq2 : (S : ℝ)^2 * S^2 = S^4 := by ring
+      field_simp
+    -- For S ≥ 2: C_Z/S² ≤ C_Z/S, C_Z·C_A/S^4 ≤ C_Z·C_A/S, 4·C_A/S = 4C_A/S.
+    have h_S2_le_S : (1 : ℝ)/S^2 ≤ 1/S := by
+      have hS_le_S2 : S ≤ S^2 := by nlinarith
+      exact one_div_le_one_div_of_le hSpos hS_le_S2
+    have h_S4_le_S : (1 : ℝ)/S^4 ≤ 1/S := by
+      have hS_le_S4 : S ≤ S^4 := by nlinarith
+      exact one_div_le_one_div_of_le hSpos hS_le_S4
+    -- Combine.
+    have hT1_le : (C_Z / S^3) * (S + C_A / S) ≤ C_Z/S + C_Z*C_A/S := by
+      rw [hT1']
+      have h1 : C_Z/S^2 ≤ C_Z/S := by
+        rw [div_eq_mul_one_div, div_eq_mul_one_div C_Z S]
+        exact mul_le_mul_of_nonneg_left h_S2_le_S hC_Z_nn
+      have h2 : C_Z*C_A/S^4 ≤ C_Z*C_A/S := by
+        rw [div_eq_mul_one_div (C_Z * C_A), div_eq_mul_one_div (C_Z * C_A) S]
+        exact mul_le_mul_of_nonneg_left h_S4_le_S
+          (mul_nonneg hC_Z_nn hC_A_nn)
+      linarith
+    have h_total : C_Z/S + C_Z*C_A/S + 4 * (C_A / S) = (C_Z + 4 * C_A + C_Z * C_A) / S := by
+      field_simp; ring
+    linarith [hT1, hT2, hT1_le]
+  -- Now bound the numerator |2S² - (S-1)·Z_S·A_S| = |2 - (S-1)·r|.
+  have h_num_eq : 2*S^2 - (S - 1) * (Z_S S * A_S S) = 2 - (S - 1) * r := by
+    rw [hr_def]; ring
+  have h_num_bd : |2 - (S - 1) * r| ≤ 2 + C_Z + 4 * C_A + C_Z * C_A := by
+    have h_S_minus_1_le : (S - 1) / S ≤ 1 := by
+      rw [div_le_one hSpos]; linarith
+    have h_S_minus_1_nn : 0 ≤ (S - 1) := by linarith
+    have h_prod_bd : (S - 1) * |r| ≤ C_Z + 4 * C_A + C_Z * C_A := by
+      have h1 : (S - 1) * |r| ≤ (S - 1) * ((C_Z + 4 * C_A + C_Z * C_A) / S) :=
+        mul_le_mul_of_nonneg_left hr_bd h_S_minus_1_nn
+      have h2 : (S - 1) * ((C_Z + 4 * C_A + C_Z * C_A) / S)
+              = ((S - 1)/S) * (C_Z + 4 * C_A + C_Z * C_A) := by
+        field_simp
+      have hM_nn : 0 ≤ C_Z + 4 * C_A + C_Z * C_A := by
+        have := mul_nonneg hC_Z_nn hC_A_nn
+        linarith
+      have h3 : ((S - 1)/S) * (C_Z + 4 * C_A + C_Z * C_A)
+              ≤ 1 * (C_Z + 4 * C_A + C_Z * C_A) :=
+        mul_le_mul_of_nonneg_right h_S_minus_1_le hM_nn
+      linarith
+    have h_t1 : |2 - (S - 1) * r| ≤ |(2 : ℝ)| + |(S - 1) * r| := abs_sub _ _
+    have h_t1' : |(2 : ℝ)| = 2 := by norm_num
+    have h_t2 : |(S - 1) * r| = (S - 1) * |r| := by
+      rw [abs_mul, abs_of_nonneg h_S_minus_1_nn]
+    linarith [h_t1, h_t1', h_t2, h_prod_bd]
+  -- Denominator: S² · Z_S · A_S ≥ S² · 1 · S/2 = S³/2.
+  have h_denom_pos : 0 < S^2 * (Z_S S * A_S S) := by
+    apply mul_pos (by positivity) (mul_pos hZ_pos hA_pos_pre)
+  have h_denom_lb : S^3 / 2 ≤ S^2 * (Z_S S * A_S S) := by
+    have h1 : S^2 * 1 * (S/2) ≤ S^2 * (Z_S S * A_S S) := by
+      have : S^2 * 1 * (S/2) = S^2 * (1 * (S/2)) := by ring
+      rw [this]
+      apply mul_le_mul_of_nonneg_left
+      · exact mul_le_mul hZ_one hA_ge_half (by linarith) hZ_pos.le
+      · positivity
+    have h_eq : S^2 * 1 * (S/2) = S^3 / 2 := by ring
+    linarith
+  -- Compute EE_phi_S S - (1/S - 1/S^2).
+  rw [hEE_eq]
+  -- 2/(Z_S A_S) - (1/S - 1/S²) = (2S² - (S-1)·Z_S·A_S) / (S²·Z_S·A_S)
+  have hZAne : Z_S S * A_S S ≠ 0 := mul_ne_zero hZ_pos.ne' hA_pos_pre.ne'
+  have hSne : (S : ℝ) ≠ 0 := hSpos.ne'
+  have hS2ne : (S : ℝ)^2 ≠ 0 := by positivity
+  have h_diff_eq : 2 / (Z_S S * A_S S) - ((1 : ℝ)/S - 1/S^2)
+      = (2 * S^2 - (S - 1) * (Z_S S * A_S S)) / (S^2 * (Z_S S * A_S S)) := by
+    field_simp
+  rw [h_diff_eq]
+  -- |a/b| ≤ |a|/|b|.
+  rw [abs_div]
+  rw [abs_of_pos h_denom_pos]
+  -- Goal: |2S² - (S-1)·Z_S·A_S| / (S²·Z_S·A_S) ≤ K · S^(-3:ℤ)
+  -- Use: |num| ≤ 2 + M (M := C_Z + 4·C_A + C_Z·C_A) and denom ≥ S³/2.
+  have h_pow3_eq : (S : ℝ)^(-(3:ℤ)) = 1/S^3 := by
+    rw [show (-(3:ℤ)) = -((3:ℕ) : ℤ) from rfl, zpow_neg, zpow_natCast, one_div]
+  show |2 * S ^ 2 - (S - 1) * (Z_S S * A_S S)| / (S ^ 2 * (Z_S S * A_S S))
+      ≤ (4 + 2 * (C_Z + 4 * C_A + C_Z * C_A)) * (S : ℝ)^(-(3:ℤ))
+  rw [h_pow3_eq, h_num_eq]
+  -- |2 - (S-1)·r| / (S²·Z_S·A_S) ≤ (2 + M) / (S³/2) = 2(2+M)/S³.
+  have h_final : |2 - (S - 1) * r| / (S^2 * (Z_S S * A_S S))
+      ≤ (4 + 2 * (C_Z + 4 * C_A + C_Z * C_A)) * (1 / S^3) := by
+    have hS3half_pos : (0 : ℝ) < S^3 / 2 := by positivity
+    have h1 : |2 - (S - 1) * r| / (S^2 * (Z_S S * A_S S))
+            ≤ |2 - (S - 1) * r| / (S^3 / 2) := by
+      apply div_le_div_of_nonneg_left (abs_nonneg _) hS3half_pos h_denom_lb
+    have h2 : |2 - (S - 1) * r| / (S^3 / 2)
+            ≤ (2 + (C_Z + 4 * C_A + C_Z * C_A)) / (S^3 / 2) := by
+      apply div_le_div_of_nonneg_right _ hS3half_pos.le
+      linarith [h_num_bd]
+    have h3 : (2 + (C_Z + 4 * C_A + C_Z * C_A)) / (S^3 / 2)
+            = (4 + 2 * (C_Z + 4 * C_A + C_Z * C_A)) * (1 / S^3) := by
+      field_simp; ring
+    linarith
+  exact h_final
 
 /-- The integrated variance `Var_f_S S = ∫ (g_S - c_S)² dρ_S` equals the
 algebraic variance `Var_phi S (g_S S) = ∫ g_S² dρ - (∫ g_S dρ)²`. The
